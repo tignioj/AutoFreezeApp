@@ -4,6 +4,7 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.widget.Toast;
 
@@ -158,5 +159,15 @@ public class DeviceMethod {
         } else {
             Toast.makeText(mContext, "请先激活设备", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    public void test1() {
+        if (devicePolicyManager.isAdminActive(componentName)) {
+        } else {
+            mContext.getPackageManager().getInstalledPackages(0);
+            Toast.makeText(mContext, "请先激活设备", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

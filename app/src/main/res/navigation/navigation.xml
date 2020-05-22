@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/appListFragment">
+
+    <fragment
+        android:id="@+id/appListFragment"
+        android:name="com.example.freezeappdemo1.AppListFragment"
+        android:label="fragment_app_list"
+        tools:layout="@layout/fragment_app_list" >
+        <action
+            android:id="@+id/action_appListFragment_to_frozenFragment"
+            app:destination="@id/frozenFragment" />
+        <action
+            android:id="@+id/action_appListFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/frozenFragment"
+        android:name="com.example.freezeappdemo1.FrozenFragment"
+        android:label="fragment_frozen"
+        tools:layout="@layout/fragment_frozen" />
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.freezeappdemo1.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
+</navigation>
