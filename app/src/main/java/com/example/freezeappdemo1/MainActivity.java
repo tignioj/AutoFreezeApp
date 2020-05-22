@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == REQUEST_CODE_WRITE_SETTINGS) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 //Settings.System.canWrite方法检测授权结果
@@ -62,7 +63,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 点击按钮执行
+     * @param view
+     */
     public void freeze(View view) {
+        /**
+         * 检测系统修改权限
+         */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.System.canWrite(MainActivity.this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS,
@@ -74,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
                 canWrite = true;
             }
         }
-        canWrite = true;
         Process process = null;
         try {
             String command = editText.getText().toString();
