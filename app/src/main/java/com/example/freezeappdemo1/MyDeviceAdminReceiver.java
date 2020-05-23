@@ -4,11 +4,9 @@ import android.app.admin.DeviceAdminReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import com.example.freezeappdemo1.utils.DeviceMethod;
 
 public class MyDeviceAdminReceiver  extends DeviceAdminReceiver {
 

@@ -1,4 +1,4 @@
-package com.example.freezeappdemo1;
+package com.example.freezeappdemo1.ui;
 
 import android.os.Bundle;
 
@@ -8,13 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.freezeappdemo1.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FrozenFragment extends Fragment {
+public class SettingFragment extends Fragment {
 
-    public FrozenFragment() {
+    public SettingFragment() {
         // Required empty public constructor
     }
 
@@ -23,6 +25,6 @@ public class FrozenFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_frozen, container, false);
+        return inflater.inflate(R.layout.fragment_setting, container, false);
     }
 }

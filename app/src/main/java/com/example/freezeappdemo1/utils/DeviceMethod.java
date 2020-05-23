@@ -1,14 +1,14 @@
-package com.example.freezeappdemo1;
+package com.example.freezeappdemo1.utils;
 
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
+import com.example.freezeappdemo1.MyDeviceAdminReceiver;
 
 /**
  * 来源：https://www.jianshu.com/p/8934d47aed3b
@@ -148,12 +148,14 @@ public class DeviceMethod {
 
     /**
      * 冻结App
+     *
      * @param packageName
      * @param isFreeze
      */
     public void freeze(String packageName, boolean isFreeze) {
         if (devicePolicyManager.isAdminActive(componentName)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Log.d("myTag", "freeze:" + isFreeze + " " + packageName);
                 devicePolicyManager.setApplicationHidden(componentName, packageName, isFreeze);
             }
         } else {
@@ -162,12 +164,22 @@ public class DeviceMethod {
     }
 
 
-    public void test1() {
+    /**
+     * 检测App是否隐藏
+     * @param packageName
+     * @return
+     */
+    public boolean isHidden(String packageName) {
+        boolean b = false;
         if (devicePolicyManager.isAdminActive(componentName)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                b = devicePolicyManager.isApplicationHidden(componentName, packageName);
+            }
         } else {
-            mContext.getPackageManager().getInstalledPackages(0);
             Toast.makeText(mContext, "请先激活设备", Toast.LENGTH_SHORT).show();
         }
-
+        return b;
     }
+
+
 }
