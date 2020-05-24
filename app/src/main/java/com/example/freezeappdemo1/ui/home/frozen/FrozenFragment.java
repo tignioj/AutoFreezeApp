@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -33,8 +34,8 @@ public class FrozenFragment extends Fragment {
     }
 
 
-    ListView listViewAppListFrozen;
-    EditText editTextSearch;
+    private ListView listViewAppListFrozen;
+    private EditText editTextSearch;
     private FrozenAdapter adapter;
     HomeViewModel homeViewModel;
 
@@ -49,7 +50,7 @@ public class FrozenFragment extends Fragment {
         adapter = new FrozenAdapter(this, mutableLiveDataFrozenAppList.getValue());
         listViewAppListFrozen.setAdapter(adapter);
 
-        mutableLiveDataFrozenAppList.observe(requireActivity(), new Observer<List<AppInfo>>() {
+        mutableLiveDataFrozenAppList.observe(getViewLifecycleOwner(), new Observer<List<AppInfo>>() {
             @Override
             public void onChanged(List<AppInfo> appInfos) {
                 Log.d("myTag", "frozen list update");
@@ -57,6 +58,7 @@ public class FrozenFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
+
     }
 
     @Override
@@ -92,13 +94,17 @@ public class FrozenFragment extends Fragment {
 
     private void unfreeze(View v) {
         List<AppInfo> appInfos = homeViewModel.getMutableLiveDataFrozenAppList().getValue();
+        boolean hasUpdate = false;
         for (int i = 0; i < appInfos.size(); i++) {
             AppInfo a = appInfos.get(i);
             if (a.isSelected()) {
+                hasUpdate = true;
                 Log.d("myTag", a.getAppName());
                 DeviceMethod.getInstance(requireContext()).freeze(a.getPackageName(), false);
             }
         }
-        homeViewModel.updateAll();
+        if (hasUpdate) {
+            homeViewModel.updateAll();
+        }
     }
 }

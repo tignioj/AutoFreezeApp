@@ -1,12 +1,17 @@
 package com.example.freezeappdemo1.ui.home.applist;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.freezeappdemo1.R;
 import com.example.freezeappdemo1.entity.AppInfo;
@@ -14,16 +19,19 @@ import com.example.freezeappdemo1.viewmodel.HomeViewModel;
 
 import java.util.List;
 
-public class AppListAdapter extends BaseAdapter {
+public class AppListAdapter extends ArrayAdapter<AppInfo> {
 
     List<AppInfo> appInfos;
-    AppListFragment appListFragment;
     HomeViewModel homeViewModel;
+    private int resourceLayout;
+    private Context context;
 
-    public AppListAdapter(AppListFragment appListFragment, List<AppInfo> appInfos) {
-        this.appListFragment = appListFragment;
+    public AppListAdapter(@NonNull Context context, int resource, List<AppInfo> appInfos, HomeViewModel homeViewModel) {
+        super(context, resource);
+        this.resourceLayout = resource;
+        this.context = context;
         this.appInfos = appInfos;
-        this.homeViewModel = appListFragment.homeViewModel;
+        this.homeViewModel = homeViewModel;
     }
 
     public void updateInfos(List<AppInfo> appInfos) {
@@ -36,7 +44,7 @@ public class AppListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public AppInfo getItem(int position) {
         return appInfos.get(position);
     }
 
@@ -49,11 +57,11 @@ public class AppListAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view = null;
         if (convertView == null) {
-            view = View.inflate(appListFragment.requireContext(), R.layout.cell_listview, null);
+            view = View.inflate(context, resourceLayout, null);
         } else {
             view = convertView;
         }
-        AppInfo item = (AppInfo) getItem(position);
+        AppInfo item = getItem(position);
 
         CheckBox checkBox = view.findViewById(R.id.checkbox_cell);
         TextView appName = view.findViewById(R.id.tv_appname);
@@ -63,7 +71,7 @@ public class AppListAdapter extends BaseAdapter {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ((AppInfo) getItem(position)).setSelected(isChecked);
+                getItem(position).setSelected(isChecked);
                 homeViewModel.getMutableLiveDataUnFreezeAppListLive().getValue().get(position).setSelected(isChecked);
             }
         });
@@ -71,7 +79,6 @@ public class AppListAdapter extends BaseAdapter {
         appName.setText(item.getAppName());
         packageName.setText(item.getPackageName());
         imageView.setImageDrawable(item.getIcon());
-
         return view;
     }
 }

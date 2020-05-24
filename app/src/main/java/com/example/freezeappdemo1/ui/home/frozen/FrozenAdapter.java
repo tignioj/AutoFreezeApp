@@ -16,16 +16,16 @@ import java.util.List;
 
 public class FrozenAdapter extends BaseAdapter {
 
-    List<AppInfo> appInfos;
-    FrozenFragment frozenFragment;
-    HomeViewModel homeViewModel;
+    private List<AppInfo> appInfos;
+    private FrozenFragment frozenFragment;
+    private HomeViewModel homeViewModel;
 
-    public FrozenAdapter(FrozenFragment appListFragment, List<AppInfo> appInfos) {
+    FrozenAdapter(FrozenFragment appListFragment, List<AppInfo> appInfos) {
         this.frozenFragment = appListFragment;
         this.appInfos = appInfos;
         homeViewModel = frozenFragment.homeViewModel;
     }
-    public void updateInfos(List<AppInfo> appInfos) {
+    void updateInfos(List<AppInfo> appInfos) {
         this.appInfos = appInfos;
     }
 
@@ -46,7 +46,7 @@ public class FrozenAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view = null;
+        View view;
         if (convertView == null) {
             view = View.inflate(frozenFragment.requireContext(), R.layout.cell_listview, null);
         } else {

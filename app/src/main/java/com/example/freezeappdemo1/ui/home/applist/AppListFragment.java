@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -48,11 +49,11 @@ public class AppListFragment extends Fragment {
 
         MutableLiveData<List<AppInfo>> unfreezeApps = homeViewModel.getMutableLiveDataUnFreezeAppListLive();
 
-        adapter = new AppListAdapter(this, unfreezeApps.getValue());
+        adapter = new AppListAdapter(requireContext(), R.layout.cell_listview, unfreezeApps.getValue(), homeViewModel);
 
         listViewAppList.setAdapter(adapter);
 
-        unfreezeApps.observe(requireActivity(), new Observer<List<AppInfo>>() {
+        unfreezeApps.observe(getViewLifecycleOwner(), new Observer<List<AppInfo>>() {
             @Override
             public void onChanged(List<AppInfo> appInfos) {
                 Log.d("myTag", "applist update");
@@ -96,13 +97,17 @@ public class AppListFragment extends Fragment {
      */
     public void freeze(View view) {
         List<AppInfo> unFreezeAppList = homeViewModel.getMutableLiveDataUnFreezeAppListLive().getValue();
+        boolean hasUpdate = false;
         for (AppInfo a : unFreezeAppList) {
             if (a.isSelected()) {
+                hasUpdate = true;
                 Log.d("myTag", a.getAppName());
                 DeviceMethod.getInstance(requireContext()).freeze(a.getPackageName(), true);
             }
         }
-        homeViewModel.updateAll();
+        if (hasUpdate) {
+            homeViewModel.updateAll();
+        }
     }
 
 }
