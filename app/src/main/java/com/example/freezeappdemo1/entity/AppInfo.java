@@ -8,10 +8,27 @@ public class AppInfo {
     private String appName;
     private String packageName;
     private Drawable icon;
+    private int iconLayout;
     private boolean isHidden;
     private boolean isSystemApp;
 
     private boolean isSelectedReadyToFreeze;
+
+    public int getIconLayout() {
+        return iconLayout;
+    }
+
+    public void setIconLayout(int iconLayout) {
+        this.iconLayout = iconLayout;
+    }
+
+    public boolean isSelectedReadyToFreeze() {
+        return isSelectedReadyToFreeze;
+    }
+
+    public void setSelectedReadyToFreeze(boolean selectedReadyToFreeze) {
+        isSelectedReadyToFreeze = selectedReadyToFreeze;
+    }
 
     @Override
     public String toString() {

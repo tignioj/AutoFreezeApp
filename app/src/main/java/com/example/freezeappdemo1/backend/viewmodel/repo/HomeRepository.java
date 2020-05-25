@@ -1,14 +1,16 @@
-package com.example.freezeappdemo1.viewmodel;
+package com.example.freezeappdemo1.backend.viewmodel.repo;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.freezeappdemo1.entity.AppInfo;
 import com.example.freezeappdemo1.utils.DeviceMethod;
+import com.example.freezeappdemo1.utils.ShpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ public class HomeRepository {
 
     MutableLiveData<List<AppInfo>> mutableLiveDataUnFreezeAppList;
     MutableLiveData<List<AppInfo>> mutableLiveDataFrozenAppList;
+    MutableLiveData<List<AppInfo>> mutableLiveDataAllAppList;
 
 
     public synchronized static HomeRepository getInstance(Context context) {
@@ -35,6 +38,13 @@ public class HomeRepository {
 
         mutableLiveDataFrozenAppList = new MutableLiveData<>();
         mutableLiveDataFrozenAppList.setValue(getFrozenAppList());
+
+        mutableLiveDataAllAppList = new MutableLiveData<>();
+        mutableLiveDataAllAppList.setValue(getAllAppList());
+    }
+
+    public MutableLiveData<List<AppInfo>> getMutableLiveDataAllAppList() {
+        return mutableLiveDataAllAppList;
     }
 
     /**
@@ -58,6 +68,8 @@ public class HomeRepository {
             a.setPackageName(p.packageName);
             a.setIcon(ai.loadIcon(pm));
 
+            a.setIconLayout(ai.icon);
+
             a.setHidden(DeviceMethod.getInstance(context).isHidden(ai.packageName));
             appInfos.add(a);
         }
@@ -70,7 +82,7 @@ public class HomeRepository {
      *
      * @return
      */
-    private List<AppInfo> getUnFreezeAppList() {
+    public List<AppInfo> getUnFreezeAppList() {
         List<AppInfo> appInfos = new ArrayList<>();
         PackageManager pm = context.getPackageManager();
         List<PackageInfo> installedPackages = pm.getInstalledPackages(PackageManager.GET_ACTIVITIES);
@@ -78,13 +90,24 @@ public class HomeRepository {
         for (PackageInfo p : installedPackages) {
             ApplicationInfo ai = p.applicationInfo;
             AppInfo a = new AppInfo();
+
+            //不显示系统应用
             boolean b = (ai.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             if (b) {
                 continue;
             }
+
+            //不显示本应用
+            if (ai.packageName.equals(context.getPackageName())) {
+                continue;
+            }
+
+
             a.setAppName((String) pm.getApplicationLabel(ai));
             a.setPackageName(p.packageName);
             a.setIcon(ai.loadIcon(pm));
+
+            a.setIconLayout(ai.icon);
 
             a.setHidden(DeviceMethod.getInstance(context).isHidden(ai.packageName));
             appInfos.add(a);
@@ -110,8 +133,46 @@ public class HomeRepository {
         mutableLiveDataUnFreezeAppList.setValue(getUnFreezeAppList());
     }
 
-    public void  updateAll() {
+    public void updateAll() {
         updateFrozenApps();
         updateUnFreezeApps();
+        updateAllApps();
+    }
+
+    private void updateAllApps() {
+        mutableLiveDataAllAppList.setValue(getAllAppList());
+    }
+
+
+    public List<AppInfo> getAllAppList() {
+        List<AppInfo> appInfos = new ArrayList<>();
+        PackageManager pm = context.getPackageManager();
+        List<PackageInfo> installedPackages = pm.getInstalledPackages(PackageManager.GET_ACTIVITIES | PackageManager.MATCH_UNINSTALLED_PACKAGES);
+
+        for (PackageInfo p : installedPackages) {
+            ApplicationInfo ai = p.applicationInfo;
+            AppInfo a = new AppInfo();
+
+            //不显示系统应用
+            boolean b = (ai.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+            if (b) {
+                continue;
+            }
+
+            //不显示本应用
+            if (ai.packageName.equals(context.getPackageName())) {
+                continue;
+            }
+
+            a.setAppName((String) pm.getApplicationLabel(ai));
+            a.setPackageName(p.packageName);
+            a.setIcon(ai.loadIcon(pm));
+
+            a.setIconLayout(ai.icon);
+
+            a.setHidden(DeviceMethod.getInstance(context).isHidden(ai.packageName));
+            appInfos.add(a);
+        }
+        return appInfos;
     }
 }

@@ -1,77 +1,82 @@
 package com.example.freezeappdemo1.ui.home.frozen;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.freezeappdemo1.R;
+import com.example.freezeappdemo1.backend.entitys.AppsCategory;
 import com.example.freezeappdemo1.entity.AppInfo;
-import com.example.freezeappdemo1.viewmodel.HomeViewModel;
+import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
 
 import java.util.List;
 
-public class FrozenAdapter extends BaseAdapter {
+public class FrozenAdapter extends ListAdapter<AppsCategory, FrozenAdapter.MyViewHolder> {
 
-    private List<AppInfo> appInfos;
-    private FrozenFragment frozenFragment;
     private HomeViewModel homeViewModel;
+    Context context;
 
-    FrozenAdapter(FrozenFragment appListFragment, List<AppInfo> appInfos) {
-        this.frozenFragment = appListFragment;
-        this.appInfos = appInfos;
-        homeViewModel = frozenFragment.homeViewModel;
-    }
-    void updateInfos(List<AppInfo> appInfos) {
-        this.appInfos = appInfos;
-    }
-
-    @Override
-    public int getCount() {
-        return appInfos.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return appInfos.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        View view;
-        if (convertView == null) {
-            view = View.inflate(frozenFragment.requireContext(), R.layout.cell_listview, null);
-        } else {
-            view = convertView;
-        }
-        AppInfo item = (AppInfo) getItem(position);
-
-        CheckBox checkBox = view.findViewById(R.id.checkbox_cell);
-        TextView appName = view.findViewById(R.id.tv_appname);
-        TextView packageName = view.findViewById(R.id.tv_packagename);
-        ImageView imageView = view.findViewById(R.id.imageView);
-
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    public FrozenAdapter(Context context, HomeViewModel homeViewModel) {
+        super(new DiffUtil.ItemCallback<AppsCategory>() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ((AppInfo) getItem(position)).setSelected(isChecked);
-                homeViewModel.getMutableLiveDataFrozenAppList().getValue().get(position).setSelected(isChecked);
+            public boolean areItemsTheSame(@NonNull AppsCategory oldItem, @NonNull AppsCategory newItem) {
+                return oldItem.getId() == newItem.getId();
+            }
 
+            @Override
+            public boolean areContentsTheSame(@NonNull AppsCategory oldItem, @NonNull AppsCategory newItem) {
+                return oldItem.getCategoryName().equals(newItem.getCategoryName());
             }
         });
-        checkBox.setChecked(item.isSelected());
-        appName.setText(item.getAppName());
-        packageName.setText(item.getPackageName());
-        imageView.setImageDrawable(item.getIcon());
+        this.context = context;
+        this.homeViewModel = homeViewModel;
+    }
 
-        return view;
+    @NonNull
+    @Override
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.cell_category, parent, false);
+
+        return new MyViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+        AppsCategory item = getItem(position);
+        holder.textViewCategoryName.setText(item.getCategoryName());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putLong("id", getItem(position).getId());
+                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_frozenAppByCategoryFragment, bundle);
+            }
+        });
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView textViewCategoryName;
+        ImageView imageView;
+
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textViewCategoryName = itemView.findViewById(R.id.tv_category_name);
+            imageView = itemView.findViewById(R.id.imageViewFolder);
+        }
     }
 }

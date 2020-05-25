@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,12 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.freezeappdemo1.R;
+import com.example.freezeappdemo1.backend.entitys.FreezeApp;
+import com.example.freezeappdemo1.config.MyConfig;
 import com.example.freezeappdemo1.entity.AppInfo;
 import com.example.freezeappdemo1.utils.DeviceMethod;
-import com.example.freezeappdemo1.viewmodel.HomeViewModel;
+import com.example.freezeappdemo1.utils.Inform;
+import com.example.freezeappdemo1.utils.ShpUtils;
+import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,9 +38,10 @@ public class AppListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    TextView textViewSearch;
-    ListView listViewAppList;
+    private TextView textViewSearch;
+    private ListView listViewAppList;
     private AppListAdapter adapter;
+    private HomeViewModel homeViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +62,7 @@ public class AppListFragment extends Fragment {
         unfreezeApps.observe(getViewLifecycleOwner(), new Observer<List<AppInfo>>() {
             @Override
             public void onChanged(List<AppInfo> appInfos) {
-                Log.d("myTag", "applist update");
+                Log.d(MyConfig.MY_TAG, "applist update");
                 adapter.updateInfos(appInfos);
                 adapter.notifyDataSetChanged();
             }
@@ -88,7 +94,6 @@ public class AppListFragment extends Fragment {
         return inflate;
     }
 
-    HomeViewModel homeViewModel;
 
     /**
      * 冻结App
@@ -97,17 +102,27 @@ public class AppListFragment extends Fragment {
      */
     public void freeze(View view) {
         List<AppInfo> unFreezeAppList = homeViewModel.getMutableLiveDataUnFreezeAppListLive().getValue();
-        boolean hasUpdate = false;
-        for (AppInfo a : unFreezeAppList) {
-            if (a.isSelected()) {
-                hasUpdate = true;
-                Log.d("myTag", a.getAppName());
-                DeviceMethod.getInstance(requireContext()).freeze(a.getPackageName(), true);
+        if (unFreezeAppList == null) {
+            Inform.error("Error,please try it later", requireContext());
+            return;
+        }
+
+        List<FreezeApp> readyToFreezeApps = new ArrayList<>();
+        for (AppInfo appInfo : unFreezeAppList) {
+            if (appInfo.isSelected()) {
+                FreezeApp freezeApp = new FreezeApp();
+                freezeApp.setPackageName(appInfo.getPackageName());
+                freezeApp.setAppName(appInfo.getAppName());
+                freezeApp.setIcon(appInfo.getIconLayout());
+                freezeApp.setFrozen(true);
+                readyToFreezeApps.add(freezeApp);
             }
         }
-        if (hasUpdate) {
-            homeViewModel.updateAll();
+        if (readyToFreezeApps.size() == 0) {
+            return;
         }
-    }
 
+        ChooseCategoryDialog chooseCategoryDialog = new ChooseCategoryDialog(homeViewModel, readyToFreezeApps);
+        chooseCategoryDialog.show(requireActivity().getSupportFragmentManager(), "choose category" );
+    }
 }

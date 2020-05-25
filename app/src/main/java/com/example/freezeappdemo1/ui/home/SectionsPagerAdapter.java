@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.example.freezeappdemo1.R;
 import com.example.freezeappdemo1.ui.home.applist.AppListFragment;
 import com.example.freezeappdemo1.ui.home.frozen.FrozenFragment;
+import com.example.freezeappdemo1.ui.home.timer.TimerFragment;
 
 import java.util.ArrayList;
 
@@ -21,10 +22,10 @@ import java.util.ArrayList;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
     private final Context mContext;
 
-    ArrayList<Fragment> fragments;
+    private ArrayList<Fragment> fragments;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
@@ -32,6 +33,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         fragments = new ArrayList<>();
         fragments.add(new AppListFragment());
         fragments.add(new FrozenFragment());
+        fragments.add(new TimerFragment());
     }
 
     @Override

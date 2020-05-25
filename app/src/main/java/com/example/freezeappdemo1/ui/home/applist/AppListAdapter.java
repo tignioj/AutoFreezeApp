@@ -4,25 +4,23 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.freezeappdemo1.R;
 import com.example.freezeappdemo1.entity.AppInfo;
-import com.example.freezeappdemo1.viewmodel.HomeViewModel;
+import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
 
 import java.util.List;
 
 public class AppListAdapter extends ArrayAdapter<AppInfo> {
 
-    List<AppInfo> appInfos;
-    HomeViewModel homeViewModel;
+    private List<AppInfo> appInfos;
+    private HomeViewModel homeViewModel;
     private int resourceLayout;
     private Context context;
 
@@ -72,7 +70,6 @@ public class AppListAdapter extends ArrayAdapter<AppInfo> {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 getItem(position).setSelected(isChecked);
-                homeViewModel.getMutableLiveDataUnFreezeAppListLive().getValue().get(position).setSelected(isChecked);
             }
         });
         checkBox.setChecked(item.isSelected());
