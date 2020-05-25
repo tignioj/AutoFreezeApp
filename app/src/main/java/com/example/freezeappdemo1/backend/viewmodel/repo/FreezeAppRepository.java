@@ -24,7 +24,6 @@ public class FreezeAppRepository {
 
     private Context mContext;
     private static FreezeAppRepository INSTANCE;
-    LiveData<List<FreezeApp>> listLiveDataFreezeApp;
 
     public synchronized static FreezeAppRepository getInstance(Context context) {
         if (INSTANCE == null) {
@@ -40,23 +39,9 @@ public class FreezeAppRepository {
         dataBase = AppsDataBase.getDataBase(context);
         freezeAppDao = dataBase.getFreezeAppDao();
         this.mContext = context;
-        this.listLiveDataFreezeApp = freezeAppDao.getAllAppsLive();
-    }
-
-    private void initDB() {
-        deleteAllFreezeApp();
-        List<FreezeApp> frozenAppList = getFrozenAppList();
-        FreezeApp[] freezeApps = frozenAppList.toArray(new FreezeApp[0]);
-        insertFreezeApp(freezeApps);
     }
 
 
-    public LiveData<List<FreezeApp>> getListLiveDataFreezeApp() {
-        if (listLiveDataFreezeApp == null) {
-            listLiveDataFreezeApp = new MutableLiveData<>();
-        }
-        return listLiveDataFreezeApp;
-    }
 
     public List<FreezeApp> getFreezeAppByCategoryId(long id) {
         return freezeAppDao.getAllAppsByCategoryId(id);
@@ -114,32 +99,6 @@ public class FreezeAppRepository {
             freezeAppDao.updateApps(tasks);
             return null;
         }
-    }
-
-    /**
-     * 获取所有的非系统安装包且冻结的包
-     *
-     * @return
-     */
-    private List<FreezeApp> getFrozenAppList() {
-        List<FreezeApp> appInfos = new ArrayList<>();
-        PackageManager pm = mContext.getPackageManager();
-        List<PackageInfo> installedPackages = pm.getInstalledPackages(PackageManager.MATCH_UNINSTALLED_PACKAGES);
-
-        for (PackageInfo p : installedPackages) {
-            ApplicationInfo ai = p.applicationInfo;
-            if (!DeviceMethod.getInstance(mContext).isHidden(ai.packageName)) {
-                continue;
-            }
-            FreezeApp freezeApp = new FreezeApp();
-//            freezeApp.setCategoryId(1);
-            freezeApp.setAppName((String) pm.getApplicationLabel(ai));
-            freezeApp.setPackageName(p.packageName);
-            freezeApp.setIcon(ai.icon);
-            freezeApp.setFrozen(true);
-            appInfos.add(freezeApp);
-        }
-        return appInfos;
     }
 
 

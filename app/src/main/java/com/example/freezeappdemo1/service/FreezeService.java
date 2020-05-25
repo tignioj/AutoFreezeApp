@@ -7,7 +7,17 @@ import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.example.freezeappdemo1.backend.entitys.FreezeTasker;
+import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
+
+import java.util.List;
 
 import static com.example.freezeappdemo1.config.MyConfig.SHP_FREEZE_APP_LIST_FOR_TIMER;
 
@@ -24,6 +34,7 @@ public class FreezeService extends Service {
         return myBinder;
     }
 
+
     public class MyBinder extends Binder {
 
     }
@@ -32,7 +43,13 @@ public class FreezeService extends Service {
     public void onCreate() {
         super.onCreate();
         //定时冻结
-        shp = getSharedPreferences(SHP_FREEZE_APP_LIST_FOR_TIMER, Context.MODE_PRIVATE);
+//        shp = getSharedPreferences(SHP_FREEZE_APP_LIST_FOR_TIMER, Context.MODE_PRIVATE);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HomeViewModel homeViewModel = new HomeViewModel(getApplication());
+            }
+        }).start();
     }
 
     @Override

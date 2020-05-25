@@ -17,7 +17,6 @@ import com.example.freezeappdemo1.backend.viewmodel.repo.FreezeTaskerRepository;
 import com.example.freezeappdemo1.backend.viewmodel.repo.HomeRepository;
 import com.example.freezeappdemo1.entity.AppInfo;
 import com.example.freezeappdemo1.utils.DeviceMethod;
-import com.example.freezeappdemo1.utils.ShpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,12 +86,6 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
 
-    public List<AppInfo> getAllAppsList() {
-        return homeRepository.getAllAppList();
-    }
-
-
-
     //========================================UI=====================================
 
     public MutableLiveData<List<AppInfo>> getMutableLiveDataUnFreezeAppListLive() {
@@ -109,17 +102,9 @@ public class HomeViewModel extends AndroidViewModel {
 
 
 
-    public void updateFrozenApps() {
-        homeRepository.updateFrozenApps();
-    }
-
-    public void updateUnFreezeApps() {
-        homeRepository.updateUnFreezeApps();
-    }
 
     public void updateAll() {
         homeRepository.updateAll();
-        ShpUtils.updateAppFrozenList(getApplication(), this);
     }
 
     public LiveData<List<FreezeApp>> getAppsByCategoryLive(long categoryId) {
@@ -156,11 +141,9 @@ public class HomeViewModel extends AndroidViewModel {
         this.freezeTaskerRepository.deleteFreezeTasker(freezeTaskers);
     }
 
-    public List<AppInfo> getFrozenAppListNoIcon() {
-        return homeRepository.getFrozenAppListNoIcon();
-    }
-
     public List<FreezeApp> getAllFrozenApps() {
         return freezeAppRepository.getAllFrozenApps();
     }
+
+
 }

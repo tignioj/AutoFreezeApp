@@ -27,8 +27,11 @@ public interface AppsCategoryDao {
     @Query("DELETE FROM apps_category")
     void deleteAllAppsCategory();
 
+
     @Query("SELECT * FROM apps_category ORDER BY id")
     LiveData<List<AppsCategory>> getAllAppsCategoryLive();
+    @Query("SELECT * FROM apps_category ORDER BY id ")
+    List<AppsCategory> getAllAppsCategory();
 
 
     @Query("SELECT * FROM apps_category WHERE category_name=:categoryName ORDER BY id ")
@@ -37,6 +40,4 @@ public interface AppsCategoryDao {
     @Query("SELECT * FROM apps_category WHERE id=:id ORDER BY id ")
     LiveData<List<AppsCategory>> getAllAppsCategoryLiveByCategoryId(long id);
 
-    @Query("SELECT * FROM apps_category ORDER BY id ")
-    List<AppsCategory> getAllAppsCategory();
 }

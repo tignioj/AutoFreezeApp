@@ -40,7 +40,9 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
             public boolean areContentsTheSame(@NonNull FreezeTasker oldItem, @NonNull FreezeTasker newItem) {
                 return oldItem.getCategoryId() == newItem.getCategoryId()
                         && oldItem.getStartTime().equals(newItem.getStartTime())
-                        && oldItem.getEndTime().equals(newItem.getEndTime());
+                        && oldItem.getEndTime().equals(newItem.getEndTime())
+                        && oldItem.getCategoryName().equals(newItem.getCategoryName())
+                        ;
             }
         });
         this.timerFragment = timerFragment;

@@ -2,6 +2,7 @@ package com.example.freezeappdemo1.backend.viewmodel.repo;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -36,9 +37,6 @@ public class AppsCategoryRepository {
     }
 
     public LiveData<List<AppsCategory>> getListLiveDataAppsCategory() {
-        if (listLiveDataAppsCategory == null) {
-            listLiveDataAppsCategory = new MutableLiveData<>();
-        }
         return listLiveDataAppsCategory;
     }
 

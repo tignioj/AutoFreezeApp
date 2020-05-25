@@ -9,12 +9,20 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 
 @Entity(tableName = "freeze_tasker",
-        foreignKeys = @ForeignKey(entity = AppsCategory.class,
+        foreignKeys = {@ForeignKey(entity = AppsCategory.class,
                 parentColumns = "id",
                 childColumns = "category_id",
                 onDelete = ForeignKey.CASCADE,
                 onUpdate = ForeignKey.CASCADE
-        ))
+
+        ), @ForeignKey(entity = AppsCategory.class,
+                parentColumns = "category_name",
+                childColumns = "category_name",
+                onDelete = ForeignKey.CASCADE,
+                onUpdate = ForeignKey.CASCADE
+        )}
+
+)
 public class FreezeTasker {
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -25,6 +33,7 @@ public class FreezeTasker {
     @ColumnInfo(name = "category_id")
     private long categoryId;
 
+    @ColumnInfo(name = "category_name")
     private String categoryName;
 
     @Ignore

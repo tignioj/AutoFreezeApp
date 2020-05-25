@@ -59,6 +59,7 @@ public class TimerFragment extends Fragment {
             @Override
             public void onChanged(List<FreezeTasker> freezeTaskers) {
                 timerAdapter.submitList(freezeTaskers);
+                timerAdapter.notifyDataSetChanged();
             }
         });
 

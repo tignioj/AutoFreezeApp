@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.freezeappdemo1.R;
 import com.example.freezeappdemo1.backend.entitys.AppsCategory;
@@ -25,7 +26,6 @@ import com.example.freezeappdemo1.backend.entitys.FreezeApp;
 import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
 import com.example.freezeappdemo1.entity.AppInfo;
 import com.example.freezeappdemo1.utils.DeviceMethod;
-import com.example.freezeappdemo1.utils.ShpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +44,7 @@ public class ChooseCategoryDialog extends DialogFragment {
     }
 
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,31 +56,31 @@ public class ChooseCategoryDialog extends DialogFragment {
         buttonAdd = view.findViewById(R.id.btn_choose_category_add_new);
 
 
-        final LiveData<List<AppsCategory>> appsCategoryLive = homeViewModel.getAppsCategoryLive();
-        List<AppsCategory> value = appsCategoryLive.getValue();
 
-        ArrayAdapter<AppsCategory> adapter = new ArrayAdapter<AppsCategory>(
+        List<AppsCategory> value = homeViewModel.getAppsCategorys();
+
+        final ArrayAdapter<AppsCategory> adapter = new ArrayAdapter<AppsCategory>(
                 requireContext(),
                 R.layout.cell_spinner_on_tv,
                 value
         );
 
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerChooseCategory.setAdapter(adapter);
 
 
         editTextAdd.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().trim().length() > 0) {
                     buttonAdd.setEnabled(true);
                 } else {
                     buttonAdd.setEnabled(false);
                 }
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
 
             @Override
@@ -95,7 +96,12 @@ public class ChooseCategoryDialog extends DialogFragment {
                     AppsCategory ac = new AppsCategory();
                     ac.setCategoryName(editTextAdd.getText().toString());
                     homeViewModel.insertAppsCategory(ac);
-                    Toast.makeText(homeViewModel.getApplication(), "Add category success!", Toast.LENGTH_SHORT);
+                    Toast.makeText(homeViewModel.getApplication(), "Add category success!", Toast.LENGTH_SHORT).show();
+
+                    adapter.add(ac);
+                    int position = adapter.getPosition(ac);
+                    spinnerChooseCategory.setSelection(position);
+                    adapter.notifyDataSetChanged();
                 }
             }
         });
