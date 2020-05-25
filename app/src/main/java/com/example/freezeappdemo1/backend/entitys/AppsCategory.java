@@ -1,5 +1,7 @@
 package com.example.freezeappdemo1.backend.entitys;
 
+import android.os.Build;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -8,6 +10,7 @@ import androidx.room.PrimaryKey;
 
 import java.sql.Time;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity(tableName = "apps_category", indices = @Index(value = "category_name", unique = true))
 public class AppsCategory {
@@ -18,6 +21,19 @@ public class AppsCategory {
     private String categoryName;
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AppsCategory that = (AppsCategory) o;
+        return id == that.id &&
+                categoryName.equals(that.categoryName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, categoryName);
+    }
 
     @Override
     public String toString() {

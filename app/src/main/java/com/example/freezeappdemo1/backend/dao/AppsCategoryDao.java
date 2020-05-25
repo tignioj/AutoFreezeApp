@@ -30,12 +30,13 @@ public interface AppsCategoryDao {
 
     @Query("SELECT * FROM apps_category ORDER BY id")
     LiveData<List<AppsCategory>> getAllAppsCategoryLive();
+
     @Query("SELECT * FROM apps_category ORDER BY id ")
     List<AppsCategory> getAllAppsCategory();
 
 
-    @Query("SELECT * FROM apps_category WHERE category_name=:categoryName ORDER BY id ")
-    LiveData<List<AppsCategory>> getAllAppsCategoryLiveByCategoryName(String categoryName);
+    @Query("SELECT * FROM apps_category WHERE category_name=:categoryName")
+    AppsCategory getAppsCategoryByCategoryName(String categoryName);
 
     @Query("SELECT * FROM apps_category WHERE id=:id ORDER BY id ")
     LiveData<List<AppsCategory>> getAllAppsCategoryLiveByCategoryId(long id);

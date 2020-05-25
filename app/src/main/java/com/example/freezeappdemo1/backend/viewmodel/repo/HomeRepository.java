@@ -133,13 +133,13 @@ public class HomeRepository {
     public void updateAll() {
         //由于后两者依赖于AppApps，所以必须先更新AllApps
         this.allApps = getAllAppList();
-        mutableLiveDataAllAppList.setValue(this.allApps);
+        mutableLiveDataAllAppList.postValue(this.allApps);
 
         this.frozenApps = getFrozenAppList();
-        mutableLiveDataFrozenAppList.setValue(this.frozenApps);
+        mutableLiveDataFrozenAppList.postValue(this.frozenApps);
 
         this.unFreezeApps = getUnFreezeAppList();
-        mutableLiveDataUnFreezeAppList.setValue(this.unFreezeApps);
+        mutableLiveDataUnFreezeAppList.postValue(this.unFreezeApps);
     }
 
 

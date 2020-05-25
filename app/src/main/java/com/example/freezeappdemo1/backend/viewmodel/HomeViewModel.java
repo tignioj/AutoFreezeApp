@@ -16,9 +16,7 @@ import com.example.freezeappdemo1.backend.viewmodel.repo.FreezeAppRepository;
 import com.example.freezeappdemo1.backend.viewmodel.repo.FreezeTaskerRepository;
 import com.example.freezeappdemo1.backend.viewmodel.repo.HomeRepository;
 import com.example.freezeappdemo1.entity.AppInfo;
-import com.example.freezeappdemo1.utils.DeviceMethod;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomeViewModel extends AndroidViewModel {
@@ -43,6 +41,10 @@ public class HomeViewModel extends AndroidViewModel {
 
     public LiveData<List<AppsCategory>> getAppsCategoryLive() {
         return appsCategoryRepository.getListLiveDataAppsCategory();
+    }
+
+    public LiveData<List<AppsCategory>> getListLiveDataAppsCategoryForSpinner() {
+        return appsCategoryRepository.getListLiveDataAppsCategoryForSpinner();
     }
 
     //appsCategory
@@ -146,4 +148,7 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
 
+    public AppsCategory getCategoryByCategoryName(String categoryName) {
+        return appsCategoryRepository.getCategoryBaCategoryCategoryName(categoryName);
+    }
 }

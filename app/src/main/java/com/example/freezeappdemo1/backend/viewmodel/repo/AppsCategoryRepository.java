@@ -29,11 +29,18 @@ public class AppsCategoryRepository {
     
     AppsCategoryDao appsCategoryDao;
     AppsDataBase dataBase;
+
+    LiveData<List<AppsCategory>> listLiveDataAppsCategoryForSpinner;
     
     private AppsCategoryRepository(Context context) {
         dataBase = AppsDataBase.getDataBase(context);
         appsCategoryDao = dataBase.getAppsCategoryDao();
         this.listLiveDataAppsCategory = appsCategoryDao.getAllAppsCategoryLive();
+        this.listLiveDataAppsCategoryForSpinner = appsCategoryDao.getAllAppsCategoryLive();
+    }
+
+    public LiveData<List<AppsCategory>> getListLiveDataAppsCategoryForSpinner() {
+        return listLiveDataAppsCategoryForSpinner;
     }
 
     public LiveData<List<AppsCategory>> getListLiveDataAppsCategory() {
@@ -62,6 +69,10 @@ public class AppsCategoryRepository {
 
     public List<AppsCategory> getAppsCategory() {
         return appsCategoryDao.getAllAppsCategory();
+    }
+
+    public AppsCategory getCategoryBaCategoryCategoryName(String categoryName) {
+        return appsCategoryDao.getAppsCategoryByCategoryName(categoryName);
     }
 
     public static class InsertAsyncTask extends AsyncTask<AppsCategory, Void, Void> {

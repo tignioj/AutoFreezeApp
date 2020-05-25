@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -24,10 +23,9 @@ import com.example.freezeappdemo1.R;
 import com.example.freezeappdemo1.backend.entitys.AppsCategory;
 import com.example.freezeappdemo1.backend.entitys.FreezeApp;
 import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
-import com.example.freezeappdemo1.entity.AppInfo;
+import com.example.freezeappdemo1.config.MyConfig;
 import com.example.freezeappdemo1.utils.DeviceMethod;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ChooseCategoryDialog extends DialogFragment {
@@ -44,10 +42,12 @@ public class ChooseCategoryDialog extends DialogFragment {
     }
 
 
+    //待插入的数据
+    AppsCategory categoryReadyToAdd;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.dialog_choose_category, container, false);
         spinnerChooseCategory = view.findViewById(R.id.spinner);
         editTextAdd = view.findViewById(R.id.et_choose_category_new_category);
@@ -56,14 +56,32 @@ public class ChooseCategoryDialog extends DialogFragment {
         buttonAdd = view.findViewById(R.id.btn_choose_category_add_new);
 
 
-
         List<AppsCategory> value = homeViewModel.getAppsCategorys();
+        LiveData<List<AppsCategory>> appsCategoryLive = homeViewModel.getListLiveDataAppsCategoryForSpinner();
+
 
         final ArrayAdapter<AppsCategory> adapter = new ArrayAdapter<AppsCategory>(
                 requireContext(),
                 R.layout.cell_spinner_on_tv,
                 value
         );
+
+        appsCategoryLive.observe(getViewLifecycleOwner(), new Observer<List<AppsCategory>>() {
+            @Override
+            public void onChanged(List<AppsCategory> appsCategories) {
+
+                adapter.clear();
+                adapter.addAll(appsCategories);
+
+                if (categoryReadyToAdd != null) {
+                    AppsCategory categoryAdded = homeViewModel.getCategoryByCategoryName(categoryReadyToAdd.toString());
+                    int position = adapter.getPosition(categoryAdded);
+                    spinnerChooseCategory.setSelection(position);
+                }
+
+                adapter.notifyDataSetChanged();
+            }
+        });
 
         spinnerChooseCategory.setAdapter(adapter);
 
@@ -89,19 +107,15 @@ public class ChooseCategoryDialog extends DialogFragment {
             }
         });
 
+
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (editTextAdd.getText() != null) {
-                    AppsCategory ac = new AppsCategory();
-                    ac.setCategoryName(editTextAdd.getText().toString());
-                    homeViewModel.insertAppsCategory(ac);
+                    categoryReadyToAdd = new AppsCategory();
+                    categoryReadyToAdd.setCategoryName(editTextAdd.getText().toString());
+                    homeViewModel.insertAppsCategory(categoryReadyToAdd);
                     Toast.makeText(homeViewModel.getApplication(), "Add category success!", Toast.LENGTH_SHORT).show();
-
-                    adapter.add(ac);
-                    int position = adapter.getPosition(ac);
-                    spinnerChooseCategory.setSelection(position);
-                    adapter.notifyDataSetChanged();
                 }
             }
         });
