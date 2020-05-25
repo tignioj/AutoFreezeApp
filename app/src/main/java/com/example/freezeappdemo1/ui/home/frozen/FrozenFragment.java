@@ -14,12 +14,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.freezeappdemo1.R;
 import com.example.freezeappdemo1.backend.entitys.AppsCategory;
+import com.example.freezeappdemo1.backend.entitys.FreezeApp;
 import com.example.freezeappdemo1.config.MyConfig;
 import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
+import com.example.freezeappdemo1.entity.AppInfo;
+import com.example.freezeappdemo1.utils.DeviceMethod;
+import com.example.freezeappdemo1.utils.Inform;
 
 import java.util.List;
 
@@ -38,6 +44,12 @@ public class FrozenFragment extends Fragment {
     private EditText editTextSearch;
     private FrozenAdapter adapter;
     HomeViewModel homeViewModel;
+    private Button buttonUnfreezeAll;
+
+
+    public FrozenAdapter getAdapter() {
+        return adapter;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,11 +62,10 @@ public class FrozenFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         LiveData<List<AppsCategory>> appsCategoryLive = homeViewModel.getAppsCategoryLive();
 
-        adapter = new FrozenAdapter(requireContext(), homeViewModel);
+        adapter = new FrozenAdapter(requireContext(), homeViewModel, this);
 
         GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 3);
         recyclerViewAppListFrozen.setLayoutManager(layoutManager);
-
 
         recyclerViewAppListFrozen.setAdapter(adapter);
         appsCategoryLive.observe(getViewLifecycleOwner(), new Observer<List<AppsCategory>>() {
@@ -77,6 +88,13 @@ public class FrozenFragment extends Fragment {
         recyclerViewAppListFrozen = inflate.findViewById(R.id.rcv_applist_frozen);
 
 
+        buttonUnfreezeAll = inflate.findViewById(R.id.btn_unfreeze_all);
+        buttonUnfreezeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                unfreezeAll(v);
+            }
+        });
 
         inflate.findViewById(R.id.buttonAddCategory).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,36 +103,22 @@ public class FrozenFragment extends Fragment {
                 addCategoryDialog.show(requireActivity().getSupportFragmentManager(), "add category");
             }
         });
-
         return inflate;
     }
 
-    private void timing(View v) {
-//        Intent service = new Intent(requireActivity(), FreezeService.class);
-//        startActivity(service);
+    private void unfreezeAll(View v) {
+        List<FreezeApp> freezeApps = homeViewModel.getAllFrozenApps();
+        int i = 0;
+        for (FreezeApp a : freezeApps) {
+            i++;
+            Log.d("myTag", a.getAppName());
+            DeviceMethod.getInstance(requireContext()).freeze(a.getPackageName(), false);
+            a.setFrozen(false);
+            homeViewModel.updateFreezeApp(a);
+        }
+        if (i > 0) {
+            Toast.makeText(requireContext(), "unFreeze " + i + " apps", Toast.LENGTH_SHORT).show();
+            homeViewModel.updateAll();
+        }
     }
-
-    private void unfreeze(View v) {
-//        List<AppInfo> appInfos = homeViewModel.getMutableLiveDataFrozenAppList().getValue();
-//        if (appInfos == null) {
-//            Inform.error("Error,please try it later", requireContext());
-//            return;
-//        }
-//
-//        int i = 0;
-//        for (AppInfo a : appInfos) {
-//            if (a.isSelected()) {
-//                i++;
-//                Log.d("myTag", a.getAppName());
-//                DeviceMethod.getInstance(requireContext()).freeze(a.getPackageName(), false);
-//            }
-//        }
-//        if (i > 0) {
-//            Toast.makeText(requireContext(), "unFreeze " + i + " apps", Toast.LENGTH_SHORT).show();
-//            homeViewModel.updateAll();
-//            ShpUtils.updateAppFrozenList(requireContext(), homeViewModel);
-//        }
-    }
-
-
 }

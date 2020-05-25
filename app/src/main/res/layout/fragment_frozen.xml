@@ -13,8 +13,9 @@
         android:layout_height="wrap_content"
         android:text="Add Category"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintEnd_toStartOf="@+id/btn_unfreeze_all"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
 
     <EditText
@@ -63,5 +64,16 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/et_search_frozen" />
+
+    <Button
+        android:id="@+id/btn_unfreeze_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UNFREEZE ALL"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonAddCategory"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/buttonAddCategory"
+        app:layout_constraintTop_toTopOf="@+id/buttonAddCategory" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

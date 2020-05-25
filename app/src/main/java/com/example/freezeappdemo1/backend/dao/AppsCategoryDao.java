@@ -15,7 +15,7 @@ import java.util.List;
 
 @Dao
 public interface AppsCategoryDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAppsCategory(AppsCategory... AppsCategory);
 
     @Update
@@ -36,4 +36,7 @@ public interface AppsCategoryDao {
 
     @Query("SELECT * FROM apps_category WHERE id=:id ORDER BY id ")
     LiveData<List<AppsCategory>> getAllAppsCategoryLiveByCategoryId(long id);
+
+    @Query("SELECT * FROM apps_category ORDER BY id ")
+    List<AppsCategory> getAllAppsCategory();
 }

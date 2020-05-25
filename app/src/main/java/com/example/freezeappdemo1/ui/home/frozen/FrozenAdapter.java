@@ -1,7 +1,9 @@
 package com.example.freezeappdemo1.ui.home.frozen;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
@@ -29,8 +32,9 @@ public class FrozenAdapter extends ListAdapter<AppsCategory, FrozenAdapter.MyVie
 
     private HomeViewModel homeViewModel;
     Context context;
+    FrozenFragment frozenFragment;
 
-    public FrozenAdapter(Context context, HomeViewModel homeViewModel) {
+    public FrozenAdapter(Context context, HomeViewModel homeViewModel, FrozenFragment frozenFragment) {
         super(new DiffUtil.ItemCallback<AppsCategory>() {
             @Override
             public boolean areItemsTheSame(@NonNull AppsCategory oldItem, @NonNull AppsCategory newItem) {
@@ -44,6 +48,7 @@ public class FrozenAdapter extends ListAdapter<AppsCategory, FrozenAdapter.MyVie
         });
         this.context = context;
         this.homeViewModel = homeViewModel;
+        this.frozenFragment = frozenFragment;
     }
 
     @NonNull
@@ -65,6 +70,15 @@ public class FrozenAdapter extends ListAdapter<AppsCategory, FrozenAdapter.MyVie
                 Bundle bundle = new Bundle();
                 bundle.putLong("id", getItem(position).getId());
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_frozenAppByCategoryFragment, bundle);
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                new EditCategoryDialog(homeViewModel, getItem(position), frozenFragment, position)
+                        .show(frozenFragment.requireActivity().getSupportFragmentManager(), "edit category");
+                return true;
             }
         });
     }

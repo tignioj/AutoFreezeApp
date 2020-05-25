@@ -10,8 +10,10 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.freezeappdemo1.backend.entitys.AppsCategory;
 import com.example.freezeappdemo1.backend.entitys.FreezeApp;
+import com.example.freezeappdemo1.backend.entitys.FreezeTasker;
 import com.example.freezeappdemo1.backend.viewmodel.repo.AppsCategoryRepository;
 import com.example.freezeappdemo1.backend.viewmodel.repo.FreezeAppRepository;
+import com.example.freezeappdemo1.backend.viewmodel.repo.FreezeTaskerRepository;
 import com.example.freezeappdemo1.backend.viewmodel.repo.HomeRepository;
 import com.example.freezeappdemo1.entity.AppInfo;
 import com.example.freezeappdemo1.utils.DeviceMethod;
@@ -26,6 +28,8 @@ public class HomeViewModel extends AndroidViewModel {
     HomeRepository homeRepository;
     AppsCategoryRepository appsCategoryRepository;
     FreezeAppRepository freezeAppRepository;
+    FreezeTaskerRepository freezeTaskerRepository;
+
 
 
     public HomeViewModel(@NonNull Application application) {
@@ -34,6 +38,7 @@ public class HomeViewModel extends AndroidViewModel {
         this.homeRepository = HomeRepository.getInstance(application);
         this.appsCategoryRepository = AppsCategoryRepository.getInstance(context);
         this.freezeAppRepository = FreezeAppRepository.getInstance(context);
+        this.freezeTaskerRepository = FreezeTaskerRepository.getInstance(context);
     }
 
 
@@ -87,6 +92,7 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
 
+
     //========================================UI=====================================
 
     public MutableLiveData<List<AppInfo>> getMutableLiveDataUnFreezeAppListLive() {
@@ -127,5 +133,34 @@ public class HomeViewModel extends AndroidViewModel {
         for (int i = 0; i < value.size(); i++) {
             mutableLiveDataUnFreezeAppListLive.getValue().get(i).setSelected(false);
         }
+    }
+
+    public LiveData<List<FreezeTasker>> getAllFreezeTaskerLive() {
+        return this.freezeTaskerRepository.getListLiveDataFreezeTasker();
+    }
+
+    public List<AppsCategory> getAppsCategorys() {
+        return this.appsCategoryRepository.getAppsCategory();
+    }
+
+    public void insertFreezeTasks(FreezeTasker ...freezeTaskers) {
+        this.freezeTaskerRepository.insertFreezeTasker(freezeTaskers);
+
+    }
+
+    public void deleteAllFreezeTasks() {
+        this.freezeTaskerRepository.deleteAllFreezeTasker();
+    }
+
+    public void deleteFreezeTasks(FreezeTasker ...freezeTaskers) {
+        this.freezeTaskerRepository.deleteFreezeTasker(freezeTaskers);
+    }
+
+    public List<AppInfo> getFrozenAppListNoIcon() {
+        return homeRepository.getFrozenAppListNoIcon();
+    }
+
+    public List<FreezeApp> getAllFrozenApps() {
+        return freezeAppRepository.getAllFrozenApps();
     }
 }

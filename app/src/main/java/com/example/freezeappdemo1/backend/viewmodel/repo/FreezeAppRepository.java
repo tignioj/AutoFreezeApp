@@ -82,7 +82,9 @@ public class FreezeAppRepository {
         return freezeAppDao.getAllAppsLiveByCategoryId(categoryId);
     }
 
-
+    public List<FreezeApp> getAllFrozenApps() {
+        return freezeAppDao.getAllFrozenApps();
+    }
 
 
     public static class InsertAsyncTask extends AsyncTask<FreezeApp, Void, Void> {
@@ -130,7 +132,7 @@ public class FreezeAppRepository {
                 continue;
             }
             FreezeApp freezeApp = new FreezeApp();
-            freezeApp.setCategoryId(1);
+//            freezeApp.setCategoryId(1);
             freezeApp.setAppName((String) pm.getApplicationLabel(ai));
             freezeApp.setPackageName(p.packageName);
             freezeApp.setIcon(ai.icon);

@@ -52,25 +52,25 @@ public class HomeRepository {
      *
      * @return
      */
-    private List<AppInfo> getFrozenAppList() {
+    public List<AppInfo> getFrozenAppList() {
         List<AppInfo> appInfos = new ArrayList<>();
         PackageManager pm = context.getPackageManager();
         List<PackageInfo> installedPackages = pm.getInstalledPackages(PackageManager.MATCH_UNINSTALLED_PACKAGES);
 
         for (PackageInfo p : installedPackages) {
             ApplicationInfo ai = p.applicationInfo;
+            //非隐藏的跳过
             if (!DeviceMethod.getInstance(context).isHidden(ai.packageName)) {
                 continue;
             }
 
             AppInfo a = new AppInfo();
+            a.setHidden(true);
             a.setAppName((String) pm.getApplicationLabel(ai));
             a.setPackageName(p.packageName);
             a.setIcon(ai.loadIcon(pm));
 
             a.setIconLayout(ai.icon);
-
-            a.setHidden(DeviceMethod.getInstance(context).isHidden(ai.packageName));
             appInfos.add(a);
         }
         return appInfos;
@@ -171,6 +171,34 @@ public class HomeRepository {
             a.setIconLayout(ai.icon);
 
             a.setHidden(DeviceMethod.getInstance(context).isHidden(ai.packageName));
+            appInfos.add(a);
+        }
+        return appInfos;
+    }
+
+    /**
+     * 不加载图标，速度更快
+     * @return
+     */
+    public List<AppInfo> getFrozenAppListNoIcon() {
+        List<AppInfo> appInfos = new ArrayList<>();
+        PackageManager pm = context.getPackageManager();
+        List<PackageInfo> installedPackages = pm.getInstalledPackages(PackageManager.MATCH_UNINSTALLED_PACKAGES);
+
+        for (PackageInfo p : installedPackages) {
+            ApplicationInfo ai = p.applicationInfo;
+            //非隐藏的跳过
+            if (!DeviceMethod.getInstance(context).isHidden(ai.packageName)) {
+                continue;
+            }
+
+            AppInfo a = new AppInfo();
+            a.setHidden(true);
+            a.setAppName((String) pm.getApplicationLabel(ai));
+            a.setPackageName(p.packageName);
+//            a.setIcon(ai.loadIcon(pm));
+//            a.setIconLayout(ai.icon);
+
             appInfos.add(a);
         }
         return appInfos;

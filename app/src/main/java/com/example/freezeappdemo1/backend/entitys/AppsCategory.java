@@ -18,6 +18,7 @@ public class AppsCategory {
     private String categoryName;
 
 
+
     @Override
     public String toString() {
         return categoryName;

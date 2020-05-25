@@ -11,13 +11,14 @@
         style="@style/TextAppearance.MaterialComponents.Headline1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:text="Choose Category"
         android:textSize="18sp" />
 
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:layout_height="42dp"
         />
 
     <LinearLayout

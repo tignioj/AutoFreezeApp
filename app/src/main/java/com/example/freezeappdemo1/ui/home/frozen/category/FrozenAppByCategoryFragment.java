@@ -121,22 +121,6 @@ public class FrozenAppByCategoryFragment extends Fragment {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START ) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                //TODO 数据的拖动，有bug，先不做了
-//                Log.d("myTag", viewHolder.getAdapterPosition() + ":" + target.getAdapterPosition());
-//                Word wordFrom = allWords.get(viewHolder.getAdapterPosition());
-//                Word wordTo = allWords.get(target.getAdapterPosition());
-//                //数据库层面的交换id
-//                int idTemp = wordFrom.getId();
-//                wordFrom.setId(wordTo.getId());
-//                wordTo.setId(idTemp);
-//
-//                //视图会自动更新吗？会，但是我们上面的observe没有考虑到交换的情况，所以observe那里更新不了了
-//                wordViewModel.updateWords(wordFrom, wordTo);
-//
-//                //手动通知视图，有内容交换位置了
-//                myAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-//                myAdapter2.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-
                 return false;
             }
 

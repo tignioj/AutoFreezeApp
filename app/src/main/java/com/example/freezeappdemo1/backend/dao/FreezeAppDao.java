@@ -42,4 +42,7 @@ public interface FreezeAppDao {
 
     @Query("SELECT * FROM freeze_app WHERE category_id <>:categoryId ORDER BY id ")
     LiveData<List<FreezeApp>> getAllAppsLiveNotInCategory(long categoryId);
+
+    @Query("SELECT * FROM freeze_app WHERE isFrozen=1 ORDER BY id ")
+    List<FreezeApp> getAllFrozenApps();
 }

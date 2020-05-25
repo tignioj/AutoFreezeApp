@@ -62,6 +62,10 @@ public class AppsCategoryRepository {
         return appsCategoryDao.getAllAppsCategoryLiveByCategoryId(id);
     }
 
+    public List<AppsCategory> getAppsCategory() {
+        return appsCategoryDao.getAllAppsCategory();
+    }
+
     public static class InsertAsyncTask extends AsyncTask<AppsCategory, Void, Void> {
         private AppsCategoryDao appsCategoryDao;
 
