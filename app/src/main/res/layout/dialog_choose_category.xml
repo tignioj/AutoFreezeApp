@@ -30,7 +30,7 @@
     <TextView
         android:id="@+id/tv_choose_category_message"
         android:layout_width="match_parent"
-        android:text="You can create new one"
+        android:text="@string/dialog_choose_category_you_can_create_new_one"
         android:layout_height="wrap_content" />
     <LinearLayout
         android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
             android:layout_weight="1"
             android:autofillHints=""
             android:ems="10"
-            android:hint="new category"
+            android:hint="@string/dialog_choose_category_edit_text_new_category"
             android:inputType="textPersonName" />
 
         <Button
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:enabled="false"
-            android:text="Add" />
+            android:text="@string/button_add_text" />
 
     </LinearLayout>
 

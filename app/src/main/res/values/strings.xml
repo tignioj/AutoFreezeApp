@@ -3,7 +3,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="tab_text_1">UnFreeze</string>
+    <string name="tab_text_1">Category</string>
     <string name="tab_text_2">Frozen</string>
     <string name="tab_text_3">Timer</string>
     <string name="edit_text_input_package_name_hint_text">Input package name</string>
@@ -37,4 +37,7 @@
     <string name="update_button_text">update</string>
     <string name="add_category_button_text">Add Category</string>
     <string name="add_apps_button_text">Add Apps</string>
+    <string name="dialog_choose_category_you_can_create_new_one">You can create new one</string>
+    <string name="dialog_choose_category_edit_text_new_category">new category</string>
+    <string name="button_add_text">Add</string>
 </resources>
