@@ -14,11 +14,7 @@
         android:id="@+id/frozenFragment"
         android:name="com.example.freezeappdemo1.ui.home.frozen.FrozenFragment"
         android:label="fragment_frozen"
-        tools:layout="@layout/fragment_frozen" >
-        <action
-            android:id="@+id/action_frozenFragment_to_frozenAppByCategoryFragment"
-            app:destination="@id/frozenAppByCategoryFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_frozen" />
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.example.freezeappdemo1.ui.SettingFragment"
@@ -38,6 +34,9 @@
         <action
             android:id="@+id/action_homeFragment_to_frozenAppByCategoryFragment"
             app:destination="@id/frozenAppByCategoryFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_freezeTimerEditFragment"
+            app:destination="@id/freezeTimerEditFragment" />
     </fragment>
     <fragment
         android:id="@+id/addTimerFragment"
@@ -49,4 +48,9 @@
         android:name="com.example.freezeappdemo1.ui.home.frozen.category.FrozenAppByCategoryFragment"
         android:label="fragment_frozen_app_by_category"
         tools:layout="@layout/fragment_frozen_app_by_category" />
+    <fragment
+        android:id="@+id/freezeTimerEditFragment"
+        android:name="com.example.freezeappdemo1.ui.home.timer.FreezeTimerEditFragment"
+        android:label="fragment_edit_timer"
+        tools:layout="@layout/fragment_edit_timer" />
 </navigation>

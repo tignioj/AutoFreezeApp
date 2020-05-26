@@ -74,16 +74,22 @@ public class FreezeService extends Service {
             public void run() {
                 while (true) {
                     //五秒刷新一次
-                    try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     //根据FreezeTask查询到Category
                     for (FreezeTasker freezeTasker : freezeTaskers) {
-                        //如果是当前时间段，则冻结！
+                        //只处理前时间段的App
                         List<FreezeApp> appsByCategory = homeViewModel.getAppsByCategory(freezeTasker.getCategoryId());
                         if (MyDateUtils.betweenStartTimeAndEndTime(freezeTasker.getStartTime(), freezeTasker.getEndTime())) {
-                            freezeApps(appsByCategory, homeViewModel);
-                        } else {
-                            //否则解冻
-                            unfreezeApps(appsByCategory, homeViewModel);
+                            if (freezeTasker.isFrozen()) {
+                                freezeApps(appsByCategory, homeViewModel);
+                            } else {
+                                //否则解冻
+                                unfreezeApps(appsByCategory, homeViewModel);
+                            }
                         }
                     }
                 }

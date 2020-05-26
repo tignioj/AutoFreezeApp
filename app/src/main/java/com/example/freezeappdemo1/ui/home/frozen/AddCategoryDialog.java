@@ -1,6 +1,8 @@
 package com.example.freezeappdemo1.ui.home.frozen;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +33,33 @@ public class AddCategoryDialog extends DialogFragment {
         final View view = inflater.inflate(R.layout.add_category_dialog, container, false);
 
 
-        editTextCategoryName = view.findViewById(R.id.editTextCategoryName);
         buttonCancel = view.findViewById(R.id.btn_add_apps_to_category_cancel);
         buttonConfirm = view.findViewById(R.id.btn_add_apps_to_category_confirm);
+        buttonConfirm.setEnabled(false);
+
+
+        editTextCategoryName = view.findViewById(R.id.editTextCategoryName);
+
+        editTextCategoryName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (editTextCategoryName.getText().toString().length() == 0) {
+                    buttonConfirm.setEnabled(false);
+                } else {
+                    buttonConfirm.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override

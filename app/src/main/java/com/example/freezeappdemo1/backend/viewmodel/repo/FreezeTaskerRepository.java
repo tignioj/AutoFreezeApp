@@ -60,6 +60,10 @@ public class FreezeTaskerRepository {
         return freezeTaskerDao.getAllTasksLiveByCategoryId(id);
     }
 
+    public FreezeTasker getFrezeTaskerById(long id) {
+        return freezeTaskerDao.getFrezeTaskerById(id);
+    }
+
     public static class InsertAsyncTask extends AsyncTask<FreezeTasker, Void, Void> {
         private FreezeTaskerDao freezeTaskerDao;
 

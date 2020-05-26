@@ -36,17 +36,8 @@ public class FreezeTasker {
     @ColumnInfo(name = "category_name")
     private String categoryName;
 
-    @Ignore
-    private boolean isSelected;
-
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
-    }
-
+    @ColumnInfo(name = "is_frozen")
+    private boolean isFrozen;
 
     @Override
     public String toString() {
@@ -56,8 +47,16 @@ public class FreezeTasker {
                 ", endTime=" + endTime +
                 ", categoryId=" + categoryId +
                 ", categoryName='" + categoryName + '\'' +
-                ", isSelected=" + isSelected +
+                ", isFrozen=" + isFrozen +
                 '}';
+    }
+
+    public boolean isFrozen() {
+        return isFrozen;
+    }
+
+    public void setFrozen(boolean frozen) {
+        isFrozen = frozen;
     }
 
     public String getCategoryName() {

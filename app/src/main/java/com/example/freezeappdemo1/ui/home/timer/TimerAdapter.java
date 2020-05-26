@@ -2,16 +2,19 @@ package com.example.freezeappdemo1.ui.home.timer;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -90,12 +93,26 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
                         }).create().show();
             }
         });
+        if (item.isFrozen()) {
+            holder.imageViewVisible.setImageResource(R.drawable.ic_visibility_off_black_24dp);
+        } else {
+            holder.imageViewVisible.setImageResource(R.drawable.ic_visibility_black_24dp);
+        }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putLong("id", getItem(position).getId());
+                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_freezeTimerEditFragment, bundle);
+            }
+        });
     }
 
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView textViewStartTime, textViewEndTime, textViewCategoryName;
-        public ImageButton imageButton;
+        ImageButton imageButton;
+        ImageView imageViewVisible;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -103,6 +120,7 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
             textViewEndTime = itemView.findViewById(R.id.textViewEndTimeCell);
             textViewCategoryName = itemView.findViewById(R.id.textViewCategoryNameCell);
             imageButton = itemView.findViewById(R.id.imageButtonDeleteTimer);
+            imageViewVisible = itemView.findViewById(R.id.imageViewVisable);
         }
     }
 

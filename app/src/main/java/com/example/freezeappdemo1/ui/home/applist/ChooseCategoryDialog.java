@@ -117,6 +117,7 @@ public class ChooseCategoryDialog extends DialogFragment {
                     homeViewModel.insertAppsCategory(categoryReadyToAdd);
                     Toast.makeText(homeViewModel.getApplication(), "Add category success!", Toast.LENGTH_SHORT).show();
                 }
+                editTextAdd.setText("");
             }
         });
 

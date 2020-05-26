@@ -1,5 +1,6 @@
 package com.example.freezeappdemo1.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,5 +29,10 @@ public class MyDateUtils {
 
         //开始时间比现在早， 现在比结束时间早
         return cStart.before(cNow) && cNow.before(cEnd);
+    }
+
+    public static String format(Date startTime) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        return sdf.format(startTime);
     }
 }

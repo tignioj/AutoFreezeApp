@@ -151,4 +151,13 @@ public class HomeViewModel extends AndroidViewModel {
     public AppsCategory getCategoryByCategoryName(String categoryName) {
         return appsCategoryRepository.getCategoryBaCategoryCategoryName(categoryName);
     }
+
+    public FreezeTasker getFreezeTaskerById(long id) {
+        return freezeTaskerRepository.getFrezeTaskerById(id);
+    }
+
+    public void updateFreezeTasks(FreezeTasker ...freezeTaskerFromDb) {
+        freezeTaskerRepository.insertFreezeTasker(freezeTaskerFromDb);
+
+    }
 }

@@ -3,12 +3,6 @@ package com.example.freezeappdemo1.ui.home.timer;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,22 +14,27 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.freezeappdemo1.R;
 import com.example.freezeappdemo1.backend.entitys.AppsCategory;
+import com.example.freezeappdemo1.backend.entitys.FreezeApp;
 import com.example.freezeappdemo1.backend.entitys.FreezeTasker;
 import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
+import com.example.freezeappdemo1.utils.MyDateUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class AddTimerFragment extends Fragment {
-
+public class FreezeTimerEditFragment extends Fragment {
     private static final String START_TIME_PICKER_TAG = "start_time_picker_tag";
     private static final String END_TIME_PICKER_TAG = "end_time_picker_tag";
     private EditText editTextEndTime;
@@ -43,26 +42,34 @@ public class AddTimerFragment extends Fragment {
     private RadioGroup radioGroupUnFreezeOrUnfreeze;
     private RadioButton radioButtonFreeze, radioButtonUnFreeze;
 
-    private boolean isEditPage;
 
     HomeViewModel homeViewModel;
 
-    private boolean infoValid;
 
-    public AddTimerFragment() {
+    public FreezeTimerEditFragment() {
     }
 
-    private FreezeTasker freezeTasker;
+    FreezeTasker freezeTaskerFromDb;
 
     Button buttonBack, buttonSave;
     Spinner spinner;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        freezeTasker = new FreezeTasker();
+        Bundle arguments = getArguments();
+        long id = arguments.getLong("id");
+        freezeTaskerFromDb = homeViewModel.getFreezeTaskerById(id);
+
+
         View inflate = inflater.inflate(R.layout.fragment_add_timer, container, false);
         buttonBack = inflate.findViewById(R.id.button_addTimer_Back);
         buttonBack.setOnClickListener(new View.OnClickListener() {
@@ -72,12 +79,16 @@ public class AddTimerFragment extends Fragment {
             }
         });
         editTextStartTime = inflate.findViewById(R.id.editText_addTime_startTime);
+        editTextStartTime.setText(MyDateUtils.format(freezeTaskerFromDb.getStartTime()));
+
         editTextEndTime = inflate.findViewById(R.id.editText_addTime_endTime);
+        editTextEndTime.setText(MyDateUtils.format(freezeTaskerFromDb.getEndTime()));
+
 
         editTextStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerFragment(AddTimerFragment.this).show(requireActivity().getSupportFragmentManager(),
+                new FreezeTimerEditFragment.TimePickerFragment(FreezeTimerEditFragment.this).show(requireActivity().getSupportFragmentManager(),
                         START_TIME_PICKER_TAG);
             }
         });
@@ -85,7 +96,7 @@ public class AddTimerFragment extends Fragment {
         editTextEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerFragment(AddTimerFragment.this).show(requireActivity().getSupportFragmentManager(),
+                new FreezeTimerEditFragment.TimePickerFragment(FreezeTimerEditFragment.this).show(requireActivity().getSupportFragmentManager(),
                         END_TIME_PICKER_TAG);
             }
         });
@@ -94,7 +105,11 @@ public class AddTimerFragment extends Fragment {
         radioButtonFreeze = inflate.findViewById(R.id.radioButtonFreeze);
         radioButtonUnFreeze = inflate.findViewById(R.id.radioButtonUnfreeze);
 
-        radioGroupUnFreezeOrUnfreeze.check(R.id.radioButtonFreeze);
+        if (freezeTaskerFromDb.isFrozen()) {
+            radioGroupUnFreezeOrUnfreeze.check(R.id.radioButtonFreeze);
+        } else {
+            radioGroupUnFreezeOrUnfreeze.check(R.id.radioButtonUnfreeze);
+        }
 
 
         List<AppsCategory> appsCategorys = homeViewModel.getAppsCategorys();
@@ -107,8 +122,12 @@ public class AddTimerFragment extends Fragment {
                 appsCategories
         );
 
+        int itemPosition = getPosition(appsCategories);
+
 //        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        spinner.setSelection(itemPosition);
 
         buttonSave = inflate.findViewById(R.id.button_addTime_save);
 
@@ -116,14 +135,16 @@ public class AddTimerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AppsCategory selectedItem = (AppsCategory) spinner.getSelectedItem();
-                freezeTasker.setCategoryId(selectedItem.getId());
-                freezeTasker.setCategoryName(selectedItem.getCategoryName());
+                freezeTaskerFromDb.setCategoryId(selectedItem.getId());
+                freezeTaskerFromDb.setCategoryName(selectedItem.getCategoryName());
                 if (radioGroupUnFreezeOrUnfreeze.getCheckedRadioButtonId() == R.id.radioButtonFreeze) {
-                    freezeTasker.setFrozen(true);
+                    freezeTaskerFromDb.setFrozen(true);
                 } else {
-                    freezeTasker.setFrozen(false);
+                    freezeTaskerFromDb.setFrozen(false);
                 }
-                homeViewModel.insertFreezeTasks(freezeTasker);
+//                homeViewModel.insertFreezeTasks(freezeTaskerFromDb);
+                homeViewModel.updateFreezeTasks(freezeTaskerFromDb);
+                Toast.makeText(getContext(), "save success", Toast.LENGTH_SHORT).show();
                 Navigation.findNavController(v).navigateUp();
             }
         });
@@ -131,22 +152,33 @@ public class AddTimerFragment extends Fragment {
         return inflate;
     }
 
+    private int getPosition(AppsCategory[] appsCategories) {
+        int position = 0;
+        for (int i = 0; i < appsCategories.length; i++) {
+            AppsCategory a = appsCategories[i];
+            if (a.getId() == freezeTaskerFromDb.getCategoryId()) {
+                position = i;
+            }
+        }
+        return position;
+    }
+
     public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
-        AddTimerFragment fragment;
+        FreezeTimerEditFragment fragment;
         Calendar c;
         Date time;
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
-        public TimePickerFragment(AddTimerFragment fragment) {
+        public TimePickerFragment(FreezeTimerEditFragment fragment) {
             this.fragment = fragment;
         }
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             if (this.getTag().equals(START_TIME_PICKER_TAG)) {
-//                time = this.fragment.timeLine.getStartTime();
+                time = this.fragment.freezeTaskerFromDb.getStartTime();
             } else {
-//                time = this.fragment.timeLine.getEndTime();
+                time = this.fragment.freezeTaskerFromDb.getEndTime();
             }
 
             sdf.format(time == null ? new Date() : time);
@@ -166,13 +198,13 @@ public class AddTimerFragment extends Fragment {
             switch (this.getTag()) {
                 case START_TIME_PICKER_TAG:
                     fragment.editTextStartTime.setText(sdf.format(c.getTime()));
-                    fragment.freezeTasker.setStartTime(c.getTime());
+                    fragment.freezeTaskerFromDb.setStartTime(c.getTime());
                     break;
                 case END_TIME_PICKER_TAG:
                     fragment.editTextEndTime.setText(sdf.format(c.getTime()));
-                    fragment.freezeTasker.setEndTime(c.getTime());
+                    fragment.freezeTaskerFromDb.setEndTime(c.getTime());
                     break;
             }
         }
-    }
+    } 
 }
