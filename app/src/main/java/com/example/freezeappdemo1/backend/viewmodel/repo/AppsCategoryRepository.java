@@ -11,6 +11,7 @@ import com.example.freezeappdemo1.backend.AppsDataBase;
 import com.example.freezeappdemo1.backend.dao.AppsCategoryDao;
 import com.example.freezeappdemo1.backend.entitys.AppsCategory;
 import com.example.freezeappdemo1.backend.entitys.FreezeApp;
+import com.example.freezeappdemo1.entity.AppInfo;
 
 import java.util.List;
 
@@ -78,6 +79,7 @@ public class AppsCategoryRepository {
     public LiveData<List<AppsCategory>> findAppCategorysLiveWithPattern(String pattern) {
         return appsCategoryDao.findAppCategorysLiveWithPattern("%" + pattern.trim() + "%");
     }
+
 
     public static class InsertAsyncTask extends AsyncTask<AppsCategory, Void, Void> {
         private AppsCategoryDao appsCategoryDao;

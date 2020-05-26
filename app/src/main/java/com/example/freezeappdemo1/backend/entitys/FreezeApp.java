@@ -11,7 +11,7 @@ import com.example.freezeappdemo1.entity.AppInfo;
 
 @Entity(
         tableName = "freeze_app",
-        indices = {@Index("id"), @Index(value = "package_name", unique = true)},
+        indices = {@Index("id"), @Index(value = "package_name", unique = true), @Index(value = "category_id")},
         foreignKeys = @ForeignKey(entity = AppsCategory.class,
                 parentColumns = "id",
                 childColumns = "category_id",

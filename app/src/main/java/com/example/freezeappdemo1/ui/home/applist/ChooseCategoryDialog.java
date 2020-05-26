@@ -10,12 +10,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
@@ -23,7 +25,6 @@ import com.example.freezeappdemo1.R;
 import com.example.freezeappdemo1.backend.entitys.AppsCategory;
 import com.example.freezeappdemo1.backend.entitys.FreezeApp;
 import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
-import com.example.freezeappdemo1.config.MyConfig;
 import com.example.freezeappdemo1.utils.DeviceMethod;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class ChooseCategoryDialog extends DialogFragment {
 
     //待插入的数据
     AppsCategory categoryReadyToAdd;
+    ProgressBar progressBarFreezeSelectedApp;
 
     @Nullable
     @Override
@@ -54,6 +56,7 @@ public class ChooseCategoryDialog extends DialogFragment {
         buttonConfirm = view.findViewById(R.id.btn_choose_category_confirm);
         buttonCancel = view.findViewById(R.id.btn_choose_category_cancel);
         buttonAdd = view.findViewById(R.id.btn_choose_category_add_new);
+        progressBarFreezeSelectedApp = view.findViewById(R.id.progressBarFreezeSelectedApp);
 
 
         List<AppsCategory> value = homeViewModel.getAppsCategorys();
@@ -69,10 +72,8 @@ public class ChooseCategoryDialog extends DialogFragment {
         appsCategoryLive.observe(getViewLifecycleOwner(), new Observer<List<AppsCategory>>() {
             @Override
             public void onChanged(List<AppsCategory> appsCategories) {
-
                 adapter.clear();
                 adapter.addAll(appsCategories);
-
                 if (categoryReadyToAdd != null) {
                     AppsCategory categoryAdded = homeViewModel.getCategoryByCategoryName(categoryReadyToAdd.toString());
                     int position = adapter.getPosition(categoryAdded);
@@ -125,21 +126,43 @@ public class ChooseCategoryDialog extends DialogFragment {
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requireDialog().dismiss();
-                int i = 0;
                 AppsCategory selectedItem = (AppsCategory) spinnerChooseCategory.getSelectedItem();
-                long id = selectedItem.getId();
-                for (FreezeApp a : readyToFreezeApp) {
-                    Log.d("myTag", a.getAppName());
-                    a.setCategoryId(id);
-                    DeviceMethod.getInstance(requireContext()).freeze(a.getPackageName(), true);
-                    homeViewModel.insertFreezeApp(a);
-                    i++;
+                if (selectedItem == null) {
+                    Toast.makeText(requireContext(), "你还没有添加分类，请先添加", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-                if (i > 0) {
-                    Toast.makeText(requireContext(), "freeze " + i + " apps", Toast.LENGTH_SHORT).show();
-                    homeViewModel.updateAll();
-                }
+                final long id = selectedItem.getId();
+                progressBarFreezeSelectedApp.setVisibility(View.VISIBLE);
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int i = 0;
+                        for (FreezeApp a : readyToFreezeApp) {
+                            Log.d("myTag", a.getAppName());
+                            a.setCategoryId(id);
+                            homeViewModel.insertFreezeApp(a);
+                            DeviceMethod.getInstance(requireContext()).freeze(a.getPackageName(), true);
+                            i++;
+                        }
+                        if (i > 0) {
+                            homeViewModel.updateAllMemoryData();
+                            requireDialog().dismiss();
+                        }
+                        FragmentActivity activity = getActivity();
+                        if (activity != null) {
+                            final int finalI = i;
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(requireContext(), "freeze " + finalI + " apps", Toast.LENGTH_SHORT).show();
+                                    progressBarFreezeSelectedApp.setVisibility(View.INVISIBLE);
+                                }
+                            });
+                        }
+                    }
+                }).start();
+
             }
         });
 

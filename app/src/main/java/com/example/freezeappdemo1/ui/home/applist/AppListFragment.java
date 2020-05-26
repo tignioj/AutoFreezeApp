@@ -90,8 +90,9 @@ public class AppListFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String string = s.toString();
-                unfreezeApps = homeViewModel.findAppsListWithPattern(string);
+                String pattern= s.toString().trim();
+                unfreezeApps = homeViewModel.findUnFreezeAppsListWithPattern(pattern);
+                unfreezeApps.removeObservers(getViewLifecycleOwner());
                 unfreezeApps.observe(getViewLifecycleOwner(), new Observer<List<AppInfo>>() {
                     @Override
                     public void onChanged(List<AppInfo> appInfos) {
@@ -108,7 +109,6 @@ public class AppListFragment extends Fragment {
         });
 
         listViewAppList = inflate.findViewById(R.id.lv_applist);
-
 
         inflate.findViewById(R.id.button_freeze).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +130,6 @@ public class AppListFragment extends Fragment {
      */
     public void freeze(View view) {
 
-
         List<FreezeApp> readyToFreezeApps = new ArrayList<>();
         for (AppInfo appInfo : unfreezeApps.getValue()) {
             if (appInfo.isSelected()) {
@@ -148,5 +147,6 @@ public class AppListFragment extends Fragment {
 
         ChooseCategoryDialog chooseCategoryDialog = new ChooseCategoryDialog(homeViewModel, readyToFreezeApps);
         chooseCategoryDialog.show(requireActivity().getSupportFragmentManager(), "choose category");
+
     }
 }

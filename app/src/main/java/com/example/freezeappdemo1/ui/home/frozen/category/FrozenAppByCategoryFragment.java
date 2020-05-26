@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -74,7 +75,7 @@ public class FrozenAppByCategoryFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rcv_applist_frozen_category);
         buttonAdd = view.findViewById(R.id.buttonAddAppToCategory);
 
-        adapter = new FrozenAppByCategoryAdapter(homeViewModel);
+        adapter = new FrozenAppByCategoryAdapter(homeViewModel, this);
         appsByCategoryLive.observe(getViewLifecycleOwner(), new Observer<List<FreezeApp>>() {
             @Override
             public void onChanged(List<FreezeApp> freezeApps) {
@@ -99,7 +100,7 @@ public class FrozenAppByCategoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 progressBarAppsByCategoryFreezeAll.setVisibility(View.VISIBLE);
-
+                //后台处理数据
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -111,13 +112,17 @@ public class FrozenAppByCategoryFragment extends Fragment {
                             homeViewModel.updateFreezeApp(freezeApp);
                         }
                         hasFreezeAll = !hasFreezeAll;
-                        homeViewModel.updateAll();
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBarAppsByCategoryFreezeAll.setVisibility(View.INVISIBLE);
-                            }
-                        });
+                        homeViewModel.updateAllMemoryData();
+                        //必须用UI线程更新UI
+                        FragmentActivity activity = getActivity();
+                        if (activity != null) {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBarAppsByCategoryFreezeAll.setVisibility(View.INVISIBLE);
+                                }
+                            });
+                        }
                     }
                 }).start();
             }
@@ -125,6 +130,7 @@ public class FrozenAppByCategoryFragment extends Fragment {
 
         return view;
     }
+
     private boolean hasFreezeAll;
 
 
@@ -136,7 +142,7 @@ public class FrozenAppByCategoryFragment extends Fragment {
          * 0: 不支持拖动
          *ItemTouchHelper.START | ItemTouchHelper.END  支持向左划以及向右滑
          */
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START ) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
@@ -155,7 +161,7 @@ public class FrozenAppByCategoryFragment extends Fragment {
                     case ItemTouchHelper.START:
                         DeviceMethod.getInstance(getContext()).freeze(currentSwipeTask.getPackageName(), false);
                         homeViewModel.deleteFreezeApp(currentSwipeTask);
-                        homeViewModel.updateAll();
+                        homeViewModel.updateAllMemoryData();
                         //撤销功能
                         Snackbar.make(
                                 /*参数1：显示在哪个组件上？*/
@@ -170,7 +176,7 @@ public class FrozenAppByCategoryFragment extends Fragment {
                             public void onClick(View v) {
                                 currentSwipeTask.setFrozen(false);
                                 homeViewModel.insertFreezeApp(currentSwipeTask);
-                                homeViewModel.updateAll();
+                                homeViewModel.updateAllMemoryData();
 //                                undoAction = true;
                             }
                             /*不要忘记调用show()方法*/

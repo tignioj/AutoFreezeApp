@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -18,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.freezeappdemo1.R;
@@ -27,7 +30,6 @@ import com.example.freezeappdemo1.config.MyConfig;
 import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
 import com.example.freezeappdemo1.entity.AppInfo;
 import com.example.freezeappdemo1.utils.DeviceMethod;
-import com.example.freezeappdemo1.utils.Inform;
 
 import java.util.List;
 
@@ -48,6 +50,11 @@ public class FrozenFragment extends Fragment {
     HomeViewModel homeViewModel;
     private Button buttonUnfreezeAll;
     LiveData<List<AppsCategory>> appsCategoryLive;
+    //解冻中进度条
+    ProgressBar progressBarFrozenFragmentUnfreeezing;
+
+    //解冻中文字
+    TextView textViewUnfreezing;
 
 
     public FrozenAdapter getAdapter() {
@@ -56,6 +63,7 @@ public class FrozenFragment extends Fragment {
 
     /**
      * 只在第一次创建时候执行
+     *
      * @param savedInstanceState
      */
     @Override
@@ -67,6 +75,7 @@ public class FrozenFragment extends Fragment {
 
     /**
      * 每次从其他页面返回时都会执行
+     *
      * @param savedInstanceState
      */
     @Override
@@ -95,6 +104,11 @@ public class FrozenFragment extends Fragment {
         View inflate = inflater.inflate(R.layout.fragment_frozen, container, false);
 
         editTextSearch = inflate.findViewById(R.id.et_search_frozen);
+
+        //解冻中进度条
+        progressBarFrozenFragmentUnfreeezing = inflate.findViewById(R.id.progressBarFrozenFragmentUnfreeezing);
+        //解冻中文字
+        textViewUnfreezing = inflate.findViewById(R.id.textViewFrozenFragmentUnfreezing);
 
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -142,19 +156,44 @@ public class FrozenFragment extends Fragment {
         return inflate;
     }
 
+
     private void unfreezeAll(View v) {
-        List<FreezeApp> freezeApps = homeViewModel.getAllFrozenApps();
-        int i = 0;
-        for (FreezeApp a : freezeApps) {
-            i++;
-            Log.d("myTag", a.getAppName());
-            DeviceMethod.getInstance(requireContext()).freeze(a.getPackageName(), false);
-            a.setFrozen(false);
-            homeViewModel.updateFreezeApp(a);
-        }
-        if (i > 0) {
-            Toast.makeText(requireContext(), "unFreeze " + i + " apps", Toast.LENGTH_SHORT).show();
-            homeViewModel.updateAll();
-        }
+        final List<FreezeApp> freezeApps = homeViewModel.getAllFrozenApps();
+
+        progressBarFrozenFragmentUnfreeezing.setVisibility(View.VISIBLE);
+        textViewUnfreezing.setVisibility(View.VISIBLE);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int i = 0;
+                for (FreezeApp a : freezeApps) {
+                    i++;
+                    DeviceMethod.getInstance(requireContext()).freeze(a.getPackageName(), false);
+                    a.setFrozen(false);
+                    homeViewModel.updateFreezeApp(a);
+                }
+
+                //解决漏网之物
+                MutableLiveData<List<AppInfo>> mutableLiveDataFrozenAppList = homeViewModel.getMutableLiveDataFrozenAppList();
+                List<AppInfo> value = mutableLiveDataFrozenAppList.getValue();
+                for (AppInfo a : value) {
+                    DeviceMethod.getInstance(requireContext()).freeze(a.getPackageName(), false);
+                }
+
+                if (i > 0) {
+                    homeViewModel.updateAllMemoryData();
+                }
+                final int finalI = i;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBarFrozenFragmentUnfreeezing.setVisibility(View.INVISIBLE);
+                        textViewUnfreezing.setVisibility(View.INVISIBLE);
+                        Toast.makeText(requireContext(), "unFreeze " + finalI + " apps", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }).start();
     }
 }

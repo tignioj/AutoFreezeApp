@@ -4,11 +4,13 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
 @Entity(tableName = "freeze_tasker",
+        indices = {@Index("category_id"), @Index("category_name")},
         foreignKeys = {@ForeignKey(entity = AppsCategory.class,
                 parentColumns = "id",
                 childColumns = "category_id",

@@ -110,7 +110,7 @@ public class HomeViewModel extends AndroidViewModel {
 
 
 
-    public void updateAll() {
+    public void updateAllMemoryData() {
         homeRepository.updateAll();
     }
 
@@ -168,5 +168,13 @@ public class HomeViewModel extends AndroidViewModel {
 
     public LiveData<List<AppsCategory>> findAppCategorysLiveWithPattern(String pattern) {
         return appsCategoryRepository.findAppCategorysLiveWithPattern(pattern);
+    }
+
+    public void unfrozenAll() {
+
+    }
+
+    public MutableLiveData<List<AppInfo>> findUnFreezeAppsListWithPattern(String pattern) {
+        return homeRepository.findUnFreezeAppsListWithPattern(pattern);
     }
 }

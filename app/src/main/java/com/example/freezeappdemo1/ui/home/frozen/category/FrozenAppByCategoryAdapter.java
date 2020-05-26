@@ -1,19 +1,14 @@
 package com.example.freezeappdemo1.ui.home.frozen.category;
 
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.widget.TintableCompoundButton;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,13 +18,12 @@ import com.example.freezeappdemo1.backend.entitys.FreezeApp;
 import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
 import com.example.freezeappdemo1.utils.DeviceMethod;
 
-import org.w3c.dom.Text;
-
-import java.util.List;
-
 public class FrozenAppByCategoryAdapter extends ListAdapter<FreezeApp, FrozenAppByCategoryAdapter.MyViewHolder> {
+    FrozenAppByCategoryFragment frozenAppByCategoryFragment;
 
-    protected FrozenAppByCategoryAdapter(HomeViewModel homeViewModel) {
+
+    protected FrozenAppByCategoryAdapter(HomeViewModel homeViewModel, FrozenAppByCategoryFragment frozenAppByCategoryFragment) {
+
         super(new DiffUtil.ItemCallback<FreezeApp>() {
             @Override
             public boolean areItemsTheSame(@NonNull FreezeApp oldItem, @NonNull FreezeApp newItem) {
@@ -47,6 +41,7 @@ public class FrozenAppByCategoryAdapter extends ListAdapter<FreezeApp, FrozenApp
 
         });
         this.homeViewModel = homeViewModel;
+        this.frozenAppByCategoryFragment = frozenAppByCategoryFragment;
     }
 
     HomeViewModel homeViewModel;
@@ -67,19 +62,31 @@ public class FrozenAppByCategoryAdapter extends ListAdapter<FreezeApp, FrozenApp
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FreezeApp item = getItem(holder.getAdapterPosition());
-                if (item.isFrozen()) {
-                    holder.imageButton.setImageResource(R.drawable.ic_lock_open_black_24dp);
-                    DeviceMethod.getInstance(homeViewModel.getApplication()).freeze(item.getPackageName(), false);
-                    item.setFrozen(false);
-                } else {
-                    holder.imageButton.setImageResource(R.drawable.ic_lock_black_24dp);
-                    DeviceMethod.getInstance(homeViewModel.getApplication()).freeze(item.getPackageName(), true);
-                    item.setFrozen(true);
-                }
-                homeViewModel.updateFreezeApp(item);
-                notifyItemChanged(holder.getAdapterPosition());
-                homeViewModel.updateAll();
+                holder.progressBar.setVisibility(View.VISIBLE);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        FreezeApp item = getItem(holder.getAdapterPosition());
+                        if (item.isFrozen()) {
+                            holder.imageButton.setImageResource(R.drawable.ic_lock_open_black_24dp);
+                            DeviceMethod.getInstance(homeViewModel.getApplication()).freeze(item.getPackageName(), false);
+                            item.setFrozen(false);
+                        } else {
+                            holder.imageButton.setImageResource(R.drawable.ic_lock_black_24dp);
+                            DeviceMethod.getInstance(homeViewModel.getApplication()).freeze(item.getPackageName(), true);
+                            item.setFrozen(true);
+                        }
+                        homeViewModel.updateFreezeApp(item);
+                        homeViewModel.updateAllMemoryData();
+                        frozenAppByCategoryFragment.getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                holder.progressBar.setVisibility(View.INVISIBLE);
+                                notifyItemChanged(holder.getAdapterPosition());
+                            }
+                        });
+                    }
+                }).start();
             }
         });
         return holder;
@@ -107,6 +114,7 @@ public class FrozenAppByCategoryAdapter extends ListAdapter<FreezeApp, FrozenApp
         ImageView imageView;
         //        CheckBox checkBox;
         ImageButton imageButton;
+        ProgressBar progressBar;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -115,6 +123,7 @@ public class FrozenAppByCategoryAdapter extends ListAdapter<FreezeApp, FrozenApp
             imageView = itemView.findViewById(R.id.imageViewAppIcon);
 //            checkBox = itemView.findViewById(R.id.checkBoxAppsCategory);
             imageButton = itemView.findViewById(R.id.imageButton);
+            progressBar = itemView.findViewById(R.id.progressBarAppsByCategoryCell);
         }
     }
 }

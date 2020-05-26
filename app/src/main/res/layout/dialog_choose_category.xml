@@ -5,6 +5,7 @@
     android:id="@+id/edit_tasks_dialog"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:padding="10dp"
     android:orientation="vertical">
 
     <TextView
@@ -12,26 +13,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Choose Category"
+        android:text="CHOOSE CATEGORY"
         android:textSize="18sp" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please Choose category"
+        />
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dialog_spinner_height"
-        android:layout_marginLeft="5dp"
         />
 
+    <TextView
+        android:id="@+id/tv_choose_category_message"
+        android:layout_width="match_parent"
+        android:text="You can create new one"
+        android:layout_height="wrap_content" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
-
         <EditText
-            android:layout_marginLeft="5dp"
             android:id="@+id/et_choose_category_new_category"
-            style="@android:style/Widget.Material.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -51,6 +57,14 @@
 
     </LinearLayout>
 
+
+    <ProgressBar
+        android:id="@+id/progressBarFreezeSelectedApp"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"

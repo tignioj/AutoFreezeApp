@@ -59,6 +59,7 @@ public class HomeRepository {
 
     /**
      * 获取所有的非系统的，已经冻结的包
+     *
      * @return
      */
     public List<AppInfo> getFrozenAppList() {
@@ -179,6 +180,7 @@ public class HomeRepository {
 
     /**
      * 根据包命获取应用列表
+     *
      * @param pattern
      * @return
      */
@@ -189,9 +191,26 @@ public class HomeRepository {
     }
 
     private List<AppInfo> getAllAppListWithPattern(String pattern) {
-        List<AppInfo> allApps = this.allApps;
         List<AppInfo> newApps = new ArrayList<>();
         for (AppInfo a : allApps) {
+            if (a.getPackageName().toLowerCase().contains(pattern.toLowerCase())
+                    || a.getAppName().toLowerCase().contains(pattern.toLowerCase())
+            ) {
+                newApps.add(a);
+            }
+        }
+        return newApps;
+    }
+
+    public MutableLiveData<List<AppInfo>> findUnFreezeAppsListWithPattern(String pattern) {
+        MutableLiveData<List<AppInfo>> mutableLiveDataAppsWithPattern = new MutableLiveData<>();
+        mutableLiveDataAppsWithPattern.setValue(getAllUnFreezeAppListWithPattern(pattern));
+        return mutableLiveDataAppsWithPattern;
+    }
+
+    private List<AppInfo> getAllUnFreezeAppListWithPattern(String pattern) {
+        List<AppInfo> newApps = new ArrayList<>();
+        for (AppInfo a : unFreezeApps) {
             if (a.getPackageName().toLowerCase().contains(pattern.toLowerCase())
                     || a.getAppName().toLowerCase().contains(pattern.toLowerCase())
             ) {

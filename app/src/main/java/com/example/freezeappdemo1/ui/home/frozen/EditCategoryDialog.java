@@ -3,14 +3,11 @@ package com.example.freezeappdemo1.ui.home.frozen;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +18,6 @@ import com.example.freezeappdemo1.backend.entitys.AppsCategory;
 import com.example.freezeappdemo1.backend.entitys.FreezeApp;
 import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
 import com.example.freezeappdemo1.utils.DeviceMethod;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -71,7 +67,7 @@ public class EditCategoryDialog extends DialogFragment {
                             }
                         }
                         homeViewModel.deleteAppsCategory(appsCategory);
-                        homeViewModel.updateAll();
+                        homeViewModel.updateAllMemoryData();
                         frozenFragment.getAdapter().notifyItemRemoved(position);
                     }
                 }).setNegativeButton("NO", new DialogInterface.OnClickListener() {

@@ -40,12 +40,25 @@
         android:id="@+id/imageButton"
         android:layout_width="0dp"
         android:layout_height="40dp"
+        android:background="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@null"
         app:srcCompat="@drawable/ic_lock_open_black_24dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBarAppsByCategoryCell"
+        android:visibility="invisible"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="32dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginRight="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="h,1:1"
+        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
