@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.icu.util.EthiopicCalendar;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -14,6 +15,8 @@ import com.example.freezeappdemo1.entity.AppInfo;
 import com.example.freezeappdemo1.utils.DeviceMethod;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class HomeRepository {
@@ -23,6 +26,7 @@ public class HomeRepository {
     private MutableLiveData<List<AppInfo>> mutableLiveDataUnFreezeAppList;
     private MutableLiveData<List<AppInfo>> mutableLiveDataFrozenAppList;
     private MutableLiveData<List<AppInfo>> mutableLiveDataAllAppList;
+    private MutableLiveData<Integer> selectedReadyToFreezeCount;
 
     public synchronized static HomeRepository getInstance(Context context) {
         if (homeRepository == null) {
@@ -51,6 +55,8 @@ public class HomeRepository {
         this.frozenApps = getFrozenAppList();
         mutableLiveDataFrozenAppList.setValue(this.frozenApps);
 
+        this.selectedReadyToFreezeCount = new MutableLiveData<>();
+        this.selectedReadyToFreezeCount.setValue(0);
     }
 
     public MutableLiveData<List<AppInfo>> getMutableLiveDataAllAppList() {
@@ -218,5 +224,55 @@ public class HomeRepository {
             }
         }
         return newApps;
+    }
+
+    public MutableLiveData<Integer> getSelectedReadyToFreezeCount() {
+        return selectedReadyToFreezeCount;
+    }
+
+    public void setSelectedReadyToFreezeCount(int i) {
+        selectedReadyToFreezeCount.setValue(i);
+    }
+
+    public MutableLiveData<List<AppInfo>> getMutableLiveDataUnFreezeAppListLiveNotInCategory(List<FreezeApp> categoryId) {
+        ArrayList<AppInfo> appInfos = (ArrayList<AppInfo>) this.unFreezeApps;
+        ArrayList<AppInfo> newAppInfos = (ArrayList<AppInfo>) appInfos.clone();
+
+        MutableLiveData<List<AppInfo>> newAppInfosLive = new MutableLiveData<>();
+        for (AppInfo appInfo : appInfos) {
+            for (FreezeApp freezeApp : categoryId) {
+                if (appInfo.getAppName().equals(freezeApp.getAppName())
+                        && appInfo.getPackageName().equals(freezeApp.getPackageName())) {
+                    newAppInfos.remove(appInfo);
+                }
+            }
+        }
+
+        newAppInfosLive.setValue(newAppInfos);
+        return newAppInfosLive;
+    }
+
+    public MutableLiveData<List<AppInfo>> getMutableLiveDataUnFreezeAppListLiveNotInCategoryWithPattern(List<FreezeApp> freezeAppsByCategoryId, String pattern) {
+        ArrayList<AppInfo> appInfos = (ArrayList<AppInfo>) this.unFreezeApps;
+        ArrayList<AppInfo> newAppInfos = (ArrayList<AppInfo>) appInfos.clone();
+
+        MutableLiveData<List<AppInfo>> newAppInfosLive = new MutableLiveData<>();
+        for (AppInfo appInfo : appInfos) {
+            //如果不符合匹配则移除
+            if (!(appInfo.getAppName().toLowerCase().contains(pattern.toLowerCase()) || appInfo.getPackageName().toLowerCase().contains(pattern.toLowerCase()))) {
+                newAppInfos.remove(appInfo);
+                continue;
+            }
+
+            for (FreezeApp freezeApp : freezeAppsByCategoryId) {
+                if (appInfo.getAppName().equals(freezeApp.getAppName())
+                        && appInfo.getPackageName().equals(freezeApp.getPackageName())
+                ) {
+                    newAppInfos.remove(appInfo);
+                }
+            }
+        }
+        newAppInfosLive.setValue(newAppInfos);
+        return newAppInfosLive;
     }
 }

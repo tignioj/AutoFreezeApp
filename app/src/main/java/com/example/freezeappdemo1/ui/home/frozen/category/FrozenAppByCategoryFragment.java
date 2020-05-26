@@ -50,6 +50,7 @@ public class FrozenAppByCategoryFragment extends Fragment {
     FrozenAppByCategoryAdapter adapter;
     ImageButton imageButtonFreezeAll;
     ProgressBar progressBarAppsByCategoryFreezeAll;
+    LiveData<List<FreezeApp>> appsByCategoryLive;
 
     public FrozenAppByCategoryAdapter getAdapter() {
         return adapter;
@@ -67,7 +68,7 @@ public class FrozenAppByCategoryFragment extends Fragment {
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 //        List<FreezeApp> appsByCategory = homeViewModel.getAppsByCategory(categoryId);
-        final LiveData<List<FreezeApp>> appsByCategoryLive = homeViewModel.getAppsByCategoryLive(categoryId);
+        appsByCategoryLive = homeViewModel.getAppsByCategoryLive(categoryId);
 
         progressBarAppsByCategoryFreezeAll = view.findViewById(R.id.progressBarAppsByCategoryFreezeAll);
         progressBarAppsByCategoryFreezeAll.setVisibility(View.INVISIBLE);
@@ -167,11 +168,11 @@ public class FrozenAppByCategoryFragment extends Fragment {
                                 /*参数1：显示在哪个组件上？*/
                                 requireView().findViewById(R.id.frozenAppByCategoryFragmentId),
                                 /*参数2：显示的文字*/
-                                "删除了一个任务",
+                                R.string.fragment_frozenapps_by_category_remove_snackbar_text,
                                 /*参数3：显示时长*/
                                 Snackbar.LENGTH_SHORT
                                 /*监听按钮*/
-                        ).setAction("撤销", new View.OnClickListener() {
+                        ).setAction(R.string.undo_text, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 currentSwipeTask.setFrozen(false);

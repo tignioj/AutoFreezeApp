@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.freezeappdemo1.service.FreezeService;
+import com.example.freezeappdemo1.utils.DeviceMethod;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,6 +29,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //判断是否可使用
+        boolean admin = DeviceMethod.getInstance(getApplicationContext()).isAdmin();
+        if (!admin) {
+            Toast.makeText(getApplicationContext(), "请先激活, 设置为device owner", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         startService(new Intent(getApplicationContext(), FreezeService.class));
     }

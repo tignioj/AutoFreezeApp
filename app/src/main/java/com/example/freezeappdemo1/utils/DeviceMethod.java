@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.freezeappdemo1.MyDeviceAdminReceiver;
+import com.example.freezeappdemo1.config.MyConfig;
 
 /**
  * 来源：https://www.jianshu.com/p/8934d47aed3b
@@ -21,6 +22,8 @@ public class DeviceMethod {
     private DevicePolicyManager devicePolicyManager;
     private ComponentName componentName;
     private Context mContext;
+
+
 
     private DeviceMethod(Context context) {
         mContext = context;
@@ -155,7 +158,7 @@ public class DeviceMethod {
     public void freeze(String packageName, boolean isFreeze) {
         if (devicePolicyManager.isAdminActive(componentName)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Log.d("myTag", "freeze:" + isFreeze + " " + packageName);
+                Log.d(MyConfig.MY_TAG, "freeze:" + isFreeze + " " + packageName);
                 devicePolicyManager.setApplicationHidden(componentName, packageName, isFreeze);
             }
         } else {
@@ -182,4 +185,7 @@ public class DeviceMethod {
     }
 
 
+    public boolean isAdmin() {
+        return devicePolicyManager.isAdminActive(componentName);
+    }
 }

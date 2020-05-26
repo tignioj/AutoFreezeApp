@@ -31,11 +31,11 @@ import java.util.List;
 
 public class ChooseCategoryDialog extends DialogFragment {
 
-    Spinner spinnerChooseCategory;
-    Button buttonConfirm, buttonCancel, buttonAdd;
-    EditText editTextAdd;
-    HomeViewModel homeViewModel;
-    List<FreezeApp> readyToFreezeApp;
+    private Spinner spinnerChooseCategory;
+    private Button buttonConfirm, buttonCancel, buttonAdd;
+    private EditText editTextAdd;
+    private HomeViewModel homeViewModel;
+    private List<FreezeApp> readyToFreezeApp;
 
     public ChooseCategoryDialog(HomeViewModel homeViewModel, List<FreezeApp> freezeAppList) {
         this.homeViewModel = homeViewModel;

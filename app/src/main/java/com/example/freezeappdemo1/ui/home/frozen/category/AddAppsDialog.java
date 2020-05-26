@@ -23,6 +23,7 @@ import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
 import com.example.freezeappdemo1.config.MyConfig;
 import com.example.freezeappdemo1.entity.AppInfo;
 import com.example.freezeappdemo1.ui.home.applist.AppListAdapter;
+import com.example.freezeappdemo1.ui.home.applist.AppListFragment;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class AddAppsDialog extends DialogFragment {
 
     MutableLiveData<List<AppInfo>> mutableLiveDataUnFreezeAppListLive;
     AppListAdapter adapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,11 +63,12 @@ public class AddAppsDialog extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mutableLiveDataUnFreezeAppListLive = homeViewModel.findAppsListWithPattern(s.toString().trim());
+                mutableLiveDataUnFreezeAppListLive = homeViewModel.getMutableLiveDataUnFreezeAppListLiveNotInCategoryWithPattern(frozenAppByCategoryFragment.appsByCategoryLive.getValue(),s.toString().trim());
+                mutableLiveDataUnFreezeAppListLive.removeObservers(getViewLifecycleOwner());
                 mutableLiveDataUnFreezeAppListLive.observe(getViewLifecycleOwner(), new Observer<List<AppInfo>>() {
                     @Override
                     public void onChanged(List<AppInfo> appInfos) {
-                        adapter.updateInfos(mutableLiveDataUnFreezeAppListLive.getValue());
+                        adapter.updateInfos(appInfos);
                         adapter.notifyDataSetChanged();
                     }
                 });
@@ -77,8 +80,13 @@ public class AddAppsDialog extends DialogFragment {
             }
         });
 
-        mutableLiveDataUnFreezeAppListLive = homeViewModel.getMutableLiveDataAllAppList();
-        adapter = new AppListAdapter(requireContext(), R.layout.cell_listview, mutableLiveDataUnFreezeAppListLive.getValue(), homeViewModel);
+        mutableLiveDataUnFreezeAppListLive = homeViewModel.getMutableLiveDataUnFreezeAppListLiveNotInCategory(frozenAppByCategoryFragment.appsByCategoryLive.getValue());
+        adapter = new AppListAdapter(
+                requireContext(),
+                R.layout.cell_listview, mutableLiveDataUnFreezeAppListLive.getValue(), homeViewModel,
+                getActivity()
+
+        );
         listView.setAdapter(adapter);
 
         buttonCancle.setOnClickListener(new View.OnClickListener() {

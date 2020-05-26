@@ -1,5 +1,6 @@
 package com.example.freezeappdemo1.ui.home.applist;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -15,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +31,8 @@ import com.example.freezeappdemo1.utils.Inform;
 import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -40,16 +45,19 @@ public class AppListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    private TextView textViewSearch;
+    private TextView textViewSearch, textViewAppListSelectCount;
     private ListView listViewAppList;
     private AppListAdapter adapter;
     private HomeViewModel homeViewModel;
+    private CheckBox checkBoxAppListSelectAll;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
     }
+
 
     private MutableLiveData<List<AppInfo>> unfreezeApps;
 
@@ -59,10 +67,10 @@ public class AppListFragment extends Fragment {
 
         unfreezeApps = homeViewModel.getMutableLiveDataUnFreezeAppListLive();
 
-        adapter = new AppListAdapter(requireContext(), R.layout.cell_listview, unfreezeApps.getValue(), homeViewModel);
+        adapter = new AppListAdapter(requireContext(), R.layout.cell_listview, unfreezeApps.getValue(), homeViewModel, getActivity());
+
 
         listViewAppList.setAdapter(adapter);
-
         unfreezeApps.observe(getViewLifecycleOwner(), new Observer<List<AppInfo>>() {
             @Override
             public void onChanged(List<AppInfo> appInfos) {
@@ -74,23 +82,60 @@ public class AppListFragment extends Fragment {
 
     }
 
+
+    private MutableLiveData<Integer> selectedReadyToFreezeCount;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View inflate = inflater.inflate(R.layout.fragment_app_list, container, false);
+        final View inflate = inflater.inflate(R.layout.fragment_app_list, container, false);
 
         textViewSearch = inflate.findViewById(R.id.et_search);
+        textViewAppListSelectCount = inflate.findViewById(R.id.textViewAppListSelectCount);
+        checkBoxAppListSelectAll = inflate.findViewById(R.id.checkBoxAppListSelectAll);
+        checkBoxAppListSelectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<AppInfo> appInfos = adapter.getAppInfos();
+                        for (int i = 0; i < adapter.getCount(); i++) {
+                            appInfos.get(i).setSelected(isChecked);
+                        }
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                }).start();
+            }
+        });
+
+
+        selectedReadyToFreezeCount = homeViewModel.getSelectedReadyToFreezeCount();
+        final CharSequence selectedText = textViewAppListSelectCount.getText();
+
+        selectedReadyToFreezeCount.observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                String s = selectedText.toString() + integer + "/" + adapter.getCount();
+                textViewAppListSelectCount.setText(s);
+            }
+        });
+
 
         textViewSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String pattern= s.toString().trim();
+                String pattern = s.toString().trim();
                 unfreezeApps = homeViewModel.findUnFreezeAppsListWithPattern(pattern);
                 unfreezeApps.removeObservers(getViewLifecycleOwner());
                 unfreezeApps.observe(getViewLifecycleOwner(), new Observer<List<AppInfo>>() {
@@ -104,7 +149,6 @@ public class AppListFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
 
@@ -122,7 +166,6 @@ public class AppListFragment extends Fragment {
         return inflate;
     }
 
-
     /**
      * 冻结App
      *
@@ -131,7 +174,9 @@ public class AppListFragment extends Fragment {
     public void freeze(View view) {
 
         List<FreezeApp> readyToFreezeApps = new ArrayList<>();
-        for (AppInfo appInfo : unfreezeApps.getValue()) {
+        List<AppInfo> appInfos = adapter.getAppInfos();
+
+        for (AppInfo appInfo : appInfos) {
             if (appInfo.isSelected()) {
                 FreezeApp freezeApp = new FreezeApp();
                 freezeApp.setPackageName(appInfo.getPackageName());

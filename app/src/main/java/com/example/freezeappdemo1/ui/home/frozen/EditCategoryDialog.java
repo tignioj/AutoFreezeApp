@@ -12,6 +12,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.freezeappdemo1.R;
 import com.example.freezeappdemo1.backend.entitys.AppsCategory;
@@ -57,18 +58,36 @@ public class EditCategoryDialog extends DialogFragment {
                 builder.setTitle("WARNING").setMessage("SURE TO DELETE?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        List<FreezeApp> appsByCategory = homeViewModel.getAppsByCategory(appsCategory.getId());
-                        for (FreezeApp freezeApp : appsByCategory) {
-                            //解冻所有
-                            if (freezeApp.isFrozen()) {
-                                DeviceMethod.getInstance(v.getContext()).freeze(freezeApp.getPackageName(), false);
-                                freezeApp.setFrozen(false);
-                                homeViewModel.updateFreezeApp(freezeApp);
+                        frozenFragment.progressBarFrozenFragmentUnfreeezing.setVisibility(View.VISIBLE);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                List<FreezeApp> appsByCategory = homeViewModel.getAppsByCategory(appsCategory.getId());
+                                for (FreezeApp freezeApp : appsByCategory) {
+                                    //解冻所有
+                                    if (freezeApp.isFrozen()) {
+                                        DeviceMethod.getInstance(v.getContext()).freeze(freezeApp.getPackageName(), false);
+                                        freezeApp.setFrozen(false);
+                                        homeViewModel.updateFreezeApp(freezeApp);
+                                    }
+                                }
+                                homeViewModel.deleteAppsCategory(appsCategory);
+                                homeViewModel.updateAllMemoryData();
+
+                                FragmentActivity activity = frozenFragment.getActivity();
+                                if (activity != null) {
+                                    activity.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            frozenFragment.getAdapter().notifyItemRemoved(position);
+                                            frozenFragment.progressBarFrozenFragmentUnfreeezing.setVisibility(View.INVISIBLE);
+                                        }
+                                    });
+                                }
+
                             }
-                        }
-                        homeViewModel.deleteAppsCategory(appsCategory);
-                        homeViewModel.updateAllMemoryData();
-                        frozenFragment.getAdapter().notifyItemRemoved(position);
+                        }).start();
                     }
                 }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
                     @Override

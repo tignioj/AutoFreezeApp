@@ -13,13 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="CHOOSE CATEGORY"
+        android:text="@string/dialog_choose_category_header_tips_text"
         android:textSize="18sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Please Choose category"
+        android:text="@string/dialog_choose_category_tips_text"
         />
     <Spinner
         android:id="@+id/spinner"
