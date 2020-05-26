@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import com.example.freezeappdemo1.R;
 import com.example.freezeappdemo1.backend.entitys.FreezeApp;
@@ -47,6 +48,7 @@ public class FrozenAppByCategoryFragment extends Fragment {
     HomeViewModel homeViewModel;
     FrozenAppByCategoryAdapter adapter;
     ImageButton imageButtonFreezeAll;
+    ProgressBar progressBarAppsByCategoryFreezeAll;
 
     public FrozenAppByCategoryAdapter getAdapter() {
         return adapter;
@@ -65,6 +67,9 @@ public class FrozenAppByCategoryFragment extends Fragment {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 //        List<FreezeApp> appsByCategory = homeViewModel.getAppsByCategory(categoryId);
         final LiveData<List<FreezeApp>> appsByCategoryLive = homeViewModel.getAppsByCategoryLive(categoryId);
+
+        progressBarAppsByCategoryFreezeAll = view.findViewById(R.id.progressBarAppsByCategoryFreezeAll);
+        progressBarAppsByCategoryFreezeAll.setVisibility(View.INVISIBLE);
 
         recyclerView = view.findViewById(R.id.rcv_applist_frozen_category);
         buttonAdd = view.findViewById(R.id.buttonAddAppToCategory);
@@ -93,15 +98,28 @@ public class FrozenAppByCategoryFragment extends Fragment {
         imageButtonFreezeAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageButtonFreezeAll.setImageResource(hasFreezeAll ? R.drawable.ic_lock_open_black_24dp : R.drawable.ic_lock_black_24dp);
-                List<FreezeApp> value = appsByCategoryLive.getValue();
-                for (FreezeApp freezeApp : value) {
-                    freezeApp.setFrozen(!hasFreezeAll);
-                    DeviceMethod.getInstance(requireContext()).freeze(freezeApp.getPackageName(), !hasFreezeAll);
-                    homeViewModel.updateFreezeApp(freezeApp);
-                }
-                hasFreezeAll = !hasFreezeAll;
-                homeViewModel.updateAll();
+                progressBarAppsByCategoryFreezeAll.setVisibility(View.VISIBLE);
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageButtonFreezeAll.setImageResource(hasFreezeAll ? R.drawable.ic_lock_open_black_24dp : R.drawable.ic_lock_black_24dp);
+                        List<FreezeApp> value = appsByCategoryLive.getValue();
+                        for (FreezeApp freezeApp : value) {
+                            freezeApp.setFrozen(!hasFreezeAll);
+                            DeviceMethod.getInstance(requireContext()).freeze(freezeApp.getPackageName(), !hasFreezeAll);
+                            homeViewModel.updateFreezeApp(freezeApp);
+                        }
+                        hasFreezeAll = !hasFreezeAll;
+                        homeViewModel.updateAll();
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBarAppsByCategoryFreezeAll.setVisibility(View.INVISIBLE);
+                            }
+                        });
+                    }
+                }).start();
             }
         });
 

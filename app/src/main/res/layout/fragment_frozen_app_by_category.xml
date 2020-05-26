@@ -77,5 +77,15 @@
         app:layout_constraintTop_toTopOf="@+id/guideline"
         android:contentDescription="TODO" />
 
+    <ProgressBar
+        android:id="@+id/progressBarAppsByCategoryFreezeAll"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonFreezeAll"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

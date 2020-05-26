@@ -164,7 +164,9 @@ public class HomeRepository {
             }
 
             a.setAppName((String) pm.getApplicationLabel(ai));
+
             a.setPackageName(p.packageName);
+
             a.setIcon(ai.loadIcon(pm));
 
             a.setIconLayout(ai.icon);
