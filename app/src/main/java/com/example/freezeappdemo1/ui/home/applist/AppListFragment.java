@@ -9,6 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +52,7 @@ public class AppListFragment extends Fragment {
     }
 
     private MutableLiveData<List<AppInfo>> unfreezeApps;
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -79,6 +82,31 @@ public class AppListFragment extends Fragment {
 
         textViewSearch = inflate.findViewById(R.id.et_search);
 
+        textViewSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String string = s.toString();
+                unfreezeApps = homeViewModel.findAppsListWithPattern(string);
+                unfreezeApps.observe(getViewLifecycleOwner(), new Observer<List<AppInfo>>() {
+                    @Override
+                    public void onChanged(List<AppInfo> appInfos) {
+                        adapter.updateInfos(appInfos);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         listViewAppList = inflate.findViewById(R.id.lv_applist);
 
 
@@ -91,7 +119,6 @@ public class AppListFragment extends Fragment {
 
 
         //执行的命令
-        textViewSearch.setText("com.example.myapp");
         return inflate;
     }
 
@@ -120,6 +147,6 @@ public class AppListFragment extends Fragment {
         }
 
         ChooseCategoryDialog chooseCategoryDialog = new ChooseCategoryDialog(homeViewModel, readyToFreezeApps);
-        chooseCategoryDialog.show(requireActivity().getSupportFragmentManager(), "choose category" );
+        chooseCategoryDialog.show(requireActivity().getSupportFragmentManager(), "choose category");
     }
 }

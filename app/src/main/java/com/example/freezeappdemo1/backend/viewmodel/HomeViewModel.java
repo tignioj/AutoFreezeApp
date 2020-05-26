@@ -88,6 +88,8 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
 
+
+
     //========================================UI=====================================
 
     public MutableLiveData<List<AppInfo>> getMutableLiveDataUnFreezeAppListLive() {
@@ -102,6 +104,9 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
 
+    public MutableLiveData<List<AppInfo>> findAppsListWithPattern(String string) {
+        return homeRepository.getMutableLiveDataAllAppListWithPattern(string);
+    }
 
 
 
@@ -159,5 +164,9 @@ public class HomeViewModel extends AndroidViewModel {
     public void updateFreezeTasks(FreezeTasker ...freezeTaskerFromDb) {
         freezeTaskerRepository.insertFreezeTasker(freezeTaskerFromDb);
 
+    }
+
+    public LiveData<List<AppsCategory>> findAppCategorysLiveWithPattern(String pattern) {
+        return appsCategoryRepository.findAppCategorysLiveWithPattern(pattern);
     }
 }

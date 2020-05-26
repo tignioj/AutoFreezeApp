@@ -6,4 +6,10 @@
     <string name="tab_text_1">UnFreeze</string>
     <string name="tab_text_2">Frozen</string>
     <string name="tab_text_3">Timer</string>
+    <string name="edit_text_input_package_name_hint_text">Input package name</string>
+    <string name="et_input_category_name_hint_text">Input category name</string>
+
+<!--    fragment_applist-->
+    <string name="fragment_applist_et_input_package_name_hint_text">Input package name</string>
+    <string name="fragment_applist_btn_freeze_text">freeze</string>
 </resources>

@@ -18,7 +18,8 @@
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
+        android:layout_height="@dimen/dialog_spinner_height"
+        android:layout_marginLeft="5dp"
         />
 
     <LinearLayout
@@ -28,6 +29,7 @@
 
 
         <EditText
+            android:layout_marginLeft="5dp"
             android:id="@+id/et_choose_category_new_category"
             style="@android:style/Widget.Material.EditText"
             android:layout_width="match_parent"
@@ -43,7 +45,7 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="1"
             android:enabled="false"
             android:text="Add" />
 

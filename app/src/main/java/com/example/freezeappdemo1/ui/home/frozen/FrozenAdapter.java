@@ -62,13 +62,13 @@ public class FrozenAdapter extends ListAdapter<AppsCategory, FrozenAdapter.MyVie
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
-        AppsCategory item = getItem(position);
+        final AppsCategory item = getItem(position);
         holder.textViewCategoryName.setText(item.getCategoryName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putLong("id", getItem(position).getId());
+                bundle.putLong("id", item.getId());
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_frozenAppByCategoryFragment, bundle);
             }
         });

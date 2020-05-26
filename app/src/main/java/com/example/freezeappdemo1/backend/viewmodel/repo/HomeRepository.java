@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.icu.util.EthiopicCalendar;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -17,12 +18,11 @@ import java.util.List;
 
 public class HomeRepository {
     private static HomeRepository homeRepository;
-    Context context;
+    private Context context;
 
-    MutableLiveData<List<AppInfo>> mutableLiveDataUnFreezeAppList;
-    MutableLiveData<List<AppInfo>> mutableLiveDataFrozenAppList;
-    MutableLiveData<List<AppInfo>> mutableLiveDataAllAppList;
-
+    private MutableLiveData<List<AppInfo>> mutableLiveDataUnFreezeAppList;
+    private MutableLiveData<List<AppInfo>> mutableLiveDataFrozenAppList;
+    private MutableLiveData<List<AppInfo>> mutableLiveDataAllAppList;
 
     public synchronized static HomeRepository getInstance(Context context) {
         if (homeRepository == null) {
@@ -173,5 +173,29 @@ public class HomeRepository {
             appInfos.add(a);
         }
         return appInfos;
+    }
+
+    /**
+     * 根据包命获取应用列表
+     * @param pattern
+     * @return
+     */
+    public MutableLiveData<List<AppInfo>> getMutableLiveDataAllAppListWithPattern(String pattern) {
+        MutableLiveData<List<AppInfo>> mutableLiveDataAppsWithPattern = new MutableLiveData<>();
+        mutableLiveDataAppsWithPattern.setValue(getAllAppListWithPattern(pattern));
+        return mutableLiveDataAppsWithPattern;
+    }
+
+    private List<AppInfo> getAllAppListWithPattern(String pattern) {
+        List<AppInfo> allApps = this.allApps;
+        List<AppInfo> newApps = new ArrayList<>();
+        for (AppInfo a : allApps) {
+            if (a.getPackageName().toLowerCase().contains(pattern.toLowerCase())
+                    || a.getAppName().toLowerCase().contains(pattern.toLowerCase())
+            ) {
+                newApps.add(a);
+            }
+        }
+        return newApps;
     }
 }

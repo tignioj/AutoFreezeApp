@@ -6,6 +6,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <EditText
+        android:id="@+id/et_add_adds_to_category_search"
+        android:layout_marginTop="2dp"
+        android:hint="@string/edit_text_input_package_name_hint_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <ListView
         android:id="@+id/lv_add_apps_to_category"
         android:layout_weight="100"

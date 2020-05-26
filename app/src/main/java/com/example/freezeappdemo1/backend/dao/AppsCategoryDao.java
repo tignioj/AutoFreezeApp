@@ -41,4 +41,6 @@ public interface AppsCategoryDao {
     @Query("SELECT * FROM apps_category WHERE id=:id ORDER BY id ")
     LiveData<List<AppsCategory>> getAllAppsCategoryLiveByCategoryId(long id);
 
+    @Query("SELECT * FROM apps_category WHERE category_name like  :pattern  ORDER BY id ")
+    LiveData<List<AppsCategory>> findAppCategorysLiveWithPattern(String pattern);
 }

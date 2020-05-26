@@ -62,7 +62,7 @@
         android:id="@+id/addTimerTaskSpinner"
         android:layout_width="0dp"
         android:layout_height="32sp"
-        android:height="48dp"
+        android:height="@dimen/dialog_spinner_height"
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
         app:layout_constraintTop_toTopOf="@+id/guideline7" />

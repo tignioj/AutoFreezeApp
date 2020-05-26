@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,22 +47,31 @@ public class FrozenFragment extends Fragment {
     private FrozenAdapter adapter;
     HomeViewModel homeViewModel;
     private Button buttonUnfreezeAll;
+    LiveData<List<AppsCategory>> appsCategoryLive;
 
 
     public FrozenAdapter getAdapter() {
         return adapter;
     }
 
+    /**
+     * 只在第一次创建时候执行
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        appsCategoryLive = homeViewModel.getAppsCategoryLive();
     }
 
+    /**
+     * 每次从其他页面返回时都会执行
+     * @param savedInstanceState
+     */
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        LiveData<List<AppsCategory>> appsCategoryLive = homeViewModel.getAppsCategoryLive();
 
         adapter = new FrozenAdapter(requireContext(), homeViewModel, this);
 
@@ -84,6 +95,31 @@ public class FrozenFragment extends Fragment {
         View inflate = inflater.inflate(R.layout.fragment_frozen, container, false);
 
         editTextSearch = inflate.findViewById(R.id.et_search_frozen);
+
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                appsCategoryLive = homeViewModel.findAppCategorysLiveWithPattern(s.toString().trim());
+                appsCategoryLive.removeObservers(getViewLifecycleOwner());
+                appsCategoryLive.observe(getViewLifecycleOwner(), new Observer<List<AppsCategory>>() {
+                    @Override
+                    public void onChanged(List<AppsCategory> appsCategories) {
+                        adapter.submitList(appsCategories);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         recyclerViewAppListFrozen = inflate.findViewById(R.id.rcv_applist_frozen);
 

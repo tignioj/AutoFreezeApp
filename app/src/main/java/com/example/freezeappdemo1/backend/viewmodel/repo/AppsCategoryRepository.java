@@ -15,10 +15,10 @@ import com.example.freezeappdemo1.backend.entitys.FreezeApp;
 import java.util.List;
 
 public class AppsCategoryRepository {
-    
+
     private static AppsCategoryRepository INSTANCE;
     LiveData<List<AppsCategory>> listLiveDataAppsCategory;
-    
+
 
     public synchronized static AppsCategoryRepository getInstance(Context context) {
         if (INSTANCE == null) {
@@ -26,12 +26,12 @@ public class AppsCategoryRepository {
         }
         return INSTANCE;
     }
-    
+
     AppsCategoryDao appsCategoryDao;
     AppsDataBase dataBase;
 
     LiveData<List<AppsCategory>> listLiveDataAppsCategoryForSpinner;
-    
+
     private AppsCategoryRepository(Context context) {
         dataBase = AppsDataBase.getDataBase(context);
         appsCategoryDao = dataBase.getAppsCategoryDao();
@@ -73,6 +73,10 @@ public class AppsCategoryRepository {
 
     public AppsCategory getCategoryBaCategoryCategoryName(String categoryName) {
         return appsCategoryDao.getAppsCategoryByCategoryName(categoryName);
+    }
+
+    public LiveData<List<AppsCategory>> findAppCategorysLiveWithPattern(String pattern) {
+        return appsCategoryDao.findAppCategorysLiveWithPattern("%" + pattern.trim() + "%");
     }
 
     public static class InsertAsyncTask extends AsyncTask<AppsCategory, Void, Void> {
@@ -118,7 +122,7 @@ public class AppsCategoryRepository {
         }
     }
 
-    public  static class DeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
+    public static class DeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
         private AppsCategoryDao appsCategoryDao;
 
         public DeleteAllAsyncTask(AppsCategoryDao appsCategoryDao) {

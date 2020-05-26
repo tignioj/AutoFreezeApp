@@ -64,9 +64,11 @@ public class EditCategoryDialog extends DialogFragment {
                         List<FreezeApp> appsByCategory = homeViewModel.getAppsByCategory(appsCategory.getId());
                         for (FreezeApp freezeApp : appsByCategory) {
                             //解冻所有
-                            DeviceMethod.getInstance(v.getContext()).freeze(freezeApp.getPackageName(), false);
-                            freezeApp.setFrozen(false);
-                            homeViewModel.updateFreezeApp(freezeApp);
+                            if (freezeApp.isFrozen()) {
+                                DeviceMethod.getInstance(v.getContext()).freeze(freezeApp.getPackageName(), false);
+                                freezeApp.setFrozen(false);
+                                homeViewModel.updateFreezeApp(freezeApp);
+                            }
                         }
                         homeViewModel.deleteAppsCategory(appsCategory);
                         homeViewModel.updateAll();

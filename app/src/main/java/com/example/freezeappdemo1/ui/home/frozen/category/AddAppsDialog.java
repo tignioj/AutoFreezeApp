@@ -1,17 +1,21 @@
 package com.example.freezeappdemo1.ui.home.frozen.category;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.freezeappdemo1.R;
 import com.example.freezeappdemo1.backend.entitys.FreezeApp;
@@ -29,6 +33,7 @@ public class AddAppsDialog extends DialogFragment {
     HomeViewModel homeViewModel;
     long categoryId;
     FrozenAppByCategoryFragment frozenAppByCategoryFragment;
+    EditText editTextSearch;
 
     public AddAppsDialog(FrozenAppByCategoryFragment frozenAppByCategoryFragment) {
         this.frozenAppByCategoryFragment = frozenAppByCategoryFragment;
@@ -37,6 +42,7 @@ public class AddAppsDialog extends DialogFragment {
     }
 
     MutableLiveData<List<AppInfo>> mutableLiveDataUnFreezeAppListLive;
+    AppListAdapter adapter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,8 +52,33 @@ public class AddAppsDialog extends DialogFragment {
         buttonConfirm = view.findViewById(R.id.btn_add_apps_to_category_confirm);
         buttonCancle = view.findViewById(R.id.btn_add_apps_to_category_cancel);
 
+        editTextSearch = view.findViewById(R.id.et_add_adds_to_category_search);
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mutableLiveDataUnFreezeAppListLive = homeViewModel.findAppsListWithPattern(s.toString().trim());
+                mutableLiveDataUnFreezeAppListLive.observe(getViewLifecycleOwner(), new Observer<List<AppInfo>>() {
+                    @Override
+                    public void onChanged(List<AppInfo> appInfos) {
+                        adapter.updateInfos(mutableLiveDataUnFreezeAppListLive.getValue());
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         mutableLiveDataUnFreezeAppListLive = homeViewModel.getMutableLiveDataAllAppList();
-        final AppListAdapter adapter = new AppListAdapter(requireContext(), R.layout.cell_listview, mutableLiveDataUnFreezeAppListLive.getValue(), homeViewModel);
+        adapter = new AppListAdapter(requireContext(), R.layout.cell_listview, mutableLiveDataUnFreezeAppListLive.getValue(), homeViewModel);
         listView.setAdapter(adapter);
 
         buttonCancle.setOnClickListener(new View.OnClickListener() {
