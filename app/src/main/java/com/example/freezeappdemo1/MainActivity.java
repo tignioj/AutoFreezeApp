@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         //判断是否可使用
         boolean admin = DeviceMethod.getInstance(getApplicationContext()).isAdmin();
         if (!admin) {
-            Toast.makeText(getApplicationContext(), "请先激活, 设置为device owner", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "请先激活, 先退出账号，再设置该应用为为device owner", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }

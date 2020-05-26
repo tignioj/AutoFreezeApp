@@ -190,4 +190,8 @@ public class HomeViewModel extends AndroidViewModel {
     public MutableLiveData<List<AppInfo>> getMutableLiveDataUnFreezeAppListLiveNotInCategoryWithPattern(List<FreezeApp> freezeAppsByCategoryId, String pattern) {
         return homeRepository.getMutableLiveDataUnFreezeAppListLiveNotInCategoryWithPattern(freezeAppsByCategoryId, pattern);
     }
+
+    public LiveData<List<FreezeApp>> getMutableLiveDataFreezeAppListLiveInCategoryWithPattern(long categoryId, String pattern) {
+        return freezeAppRepository.getMutableLiveDataFreezeAppListLiveInCategoryWithPattern(categoryId, pattern);
+    }
 }

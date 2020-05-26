@@ -23,7 +23,6 @@ import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
 import com.example.freezeappdemo1.config.MyConfig;
 import com.example.freezeappdemo1.entity.AppInfo;
 import com.example.freezeappdemo1.ui.home.applist.AppListAdapter;
-import com.example.freezeappdemo1.ui.home.applist.AppListFragment;
 
 import java.util.List;
 
@@ -63,7 +62,7 @@ public class AddAppsDialog extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mutableLiveDataUnFreezeAppListLive = homeViewModel.getMutableLiveDataUnFreezeAppListLiveNotInCategoryWithPattern(frozenAppByCategoryFragment.appsByCategoryLive.getValue(),s.toString().trim());
+                mutableLiveDataUnFreezeAppListLive = homeViewModel.getMutableLiveDataUnFreezeAppListLiveNotInCategoryWithPattern(frozenAppByCategoryFragment.freezeAppListLive.getValue(),s.toString().trim());
                 mutableLiveDataUnFreezeAppListLive.removeObservers(getViewLifecycleOwner());
                 mutableLiveDataUnFreezeAppListLive.observe(getViewLifecycleOwner(), new Observer<List<AppInfo>>() {
                     @Override
@@ -80,7 +79,7 @@ public class AddAppsDialog extends DialogFragment {
             }
         });
 
-        mutableLiveDataUnFreezeAppListLive = homeViewModel.getMutableLiveDataUnFreezeAppListLiveNotInCategory(frozenAppByCategoryFragment.appsByCategoryLive.getValue());
+        mutableLiveDataUnFreezeAppListLive = homeViewModel.getMutableLiveDataUnFreezeAppListLiveNotInCategory(frozenAppByCategoryFragment.freezeAppListLive.getValue());
         adapter = new AppListAdapter(
                 requireContext(),
                 R.layout.cell_listview, mutableLiveDataUnFreezeAppListLive.getValue(), homeViewModel,

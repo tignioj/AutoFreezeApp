@@ -18,10 +18,13 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
@@ -44,13 +47,15 @@ public class FrozenAppByCategoryFragment extends Fragment {
 
     long categoryId;
 
-    RecyclerView recyclerView;
-    Button buttonAdd, buttonUnFreeze;
+    private RecyclerView recyclerView;
+    private Button buttonAdd;
+    EditText editTextSearch;
     HomeViewModel homeViewModel;
-    FrozenAppByCategoryAdapter adapter;
-    ImageButton imageButtonFreezeAll;
-    ProgressBar progressBarAppsByCategoryFreezeAll;
-    LiveData<List<FreezeApp>> appsByCategoryLive;
+    private FrozenAppByCategoryAdapter adapter;
+    private ImageButton imageButtonFreezeAll;
+    private ProgressBar progressBarAppsByCategoryFreezeAll;
+    LiveData<List<FreezeApp>> freezeAppListLive;
+
 
     public FrozenAppByCategoryAdapter getAdapter() {
         return adapter;
@@ -68,7 +73,7 @@ public class FrozenAppByCategoryFragment extends Fragment {
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 //        List<FreezeApp> appsByCategory = homeViewModel.getAppsByCategory(categoryId);
-        appsByCategoryLive = homeViewModel.getAppsByCategoryLive(categoryId);
+        freezeAppListLive = homeViewModel.getAppsByCategoryLive(categoryId);
 
         progressBarAppsByCategoryFreezeAll = view.findViewById(R.id.progressBarAppsByCategoryFreezeAll);
         progressBarAppsByCategoryFreezeAll.setVisibility(View.INVISIBLE);
@@ -77,11 +82,34 @@ public class FrozenAppByCategoryFragment extends Fragment {
         buttonAdd = view.findViewById(R.id.buttonAddAppToCategory);
 
         adapter = new FrozenAppByCategoryAdapter(homeViewModel, this);
-        appsByCategoryLive.observe(getViewLifecycleOwner(), new Observer<List<FreezeApp>>() {
+        freezeAppListLive.observe(getViewLifecycleOwner(), new Observer<List<FreezeApp>>() {
             @Override
             public void onChanged(List<FreezeApp> freezeApps) {
                 adapter.submitList(freezeApps);
                 adapter.notifyDataSetChanged();
+            }
+        });
+
+        editTextSearch = view.findViewById(R.id.et_search_frozen_category);
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                freezeAppListLive = homeViewModel.getMutableLiveDataFreezeAppListLiveInCategoryWithPattern(categoryId,s.toString().trim());
+                freezeAppListLive.removeObservers(getViewLifecycleOwner());
+                freezeAppListLive.observe(getViewLifecycleOwner(), new Observer<List<FreezeApp>>() {
+                    @Override
+                    public void onChanged(List<FreezeApp> freezeApps) {
+                        adapter.submitList(freezeApps);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
 
@@ -106,7 +134,7 @@ public class FrozenAppByCategoryFragment extends Fragment {
                     @Override
                     public void run() {
                         imageButtonFreezeAll.setImageResource(hasFreezeAll ? R.drawable.ic_lock_open_black_24dp : R.drawable.ic_lock_black_24dp);
-                        List<FreezeApp> value = appsByCategoryLive.getValue();
+                        List<FreezeApp> value = freezeAppListLive.getValue();
                         for (FreezeApp freezeApp : value) {
                             freezeApp.setFrozen(!hasFreezeAll);
                             DeviceMethod.getInstance(requireContext()).freeze(freezeApp.getPackageName(), !hasFreezeAll);

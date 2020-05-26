@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FreezeAppDemo1</string>
+    <string name="app_name">定时冻结</string>
     <string name="tab_text_1">分类</string>
     <string name="tab_text_2">冻结</string>
     <string name="tab_text_3">定时</string>
@@ -9,7 +9,7 @@
     <string name="fragment_applist_et_input_package_name_hint_text">输入包名或应用名</string>
     <string name="fragment_applist_btn_freeze_text">冻结</string>
     <string name="fragment_frozen_unfreezing_center_text">解冻中...</string>
-    <string name="fragment_frozen_unfreeze_all_button_text">解冻全部</string>
+    <string name="fragment_frozen_unfreeze_all_button_text">全部解冻</string>
     <string name="message_waiting_dialog_text">等待...</string>
     <string name="fragment_applilst_selected_count_text">已选择:</string>
     <string name="dialog_choose_category_tips_text">请选择分类</string>
@@ -31,7 +31,7 @@
     <string name="edittext_input_category_name_hint">输入分类名称</string>
     <string name="text_view_delete">删除</string>
     <string name="update_button_text">更新</string>
-    <string name="add_category_button_text">添加分裂</string>
+    <string name="add_category_button_text">添加分类</string>
     <string name="add_apps_button_text">添加应用</string>
     <string name="dialog_choose_category_you_can_create_new_one">你可以创建新的分类</string>
     <string name="dialog_choose_category_edit_text_new_category">输入的新分类名称</string>
