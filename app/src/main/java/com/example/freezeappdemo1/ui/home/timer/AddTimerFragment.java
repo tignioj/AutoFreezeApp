@@ -49,11 +49,8 @@ public class AddTimerFragment extends Fragment {
     private RadioButton radioButtonFreeze, radioButtonUnFreeze;
     CheckBox checkBoxAddTimerIsLockScreen;
 
-    private boolean isEditPage;
 
     HomeViewModel homeViewModel;
-
-    private boolean infoValid;
 
     public AddTimerFragment() {
     }

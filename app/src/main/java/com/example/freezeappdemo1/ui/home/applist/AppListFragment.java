@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
@@ -50,6 +51,7 @@ public class AppListFragment extends Fragment {
     private AppListAdapter adapter;
     private HomeViewModel homeViewModel;
     private CheckBox checkBoxAppListSelectAll;
+    private Button buttonFreeze;
 
 
     @Override
@@ -91,6 +93,16 @@ public class AppListFragment extends Fragment {
         // Inflate the layout for this fragment
         final View inflate = inflater.inflate(R.layout.fragment_app_list, container, false);
 
+        buttonFreeze = inflate.findViewById(R.id.button_freeze);
+
+        buttonFreeze.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                freeze(v);
+            }
+        });
+
+
         textViewSearch = inflate.findViewById(R.id.et_search);
         textViewAppListSelectCount = inflate.findViewById(R.id.textViewAppListSelectCount);
         checkBoxAppListSelectAll = inflate.findViewById(R.id.checkBoxAppListSelectAll);
@@ -122,6 +134,11 @@ public class AppListFragment extends Fragment {
         selectedReadyToFreezeCount.observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
+                if (integer == 0) {
+                    buttonFreeze.setEnabled(false);
+                } else {
+                    buttonFreeze.setEnabled(true);
+                }
                 String s = selectedText.toString() + integer + "/" + adapter.getCount();
                 textViewAppListSelectCount.setText(s);
             }
@@ -154,12 +171,6 @@ public class AppListFragment extends Fragment {
 
         listViewAppList = inflate.findViewById(R.id.lv_applist);
 
-        inflate.findViewById(R.id.button_freeze).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                freeze(v);
-            }
-        });
 
 
         //执行的命令
