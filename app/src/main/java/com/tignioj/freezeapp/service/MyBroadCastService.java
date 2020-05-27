@@ -27,4 +27,11 @@ public class MyBroadCastService extends Service {
         myReceiver = new MyReceiver();
         registerReceiver(myReceiver, intentFilter);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(myReceiver);
+    }
+
 }
