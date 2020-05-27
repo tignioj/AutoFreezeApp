@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/appListFragment"
-        android:name="com.example.freezeappdemo1.ui.home.applist.AppListFragment"
+        android:name="com.tignioj.freezeapp.ui.home.applist.AppListFragment"
         android:label="fragment_app_list"
         tools:layout="@layout/fragment_app_list" />
     <fragment
         android:id="@+id/frozenFragment"
-        android:name="com.example.freezeappdemo1.ui.home.frozen.FrozenFragment"
+        android:name="com.tignioj.freezeapp.ui.home.frozen.FrozenFragment"
         android:label="fragment_frozen"
         tools:layout="@layout/fragment_frozen" />
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.example.freezeappdemo1.ui.SettingFragment"
+        android:name="com.tignioj.freezeapp.ui.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.freezeappdemo1.ui.home.HomeFragment"
+        android:name="com.tignioj.freezeapp.ui.home.HomeFragment"
         android:label="@string/fragment_home_label"
         tools:layout="@layout/fragment_home">
         <action
@@ -40,17 +40,17 @@
     </fragment>
     <fragment
         android:id="@+id/addTimerFragment"
-        android:name="com.example.freezeappdemo1.ui.home.timer.AddTimerFragment"
+        android:name="com.tignioj.freezeapp.ui.home.timer.AddTimerFragment"
         android:label="@string/fragment_add_timer_label"
         tools:layout="@layout/fragment_add_timer" />
     <fragment
         android:id="@+id/frozenAppByCategoryFragment"
-        android:name="com.example.freezeappdemo1.ui.home.frozen.category.FrozenAppByCategoryFragment"
+        android:name="com.tignioj.freezeapp.ui.home.frozen.category.FrozenAppByCategoryFragment"
         android:label="@string/fragment_apps_by_category_label"
         tools:layout="@layout/fragment_frozen_app_by_category" />
     <fragment
         android:id="@+id/freezeTimerEditFragment"
-        android:name="com.example.freezeappdemo1.ui.home.timer.FreezeTimerEditFragment"
+        android:name="com.tignioj.freezeapp.ui.home.timer.FreezeTimerEditFragment"
         android:label="@string/fragment_edit_timer_label"
         tools:layout="@layout/fragment_edit_timer" />
 </navigation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.freezeappdemo1">
+    package="com.tignioj.freezeapp">
 
 
     <application
@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.tignioj.freezeapp.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,8 +19,9 @@
             </intent-filter>
         </activity>
         <receiver
-            android:name=".MyDeviceAdminReceiver"
-            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            android:name="com.tignioj.freezeapp.MyDeviceAdminReceiver"
+            android:permission="android.permission.BIND_DEVICE_ADMIN"
+            >
             <meta-data
                 android:name="android.app.device_admin"
                 android:resource="@xml/device_admin"/>
@@ -31,7 +32,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".receiver.MyReceiver"
+            android:name="com.tignioj.freezeapp.receiver.MyReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.SCREEN_OFF"/>
@@ -42,9 +43,9 @@
         </receiver>
 
 <!--        定时服务-->
-        <service android:name=".service.FreezeService" android:enabled="true"/>
+        <service android:name="com.tignioj.freezeapp.service.FreezeService" android:enabled="true"/>
         <service
-            android:name=".service.MyBroadCastService"
+            android:name="com.tignioj.freezeapp.service.MyBroadCastService"
             android:enabled="true" />
 
     </application>
