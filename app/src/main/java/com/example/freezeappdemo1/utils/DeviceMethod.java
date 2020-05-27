@@ -103,13 +103,14 @@ public class DeviceMethod {
     /**
      * 立刻锁屏
      */
-    public void LockNow() {
+    public void lockNow() {
         if (devicePolicyManager.isAdminActive(componentName)) {
             devicePolicyManager.lockNow();
         } else {
             Toast.makeText(mContext, "请先激活设备", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     /**
      * 设置多长时间后锁屏
@@ -187,5 +188,9 @@ public class DeviceMethod {
 
     public boolean isAdmin() {
         return devicePolicyManager.isAdminActive(componentName);
+    }
+
+    public DevicePolicyManager getDevicePolicyManager() {
+        return devicePolicyManager;
     }
 }

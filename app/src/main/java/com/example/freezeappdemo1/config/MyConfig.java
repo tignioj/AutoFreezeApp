@@ -13,5 +13,6 @@ public class MyConfig {
 
     //调试Start=============================================
     public static final String MY_TAG = "myTag";
+    public static final String BROADCAST_RECEIVER = "broadcast_receiver";
     //调试End=============================================
 }

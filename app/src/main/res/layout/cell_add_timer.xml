@@ -65,4 +65,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_visibility_black_24dp" />
 
+    <ImageView
+        android:id="@+id/imageViewLockPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewVisable"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_phonelink_lock_black_24dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

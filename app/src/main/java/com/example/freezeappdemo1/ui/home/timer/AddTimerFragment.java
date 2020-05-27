@@ -1,7 +1,9 @@
 package com.example.freezeappdemo1.ui.home.timer;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
@@ -15,11 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.freezeappdemo1.R;
 import com.example.freezeappdemo1.backend.entitys.AppsCategory;
@@ -42,6 +47,7 @@ public class AddTimerFragment extends Fragment {
     private EditText editTextStartTime;
     private RadioGroup radioGroupUnFreezeOrUnfreeze;
     private RadioButton radioButtonFreeze, radioButtonUnFreeze;
+    CheckBox checkBoxAddTimerIsLockScreen;
 
     private boolean isEditPage;
 
@@ -57,10 +63,12 @@ public class AddTimerFragment extends Fragment {
     Button buttonBack, buttonSave;
     Spinner spinner;
 
+    boolean isFirstWarinng;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        isFirstWarinng = true;
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         freezeTasker = new FreezeTasker();
         View inflate = inflater.inflate(R.layout.fragment_add_timer, container, false);
@@ -96,6 +104,23 @@ public class AddTimerFragment extends Fragment {
 
         radioGroupUnFreezeOrUnfreeze.check(R.id.radioButtonFreeze);
 
+        checkBoxAddTimerIsLockScreen = inflate.findViewById(R.id.checkBoxAddTimerIsLockScreen);
+        checkBoxAddTimerIsLockScreen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked && isFirstWarinng) {
+                    isFirstWarinng = false;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                    builder.setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    }).setTitle(R.string.warning)
+                            .setMessage(R.string.lock_screen_check_warning_text)
+                    .create().show();
+                }
+            }
+        });
 
         List<AppsCategory> appsCategorys = homeViewModel.getAppsCategorys();
         AppsCategory[] appsCategories = appsCategorys.toArray(new AppsCategory[0]);
@@ -116,8 +141,15 @@ public class AddTimerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AppsCategory selectedItem = (AppsCategory) spinner.getSelectedItem();
+                if (selectedItem == null) {
+                    Toast.makeText(requireContext(), R.string.prompt_to_add_categories, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 freezeTasker.setCategoryId(selectedItem.getId());
                 freezeTasker.setCategoryName(selectedItem.getCategoryName());
+                freezeTasker.setLockScreen(checkBoxAddTimerIsLockScreen.isChecked());
+
                 if (radioGroupUnFreezeOrUnfreeze.getCheckedRadioButtonId() == R.id.radioButtonFreeze) {
                     freezeTasker.setFrozen(true);
                 } else {

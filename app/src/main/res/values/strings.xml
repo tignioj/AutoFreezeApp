@@ -3,8 +3,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="tab_text_1">Category</string>
-    <string name="tab_text_2">Frozen</string>
+    <string name="tab_text_1">UnFreeze</string>
+    <string name="tab_text_2">Category</string>
     <string name="tab_text_3">Timer</string>
     <string name="edit_text_input_package_name_hint_text">Input package name</string>
     <string name="et_input_category_name_hint_text">Input category name</string>
@@ -54,4 +54,6 @@
     <string name="fragment_edit_timer_label">Edit Tasker</string>
     <string name="fragment_add_timer_label">Add Tisker</string>
     <string name="textview_option">OPTION</string>
+    <string name="checkBoxAddTimerIsLockScreen">lock screen</string>
+    <string name="lock_screen_check_warning_text">Check this option, you will not be able to use the phone during the specified time! The phone will remain locked</string>
 </resources>

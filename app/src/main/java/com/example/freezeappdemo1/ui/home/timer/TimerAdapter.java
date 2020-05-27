@@ -45,6 +45,7 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
                         && oldItem.getStartTime().equals(newItem.getStartTime())
                         && oldItem.getEndTime().equals(newItem.getEndTime())
                         && oldItem.getCategoryName().equals(newItem.getCategoryName())
+                        && oldItem.isLockScreen() == newItem.isLockScreen()
                         ;
             }
         });
@@ -106,13 +107,14 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_freezeTimerEditFragment, bundle);
             }
         });
+        holder.imageViewLockPhone.setVisibility(item.isLockScreen()?View.VISIBLE:View.INVISIBLE);
     }
 
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView textViewStartTime, textViewEndTime, textViewCategoryName;
         ImageButton imageButton;
-        ImageView imageViewVisible;
+        ImageView imageViewVisible, imageViewLockPhone;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -121,6 +123,7 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
             textViewCategoryName = itemView.findViewById(R.id.textViewCategoryNameCell);
             imageButton = itemView.findViewById(R.id.imageButtonDeleteTimer);
             imageViewVisible = itemView.findViewById(R.id.imageViewVisable);
+            imageViewLockPhone = itemView.findViewById(R.id.imageViewLockPhone);
         }
     }
 

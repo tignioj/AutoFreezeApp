@@ -20,16 +20,18 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.freezeappdemo1.backend.entitys.FreezeApp;
 import com.example.freezeappdemo1.backend.entitys.FreezeTasker;
 import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
+import com.example.freezeappdemo1.config.MyConfig;
 import com.example.freezeappdemo1.entity.AppInfo;
+import com.example.freezeappdemo1.receiver.MyReceiver;
 import com.example.freezeappdemo1.utils.DeviceMethod;
 import com.example.freezeappdemo1.utils.MyDateUtils;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static com.example.freezeappdemo1.config.MyConfig.SHP_FREEZE_APP_LIST_FOR_TIMER;
 
 public class FreezeService extends Service {
-    SharedPreferences shp;
     private MyBinder myBinder;
 
     public MyBinder getMyBinder() {
@@ -49,53 +51,80 @@ public class FreezeService extends Service {
     }
 
     List<FreezeTasker> freezeTaskers;
+    private boolean isLockScreen;
+
+
+    HashMap<Long, Boolean> schedulingMap;
 
     @Override
-
     public void onCreate() {
         super.onCreate();
+        schedulingMap = new HashMap<>();
         //定时冻结
         final HomeViewModel homeViewModel = new HomeViewModel(getApplication());
 
         LiveData<List<FreezeTasker>> allFreezeTaskerLive = homeViewModel.getAllFreezeTaskerLive();
         allFreezeTaskerLive.observeForever(new Observer<List<FreezeTasker>>() {
             @Override
-            public void onChanged(List<FreezeTasker> freezeTaskers) {
+            public void onChanged(final List<FreezeTasker> freezeTaskers) {
                 if (FreezeService.this.freezeTaskers != null) {
                     Log.d("myTag", "数据更新 从" + FreezeService.this.freezeTaskers.size() +
                             "到 " + freezeTaskers.size());
                 }
                 FreezeService.this.freezeTaskers = freezeTaskers;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (true) {
+                            //五秒刷新一次
+                            //根据FreezeTask查询到Category
+                            for (FreezeTasker freezeTasker : freezeTaskers) {
+                                //只处理这时间段的App
+                                List<FreezeApp> appsByCategory = homeViewModel.getAppsByCategory(freezeTasker.getCategoryId());
+                                if (MyDateUtils.betweenStartTimeAndEndTime(freezeTasker.getStartTime(), freezeTasker.getEndTime())) {
+                                    if (freezeTasker.isLockScreen()) {
+                                        Log.d(MyConfig.MY_TAG, "lock screen");
+                                        schedulingMap.put(freezeTasker.getId(), true);
+                                        MyReceiver.isLockScreen = true;
+                                        DeviceMethod.getInstance(getApplicationContext()).lockNow();
+                                    } else {
+                                        Log.d(MyConfig.MY_TAG, "unlock screen");
+                                        schedulingMap.put(freezeTasker.getId(), false);
+                                    }
+                                    //如何保证时间过后，变量恢复为false
+
+                                    Log.d(MyConfig.MY_TAG, "lock apps");
+                                    if (freezeTasker.isFrozen()) {
+                                        freezeApps(appsByCategory, homeViewModel);
+                                    } else {
+                                        //否则解冻
+                                        unfreezeApps(appsByCategory, homeViewModel);
+                                    }
+                                } else {
+                                    //如果不是该时间段的，查看是不是之前有冻结的记录
+                                    //如果有, 说明之前灭屏了，则把广播的设为false
+                                    Boolean aBoolean = schedulingMap.get(freezeTasker.getId());
+                                    if (aBoolean != null && aBoolean.booleanValue()) {
+                                        Log.d(MyConfig.MY_TAG, "out of data: unlock screen");
+                                        schedulingMap.put(freezeTasker.getId(), false);
+                                        MyReceiver.isLockScreen = false;
+                                    }
+                                }
+                            }
+
+                            try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+                }).start();
             }
         });
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    //五秒刷新一次
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    //根据FreezeTask查询到Category
-                    for (FreezeTasker freezeTasker : freezeTaskers) {
-                        //只处理前时间段的App
-                        List<FreezeApp> appsByCategory = homeViewModel.getAppsByCategory(freezeTasker.getCategoryId());
-                        if (MyDateUtils.betweenStartTimeAndEndTime(freezeTasker.getStartTime(), freezeTasker.getEndTime())) {
-                            if (freezeTasker.isFrozen()) {
-                                freezeApps(appsByCategory, homeViewModel);
-                            } else {
-                                //否则解冻
-                                unfreezeApps(appsByCategory, homeViewModel);
-                            }
-                        }
-                    }
-                }
 
-            }
-        }).start();
     }
 
     private void unfreezeApps(List<FreezeApp> appsByCategory, HomeViewModel homeViewModel) {

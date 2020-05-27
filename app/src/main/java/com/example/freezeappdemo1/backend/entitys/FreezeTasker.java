@@ -41,6 +41,18 @@ public class FreezeTasker {
     @ColumnInfo(name = "is_frozen")
     private boolean isFrozen;
 
+    @ColumnInfo(name = "is_lock_screen")
+    private boolean isLockScreen;
+
+    public boolean isLockScreen() {
+        return isLockScreen;
+    }
+
+    public void setLockScreen(boolean lockScreen) {
+        isLockScreen = lockScreen;
+    }
+
+
     @Override
     public String toString() {
         return "FreezeTasker{" +
@@ -50,6 +62,7 @@ public class FreezeTasker {
                 ", categoryId=" + categoryId +
                 ", categoryName='" + categoryName + '\'' +
                 ", isFrozen=" + isFrozen +
+                ", isLockScreen=" + isLockScreen +
                 '}';
     }
 

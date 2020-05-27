@@ -18,6 +18,8 @@
         app:layout_constraintTop_toTopOf="@+id/guideline" />
 
 
+
+
     <EditText
         android:id="@+id/et_search"
         android:layout_width="0dp"
@@ -63,7 +65,9 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/et_search" />
+        app:layout_constraintTop_toBottomOf="@+id/et_search" >
+
+    </ListView>
 
     <TextView
         android:id="@+id/textViewAppListSelectCount"
@@ -84,6 +88,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+    <Button
+        android:id="@+id/buttonDebug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:onClick="debug"
+        android:text="DEBUG"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">定时冻结</string>
-    <string name="tab_text_1">分类</string>
-    <string name="tab_text_2">冻结</string>
+    <string name="tab_text_1">未冻结</string>
+    <string name="tab_text_2">分类</string>
     <string name="tab_text_3">定时</string>
     <string name="edit_text_input_package_name_hint_text">输入包名或应用名</string>
     <string name="et_input_category_name_hint_text">输入分类名称</string>
@@ -49,4 +49,7 @@
     <string name="fragment_apps_by_category_label">分类应用</string>
     <string name="fragment_edit_timer_label">编辑任务</string>
     <string name="fragment_add_timer_label">添加任务</string>
+    <string name="textview_option">选项</string>
+    <string name="checkBoxAddTimerIsLockScreen">锁屏</string>
+    <string name="lock_screen_check_warning_text">勾上此选项，在指定时间内将无法使用手机！手机将会一直处于锁屏状态</string>
 </resources>

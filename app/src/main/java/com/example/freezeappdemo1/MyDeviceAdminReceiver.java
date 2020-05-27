@@ -10,6 +10,7 @@ import com.example.freezeappdemo1.utils.DeviceMethod;
 
 public class MyDeviceAdminReceiver  extends DeviceAdminReceiver {
 
+
     @Override
     public void onEnabled(Context context, Intent intent) {
         // 设备管理：可用
@@ -43,18 +44,18 @@ public class MyDeviceAdminReceiver  extends DeviceAdminReceiver {
     @Override
     public void onPasswordChanged(Context context, Intent intent) {
         // 设备管理：密码己经改变
-        Toast.makeText(context, "设备管理：密码己经改变", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "设备管理：密码己经改变", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onPasswordFailed(Context context, Intent intent) {
         // 设备管理：改变密码失败
-        Toast.makeText(context, "设备管理：改变密码失败", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "设备管理：改变密码失败", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onPasswordSucceeded(Context context, Intent intent) {
         // 设备管理：改变密码成功
-        Toast.makeText(context, "设备管理：改变密码成功", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "设备管理：改变密码成功", Toast.LENGTH_SHORT).show();
     }
 }

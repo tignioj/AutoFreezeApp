@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -41,6 +42,7 @@ public class FreezeTimerEditFragment extends Fragment {
     private EditText editTextStartTime;
     private RadioGroup radioGroupUnFreezeOrUnfreeze;
     private RadioButton radioButtonFreeze, radioButtonUnFreeze;
+    private CheckBox checkBoxEditTimerIsLockScreen;
 
 
     HomeViewModel homeViewModel;
@@ -70,7 +72,7 @@ public class FreezeTimerEditFragment extends Fragment {
         freezeTaskerFromDb = homeViewModel.getFreezeTaskerById(id);
 
 
-        View inflate = inflater.inflate(R.layout.fragment_add_timer, container, false);
+        View inflate = inflater.inflate(R.layout.fragment_edit_timer, container, false);
         buttonBack = inflate.findViewById(R.id.button_addTimer_Back);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +114,9 @@ public class FreezeTimerEditFragment extends Fragment {
         }
 
 
+        checkBoxEditTimerIsLockScreen = inflate.findViewById(R.id.checkBoxEditTimerIsLockScreen);
+        checkBoxEditTimerIsLockScreen.setChecked(freezeTaskerFromDb.isLockScreen());
+
         List<AppsCategory> appsCategorys = homeViewModel.getAppsCategorys();
         AppsCategory[] appsCategories = appsCategorys.toArray(new AppsCategory[0]);
 
@@ -142,6 +147,7 @@ public class FreezeTimerEditFragment extends Fragment {
                 } else {
                     freezeTaskerFromDb.setFrozen(false);
                 }
+                freezeTaskerFromDb.setLockScreen(checkBoxEditTimerIsLockScreen.isChecked());
 //                homeViewModel.insertFreezeTasks(freezeTaskerFromDb);
                 homeViewModel.updateFreezeTasks(freezeTaskerFromDb);
                 Toast.makeText(getContext(), R.string.save_success, Toast.LENGTH_SHORT).show();
