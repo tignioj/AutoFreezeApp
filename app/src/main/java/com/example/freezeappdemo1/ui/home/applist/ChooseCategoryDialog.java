@@ -25,6 +25,7 @@ import com.example.freezeappdemo1.R;
 import com.example.freezeappdemo1.backend.entitys.AppsCategory;
 import com.example.freezeappdemo1.backend.entitys.FreezeApp;
 import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
+import com.example.freezeappdemo1.config.MyConfig;
 import com.example.freezeappdemo1.utils.DeviceMethod;
 
 import java.util.List;
@@ -116,7 +117,7 @@ public class ChooseCategoryDialog extends DialogFragment {
                     categoryReadyToAdd = new AppsCategory();
                     categoryReadyToAdd.setCategoryName(editTextAdd.getText().toString());
                     homeViewModel.insertAppsCategory(categoryReadyToAdd);
-                    Toast.makeText(homeViewModel.getApplication(), "Add category success!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(homeViewModel.getApplication(), R.string.add_category_success, Toast.LENGTH_SHORT).show();
                 }
                 editTextAdd.setText("");
             }
@@ -128,7 +129,7 @@ public class ChooseCategoryDialog extends DialogFragment {
             public void onClick(View v) {
                 AppsCategory selectedItem = (AppsCategory) spinnerChooseCategory.getSelectedItem();
                 if (selectedItem == null) {
-                    Toast.makeText(requireContext(), "你还没有添加分类，请先添加", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), R.string.prompt_to_add_categories, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 final long id = selectedItem.getId();
@@ -139,7 +140,7 @@ public class ChooseCategoryDialog extends DialogFragment {
                     public void run() {
                         int i = 0;
                         for (FreezeApp a : readyToFreezeApp) {
-                            Log.d("myTag", a.getAppName());
+                            Log.d(MyConfig.MY_TAG, a.getAppName());
                             a.setCategoryId(id);
                             homeViewModel.insertFreezeApp(a);
                             DeviceMethod.getInstance(requireContext()).freeze(a.getPackageName(), true);

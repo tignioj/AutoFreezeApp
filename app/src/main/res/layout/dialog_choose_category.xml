@@ -50,6 +50,7 @@
             android:id="@+id/btn_choose_category_add_new"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="match_parent"
+            android:textSize="@dimen/normal_button_text_size"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:enabled="false"
@@ -74,6 +75,7 @@
         <Button
             android:id="@+id/btn_choose_category_confirm"
             style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:textSize="@dimen/normal_button_text_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -82,6 +84,7 @@
         <Button
             android:id="@+id/btn_choose_category_cancel"
             style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:textSize="@dimen/normal_button_text_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

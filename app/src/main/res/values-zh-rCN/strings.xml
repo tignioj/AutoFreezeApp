@@ -36,4 +36,17 @@
     <string name="dialog_choose_category_you_can_create_new_one">你可以创建新的分类</string>
     <string name="dialog_choose_category_edit_text_new_category">输入的新分类名称</string>
     <string name="button_add_text">添加分类</string>
+    <string name="image_button_content_description_delete">删除按钮</string>
+    <string name="imageview_content_description_visibility">可见性</string>
+    <string name="dialog_confirm_deletion_text">确认删除吗？</string>
+    <string name="warning">警告</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="prompt_to_add_categories">你还没有添加分类，请先添加分类</string>
+    <string name="add_category_success">添加分类成功！</string>
+    <string name="save_success">保存成功</string>
+    <string name="fragment_home_label">主页</string>
+    <string name="fragment_apps_by_category_label">分类应用</string>
+    <string name="fragment_edit_timer_label">编辑任务</string>
+    <string name="fragment_add_timer_label">添加任务</string>
 </resources>

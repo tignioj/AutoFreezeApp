@@ -1,6 +1,9 @@
 package com.example.freezeappdemo1;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
@@ -30,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //添加返回按钮到导航栏
+        NavController navController = Navigation.findNavController(this, R.id.fragment);
+        NavigationUI.setupActionBarWithNavController(this,navController);
+
         //判断是否可使用
         boolean admin = DeviceMethod.getInstance(getApplicationContext()).isAdmin();
         if (!admin) {
@@ -41,4 +48,13 @@ public class MainActivity extends AppCompatActivity {
         startService(new Intent(getApplicationContext(), FreezeService.class));
     }
 
+    /**
+     * 导航栏上返回按钮可用需要重写此方法
+     * @return
+     */
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.fragment);
+        return navController.navigateUp();
+    }
 }

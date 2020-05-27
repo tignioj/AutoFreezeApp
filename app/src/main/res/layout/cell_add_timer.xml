@@ -9,36 +9,38 @@
         android:id="@+id/textViewStartTimeCell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textViewEndTimeCell"
+        app:layout_constraintEnd_toEndOf="@+id/textViewEndTimeCell"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/textViewEndTimeCell"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEndTimeCell" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="8:30" />
 
     <TextView
         android:id="@+id/textViewEndTimeCell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:layout_marginLeft="6dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/textViewStartTimeCell"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewStartTimeCell"
+        tools:text="9:30" />
 
     <TextView
         android:id="@+id/textViewCategoryNameCell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:maxEms="10"
         android:layout_marginStart="6dp"
         android:layout_marginLeft="6dp"
-        android:text="TextView"
+        android:ellipsize="end"
+        android:maxEms="10"
+        android:maxLines="1"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textViewEndTimeCell"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Socal apps" />
 
     <ImageButton
         android:id="@+id/imageButtonDeleteTimer"
@@ -47,6 +49,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:background="@null"
+        android:contentDescription="@string/image_button_content_description_delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -56,6 +59,7 @@
         android:id="@+id/imageViewVisable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/imageview_content_description_visibility"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButtonDeleteTimer"
         app:layout_constraintTop_toTopOf="parent"

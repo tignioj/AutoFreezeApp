@@ -40,4 +40,17 @@
     <string name="dialog_choose_category_you_can_create_new_one">You can create new one</string>
     <string name="dialog_choose_category_edit_text_new_category">new category</string>
     <string name="button_add_text">Add</string>
+    <string name="image_button_content_description_delete">Delete Image Button</string>
+    <string name="imageview_content_description_visibility">visibility</string>
+    <string name="dialog_confirm_deletion_text">Confirm deletion?</string>
+    <string name="warning">WARNING</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="prompt_to_add_categories">You have not added the categories, please add first</string>
+    <string name="add_category_success">Add category success!</string>
+    <string name="save_success">save success</string>
+    <string name="fragment_home_label">HOME</string>
+    <string name="fragment_apps_by_category_label">Apps by category</string>
+    <string name="fragment_edit_timer_label">Edit Tasker</string>
+    <string name="fragment_add_timer_label">Add Tisker</string>
 </resources>

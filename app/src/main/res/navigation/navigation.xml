@@ -23,8 +23,8 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.freezeappdemo1.ui.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        android:label="@string/fragment_home_label"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_settingFragment"
             app:destination="@id/settingFragment" />
@@ -41,16 +41,16 @@
     <fragment
         android:id="@+id/addTimerFragment"
         android:name="com.example.freezeappdemo1.ui.home.timer.AddTimerFragment"
-        android:label="fragment_add_timer"
+        android:label="@string/fragment_add_timer_label"
         tools:layout="@layout/fragment_add_timer" />
     <fragment
         android:id="@+id/frozenAppByCategoryFragment"
         android:name="com.example.freezeappdemo1.ui.home.frozen.category.FrozenAppByCategoryFragment"
-        android:label="fragment_frozen_app_by_category"
+        android:label="@string/fragment_apps_by_category_label"
         tools:layout="@layout/fragment_frozen_app_by_category" />
     <fragment
         android:id="@+id/freezeTimerEditFragment"
         android:name="com.example.freezeappdemo1.ui.home.timer.FreezeTimerEditFragment"
-        android:label="fragment_edit_timer"
+        android:label="@string/fragment_edit_timer_label"
         tools:layout="@layout/fragment_edit_timer" />
 </navigation>

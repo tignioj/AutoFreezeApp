@@ -9,10 +9,11 @@
 
     <Button
         android:id="@+id/btn_add_apps_to_category_confirm"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:textSize="@dimen/normal_button_text_size"
         android:text="@android:string/ok"
         app:layout_constraintBottom_toBottomOf="@+id/btn_add_apps_to_category_cancel"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,9 +23,10 @@
 
     <Button
         android:id="@+id/btn_add_apps_to_category_cancel"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:textSize="@dimen/normal_button_text_size"
         android:layout_marginTop="8dp"
         android:layout_weight="1"
         android:text="@android:string/cancel"

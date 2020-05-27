@@ -76,14 +76,14 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
                 final FreezeTasker currentDeleteItem = getItem(position);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                builder.setTitle("WARNING")
-                        .setMessage("SURE TO DELETE?")
-                        .setNegativeButton("NO",
+                builder.setTitle(R.string.warning)
+                        .setMessage(R.string.dialog_confirm_deletion_text)
+                        .setNegativeButton(R.string.no,
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                     }
-                                }).setPositiveButton("YES",
+                                }).setPositiveButton(R.string.yes,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

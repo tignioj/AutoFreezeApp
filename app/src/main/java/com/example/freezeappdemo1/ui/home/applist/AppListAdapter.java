@@ -84,7 +84,7 @@ public class AppListAdapter extends ArrayAdapter<AppInfo> {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(MyConfig.MY_TAG, "new Thread" + Thread.currentThread().getId());
+//                        Log.d(MyConfig.MY_TAG, "new Thread" + Thread.currentThread().getId());
 
                         int i = 0;
                         for (AppInfo a : appInfos) {

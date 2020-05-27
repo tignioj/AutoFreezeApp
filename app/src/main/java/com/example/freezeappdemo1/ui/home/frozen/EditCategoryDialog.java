@@ -55,7 +55,7 @@ public class EditCategoryDialog extends DialogFragment {
             @Override
             public void onClick(final View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                builder.setTitle("WARNING").setMessage("SURE TO DELETE?").setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                builder.setTitle(R.string.warning).setMessage(R.string.dialog_confirm_deletion_text).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         frozenFragment.progressBarFrozenFragmentUnfreeezing.setVisibility(View.VISIBLE);
@@ -89,7 +89,7 @@ public class EditCategoryDialog extends DialogFragment {
                             }
                         }).start();
                     }
-                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }

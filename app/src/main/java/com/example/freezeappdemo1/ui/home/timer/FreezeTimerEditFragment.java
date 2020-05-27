@@ -144,7 +144,7 @@ public class FreezeTimerEditFragment extends Fragment {
                 }
 //                homeViewModel.insertFreezeTasks(freezeTaskerFromDb);
                 homeViewModel.updateFreezeTasks(freezeTaskerFromDb);
-                Toast.makeText(getContext(), "save success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.save_success, Toast.LENGTH_SHORT).show();
                 Navigation.findNavController(v).navigateUp();
             }
         });
