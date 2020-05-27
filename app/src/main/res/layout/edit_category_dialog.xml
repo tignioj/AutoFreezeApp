@@ -7,19 +7,29 @@
     android:padding="10dp">
 
     <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/normal_button_text_size"
+        android:text="@string/textview_option"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_view_rename_text"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <Button
         android:id="@+id/btn_edit_category_confirm"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/normal_button_text_size"
         android:layout_weight="1"
         android:text="@android:string/ok"
         app:layout_constraintBottom_toBottomOf="@+id/btn_edit_category_cancel"
@@ -31,6 +41,7 @@
     <Button
         android:id="@+id/btn_edit_category_delete"
         style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:textSize="@dimen/normal_button_text_size"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -44,6 +55,7 @@
     <Button
         android:id="@+id/btn_edit_category_cancel"
         style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:textSize="@dimen/normal_button_text_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -72,7 +84,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/text_view_delete"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_edit_category_cancel" />
 

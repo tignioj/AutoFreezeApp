@@ -85,7 +85,6 @@ public class EditCategoryDialog extends DialogFragment {
                                         }
                                     });
                                 }
-
                             }
                         }).start();
                     }
