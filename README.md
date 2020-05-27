@@ -34,7 +34,11 @@
 
 因为它不需要Root权限，因此需要一些特殊的手段来激活这个应用
 
-## 步骤一：下载Apk,安装到你的手机
+## 步骤一：下载Apk,*不能*直接安装到手机，你需要使用adb工具
+
+这是因为清单中设置了testOnly="true"
+只有这样，才能更加方便卸载，否则如果app突然打不开，你将无法卸载
+
 
 ## 步骤二：退出所有手机账户
 在设置->账户 出退出你的所有账号，例如退出小米账号
@@ -62,7 +66,7 @@ generic_x86_64:/ $
 ```
 
 ## 步骤六：通过adb移除手机中其它的账户
-如果你看见除了0以外的其它账户，移除它，例如移除上面的999
+如果你看见除了0以外的其它账户，移除它，例如移除下面的999
 ```
 generic_x86_64:/ $ pm list users
 Users:
@@ -74,10 +78,18 @@ Users:
 generic_x86_64:/ $ pm remove-user 999
 ```
 
-## 步骤七：设置这个应用为管理员
-
+## 步骤七：利用adb安装App, 并设置该App为管理员
+### 1) 安装App
+先退出shell, 再安装
 ```
-generic_x86_64:/ # dpm set-device-owner com.tignioj.freezeapp/.MyDeviceAdminReceiver
+generic_x86_64:/ $ exit
+PS C:\Users\lili>  adb -s [你设备的id] install -t app-release.apk
+Performing Streamed Install
+Success
+```
+## 2) 设置为管理员（关键)
+```
+PS C:\Users\lili>  adb -s [你设备的id] shell dpm set-device-owner com.tignioj.freezeapp/.MyDeviceAdminReceiver
 Success: Device owner set to package ComponentInfo{com.tignioj.freezeapp/com.tignioj.freezeapp.MyDeviceAdminReceiver}
 Active admin set to component {com.tignioj.freezeapp/com.tignioj.freezeapp.MyDeviceAdminReceiver}
 ```

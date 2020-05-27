@@ -36,7 +36,9 @@ information are flooding our brains. We need be quiet.
 Because it does not require root, it requires some special means of
 activation
 
-## Step1. install it to you phone.
+## Step1. install it to you PC, *DO NOT* install directly to the phone, you need to use adb tool.
+Because testOnly="true" is set in AndroidManifest
+Only in this way, can it be more convenient to uninstall, otherwise if the app suddenly does not open, you will not be able to uninstall
 
 ## Step2. Log out of all accounts in your phone.
 Setting->Account
@@ -76,10 +78,18 @@ remove account 999
 generic_x86_64:/ $ pm remove-user 999
 ```
 
-## Step7. Set this application to administrator
-
+## Step7. Install application using adb, then set it to administrator
+### 1) Install application
+First exit shell, then install it
 ```
-generic_x86_64:/ # dpm set-device-owner com.tignioj.freezeapp/.MyDeviceAdminReceiver
+generic_x86_64:/ $ exit
+PS C:\Users\lili>  adb -s [你设备的id] install -t app-release.apk
+Performing Streamed Install
+Success
+```
+## 2) Set it to administrator (Important)
+```
+PS C:\Users\lili>  adb -s [你设备的id] shell dpm set-device-owner com.tignioj.freezeapp/.MyDeviceAdminReceiver
 Success: Device owner set to package ComponentInfo{com.tignioj.freezeapp/com.tignioj.freezeapp.MyDeviceAdminReceiver}
 Active admin set to component {com.tignioj.freezeapp/com.tignioj.freezeapp.MyDeviceAdminReceiver}
 ```
