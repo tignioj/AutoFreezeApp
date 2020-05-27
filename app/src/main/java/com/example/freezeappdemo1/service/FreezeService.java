@@ -1,35 +1,25 @@
 package com.example.freezeappdemo1.service;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.freezeappdemo1.backend.entitys.FreezeApp;
 import com.example.freezeappdemo1.backend.entitys.FreezeTasker;
 import com.example.freezeappdemo1.backend.viewmodel.HomeViewModel;
 import com.example.freezeappdemo1.config.MyConfig;
-import com.example.freezeappdemo1.entity.AppInfo;
 import com.example.freezeappdemo1.receiver.MyReceiver;
 import com.example.freezeappdemo1.utils.DeviceMethod;
 import com.example.freezeappdemo1.utils.MyDateUtils;
 
 import java.util.HashMap;
 import java.util.List;
-
-import static com.example.freezeappdemo1.config.MyConfig.SHP_FREEZE_APP_LIST_FOR_TIMER;
 
 public class FreezeService extends Service {
     private MyBinder myBinder;
@@ -46,20 +36,22 @@ public class FreezeService extends Service {
     }
 
 
-    public class MyBinder extends Binder {
-
+    public static class MyBinder extends Binder {
     }
 
     List<FreezeTasker> freezeTaskers;
-    private boolean isLockScreen;
 
 
-    HashMap<Long, Boolean> schedulingMap;
+    /**
+     * 当任务在指定时间段为锁屏，则将应用的 id, true 存入, 同时锁定屏幕
+     * 当任务在非指定时间段，则从该map中获取，是否为true，有的话则解锁屏幕
+     */
+    HashMap<Long, Boolean> screenSchedulingMap;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        schedulingMap = new HashMap<>();
+        screenSchedulingMap = new HashMap<>();
         //定时冻结
         final HomeViewModel homeViewModel = new HomeViewModel(getApplication());
 
@@ -82,43 +74,60 @@ public class FreezeService extends Service {
                                 //只处理这时间段的App
                                 List<FreezeApp> appsByCategory = homeViewModel.getAppsByCategory(freezeTasker.getCategoryId());
                                 if (MyDateUtils.betweenStartTimeAndEndTime(freezeTasker.getStartTime(), freezeTasker.getEndTime())) {
-                                    if (freezeTasker.isLockScreen()) {
-                                        Log.d(MyConfig.MY_TAG, "lock screen");
-                                        schedulingMap.put(freezeTasker.getId(), true);
-                                        MyReceiver.isLockScreen = true;
-                                        DeviceMethod.getInstance(getApplicationContext()).lockNow();
-                                    } else {
-                                        Log.d(MyConfig.MY_TAG, "unlock screen");
-                                        schedulingMap.put(freezeTasker.getId(), false);
-                                    }
-                                    //如何保证时间过后，变量恢复为false
+                                    //处理锁屏
+                                    lockScreen(freezeTasker);
 
-                                    Log.d(MyConfig.MY_TAG, "lock apps");
-                                    if (freezeTasker.isFrozen()) {
-                                        freezeApps(appsByCategory, homeViewModel);
-                                    } else {
-                                        //否则解冻
-                                        unfreezeApps(appsByCategory, homeViewModel);
-                                    }
+                                    //处理冻结应用
+                                    lockApps(freezeTasker, appsByCategory);
                                 } else {
                                     //如果不是该时间段的，查看是不是之前有冻结的记录
                                     //如果有, 说明之前灭屏了，则把广播的设为false
-                                    Boolean aBoolean = schedulingMap.get(freezeTasker.getId());
+                                    Boolean aBoolean = screenSchedulingMap.get(freezeTasker.getId());
                                     if (aBoolean != null && aBoolean.booleanValue()) {
                                         Log.d(MyConfig.MY_TAG, "out of data: unlock screen");
-                                        schedulingMap.put(freezeTasker.getId(), false);
+                                        screenSchedulingMap.put(freezeTasker.getId(), false);
                                         MyReceiver.isLockScreen = false;
                                     }
                                 }
                             }
-
                             try {
                                 Thread.sleep(5000);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                         }
+                    }
 
+                    /**
+                     * 冻结应用
+                     * @param freezeTasker
+                     * @param appsByCategory
+                     */
+                    private void lockApps(FreezeTasker freezeTasker, List<FreezeApp> appsByCategory) {
+                        Log.d(MyConfig.MY_TAG, "lock apps");
+                        if (freezeTasker.isFrozen()) {
+                            freezeApps(appsByCategory, homeViewModel);
+                        } else {
+                            //否则解冻
+                            unfreezeApps(appsByCategory, homeViewModel);
+                        }
+                    }
+
+                    /**
+                     * 锁屏
+                     * @param freezeTasker
+                     */
+                    private void lockScreen(FreezeTasker freezeTasker) {
+                        //处理锁屏
+                        if (freezeTasker.isLockScreen()) {
+                            Log.d(MyConfig.MY_TAG, "lock screen");
+                            screenSchedulingMap.put(freezeTasker.getId(), true);
+                            MyReceiver.isLockScreen = true;
+                            DeviceMethod.getInstance(getApplicationContext()).lockNow();
+                        } else {
+                            Log.d(MyConfig.MY_TAG, "unlock screen");
+                            screenSchedulingMap.put(freezeTasker.getId(), false);
+                        }
                     }
                 }).start();
             }
@@ -127,6 +136,11 @@ public class FreezeService extends Service {
 
     }
 
+    /**
+     * 解冻App集合
+     * @param appsByCategory
+     * @param homeViewModel
+     */
     private void unfreezeApps(List<FreezeApp> appsByCategory, HomeViewModel homeViewModel) {
         for (FreezeApp freezeApp : appsByCategory) {
             if (freezeApp.isFrozen()) {
@@ -141,7 +155,6 @@ public class FreezeService extends Service {
 
     /**
      * 冻结指定App集合
-     *
      * @param appsByCategory
      */
     private void freezeApps(List<FreezeApp> appsByCategory, HomeViewModel homeViewModel) {
