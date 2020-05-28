@@ -41,6 +41,8 @@ public class AppListAdapter extends ArrayAdapter<AppInfo> {
 
     public void updateInfos(List<AppInfo> appInfos) {
         this.appInfos = appInfos;
+        notifyDataSetChanged();
+        updateSelectedCount();
     }
 
     @Override
@@ -78,26 +80,7 @@ public class AppListAdapter extends ArrayAdapter<AppInfo> {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 getItem(position).setSelected(isChecked);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        Log.d(MyConfig.MY_TAG, "new Thread" + Thread.currentThread().getId());
-
-                        int i = 0;
-                        for (AppInfo a : appInfos) {
-                            if (a.isSelected()) {
-                                i++;
-                            }
-                        }
-                        final int finalI = i;
-                        fragmentActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                homeViewModel.setSelectedReadyToFreezeCount(finalI);
-                            }
-                        });
-                    }
-                }).start();
+                updateSelectedCount();
             }
         });
         checkBox.setChecked(item.isSelected());
@@ -105,6 +88,27 @@ public class AppListAdapter extends ArrayAdapter<AppInfo> {
         packageName.setText(item.getPackageName());
         imageView.setImageDrawable(item.getIcon());
         return view;
+    }
+
+    private void updateSelectedCount() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int i = 0;
+                for (AppInfo a : appInfos) {
+                    if (a.isSelected()) {
+                        i++;
+                    }
+                }
+                final int finalI = i;
+                fragmentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        homeViewModel.setSelectedReadyToFreezeCount(finalI);
+                    }
+                });
+            }
+        }).start();
     }
 
     public List<AppInfo> getAppInfos() {

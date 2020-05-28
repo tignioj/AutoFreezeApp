@@ -68,7 +68,6 @@ public class AddAppsDialog extends DialogFragment {
                     @Override
                     public void onChanged(List<AppInfo> appInfos) {
                         adapter.updateInfos(appInfos);
-                        adapter.notifyDataSetChanged();
                     }
                 });
             }

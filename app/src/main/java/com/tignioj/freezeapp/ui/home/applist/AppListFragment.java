@@ -71,7 +71,6 @@ public class AppListFragment extends Fragment {
             public void onChanged(List<AppInfo> appInfos) {
                 Log.d(MyConfig.MY_TAG, "applist update");
                 adapter.updateInfos(appInfos);
-                adapter.notifyDataSetChanged();
             }
         });
 
@@ -152,7 +151,6 @@ public class AppListFragment extends Fragment {
                     @Override
                     public void onChanged(List<AppInfo> appInfos) {
                         adapter.updateInfos(appInfos);
-                        adapter.notifyDataSetChanged();
                     }
                 });
             }
