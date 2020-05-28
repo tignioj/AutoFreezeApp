@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.tignioj.freezeapp.service.FreezeService;
-import com.tignioj.freezeapp.service.MyBroadCastService;
 import com.tignioj.freezeapp.utils.DeviceMethod;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,14 +36,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         startService(new Intent(getApplicationContext(), FreezeService.class));
-        startService(new Intent(getApplicationContext(), MyBroadCastService.class));
     }
 
-    /**
-     * 导航栏上返回按钮可用需要重写此方法
-     *
-     * @return
-     */
+     //导航栏上返回按钮可用需要重写此方法
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.fragment);

@@ -10,13 +10,10 @@ import com.tignioj.freezeapp.backend.viewmodel.HomeViewModel;
 import com.tignioj.freezeapp.config.MyConfig;
 import com.tignioj.freezeapp.utils.DeviceMethod;
 
-public class MyReceiver extends BroadcastReceiver {
-    public static boolean isLockScreen;
+public class PackageReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(MyConfig.MY_TAG, intent.getAction() + ":" + isLockScreen);
-
         if (intent.getAction() == null) {
             return;
         }
@@ -24,13 +21,7 @@ public class MyReceiver extends BroadcastReceiver {
         HomeViewModel homeViewModel = new HomeViewModel((Application) context.getApplicationContext());
 
         switch (intent.getAction()) {
-            case Intent.ACTION_SCREEN_ON:
-            case Intent.ACTION_USER_PRESENT:
-                if (isLockScreen) {
-                    Log.d(MyConfig.BROADCAST_RECEIVER, "屏幕开启了");
-                    DeviceMethod.getInstance(context).lockNow();
-                }
-                break;
+
 //            case Intent.ACTION_PACKAGE_REMOVED:
             case Intent.ACTION_PACKAGE_FULLY_REMOVED:
                 Log.d(MyConfig.MY_TAG, "安装包移除");
