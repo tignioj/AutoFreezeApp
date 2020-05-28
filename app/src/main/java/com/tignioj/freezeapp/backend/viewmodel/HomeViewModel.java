@@ -194,4 +194,17 @@ public class HomeViewModel extends AndroidViewModel {
     public LiveData<List<FreezeApp>> getMutableLiveDataFreezeAppListLiveInCategoryWithPattern(long categoryId, String pattern) {
         return freezeAppRepository.getMutableLiveDataFreezeAppListLiveInCategoryWithPattern(categoryId, pattern);
     }
+
+    public void deleteFreezeAppByPackageName(String appName) {
+        FreezeApp freezeAppByPackageName = freezeAppRepository.getFreezeAppByPackageName(appName);
+        if (freezeAppByPackageName != null) {
+            FreezeApp[] apps = new FreezeApp[]{freezeAppByPackageName};
+            freezeAppRepository.deleteFreezeApp(apps);
+        }
+    }
+
+    public List<String > getFonzenAppListPackageName() {
+        return homeRepository.getFrozenAppListPackageName();
+    }
+
 }

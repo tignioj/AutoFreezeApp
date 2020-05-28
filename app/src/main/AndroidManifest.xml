@@ -39,14 +39,13 @@
                 <action android:name="android.intent.action.SCREEN_ON"/>
                 <action android:name="android.intent.action.USER_PRESENT"/>
             </intent-filter>
-
         </receiver>
+
 
 <!--        定时服务-->
         <service android:name="com.tignioj.freezeapp.service.FreezeService" android:enabled="true"/>
-        <service
-            android:name="com.tignioj.freezeapp.service.MyBroadCastService"
-            android:enabled="true" />
+
+        <service android:name="com.tignioj.freezeapp.service.MyBroadCastService" android:enabled="true" />
 
     </application>
 

@@ -1,5 +1,6 @@
 package com.tignioj.freezeapp.ui.home.frozen.category;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tignioj.freezeapp.R;
 import com.tignioj.freezeapp.backend.entitys.FreezeApp;
 import com.tignioj.freezeapp.backend.viewmodel.HomeViewModel;
+import com.tignioj.freezeapp.config.MyConfig;
 import com.tignioj.freezeapp.utils.DeviceMethod;
 
 public class FrozenAppByCategoryAdapter extends ListAdapter<FreezeApp, FrozenAppByCategoryAdapter.MyViewHolder> {
@@ -66,25 +69,29 @@ public class FrozenAppByCategoryAdapter extends ListAdapter<FreezeApp, FrozenApp
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        FreezeApp item = getItem(holder.getAdapterPosition());
-                        if (item.isFrozen()) {
-                            holder.imageButton.setImageResource(R.drawable.ic_lock_open_black_24dp);
-                            DeviceMethod.getInstance(homeViewModel.getApplication()).freeze(item.getPackageName(), false);
-                            item.setFrozen(false);
-                        } else {
-                            holder.imageButton.setImageResource(R.drawable.ic_lock_black_24dp);
-                            DeviceMethod.getInstance(homeViewModel.getApplication()).freeze(item.getPackageName(), true);
-                            item.setFrozen(true);
-                        }
+                        final FreezeApp item = getItem(holder.getAdapterPosition());
+                        final boolean b = !item.isFrozen();
+                        DeviceMethod.getInstance(homeViewModel.getApplication()).freeze(item.getPackageName(), b);
+                        item.setFrozen(b);
                         homeViewModel.updateFreezeApp(item);
                         homeViewModel.updateAllMemoryData();
-                        frozenAppByCategoryFragment.getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                holder.progressBar.setVisibility(View.INVISIBLE);
-                                notifyItemChanged(holder.getAdapterPosition());
-                            }
-                        });
+                        FragmentActivity activity = frozenAppByCategoryFragment.getActivity();
+                        if (activity != null) {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (b) {
+                                        holder.imageButton.setImageResource(R.drawable.ic_lock_open_black_24dp);
+                                    } else {
+                                        holder.imageButton.setImageResource(R.drawable.ic_lock_black_24dp);
+                                    }
+                                    holder.progressBar.setVisibility(View.INVISIBLE);
+                                    notifyItemChanged(holder.getAdapterPosition());
+                                }
+                            });
+                        } else {
+                            Log.e(MyConfig.TAG_ERR, "activity null" + activity);
+                        }
                     }
                 }).start();
             }

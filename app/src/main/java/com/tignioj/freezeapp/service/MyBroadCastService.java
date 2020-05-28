@@ -18,20 +18,24 @@ public class MyBroadCastService extends Service {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-
-//        intentFilter.addDataScheme("package");
-        myReceiver = new MyReceiver();
-        registerReceiver(myReceiver, intentFilter);
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(myReceiver);
     }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+
+        intentFilter.addDataScheme("package");
+        myReceiver = new MyReceiver();
+        registerReceiver(myReceiver, intentFilter);
+    }
+
+
 
 }

@@ -44,4 +44,7 @@ public interface FreezeAppDao {
 
     @Query("SELECT * FROM freeze_app WHERE appName LIKE :pattern OR package_name LIKE :pattern AND isFrozen=1 AND category_id=:categoryId  ORDER BY id ")
     LiveData<List<FreezeApp>> getMutableLiveDataFreezeAppListLiveInCategoryWithPattern(long categoryId, String pattern);
+
+    @Query("SELECT * FROM freeze_app WHERE package_name=:packageName")
+    FreezeApp getFreezeAppByPackageName(String packageName);
 }

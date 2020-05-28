@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -28,7 +27,6 @@ import com.tignioj.freezeapp.backend.entitys.AppsCategory;
 import com.tignioj.freezeapp.backend.entitys.FreezeApp;
 import com.tignioj.freezeapp.config.MyConfig;
 import com.tignioj.freezeapp.backend.viewmodel.HomeViewModel;
-import com.tignioj.freezeapp.entity.AppInfo;
 import com.tignioj.freezeapp.utils.DeviceMethod;
 
 import java.util.List;
@@ -175,10 +173,9 @@ public class FrozenFragment extends Fragment {
                 }
 
                 //解决漏网之物
-                MutableLiveData<List<AppInfo>> mutableLiveDataFrozenAppList = homeViewModel.getMutableLiveDataFrozenAppList();
-                List<AppInfo> value = mutableLiveDataFrozenAppList.getValue();
-                for (AppInfo a : value) {
-                    DeviceMethod.getInstance(requireContext()).freeze(a.getPackageName(), false);
+                List<String> value = homeViewModel.getFonzenAppListPackageName();
+                for (String a : value) {
+                    DeviceMethod.getInstance(requireContext()).freeze(a, false);
                 }
 
                 if (i > 0) {

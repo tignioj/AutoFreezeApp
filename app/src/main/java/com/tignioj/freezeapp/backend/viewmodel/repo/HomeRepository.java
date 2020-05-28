@@ -270,4 +270,31 @@ public class HomeRepository {
         newAppInfosLive.setValue(newAppInfos);
         return newAppInfosLive;
     }
+
+    public List<String> getFrozenAppListPackageName() {
+        List<String> appInfos = new ArrayList<>();
+
+        PackageManager pm = context.getPackageManager();
+        List<PackageInfo> installedPackages = pm.getInstalledPackages(PackageManager.GET_ACTIVITIES | PackageManager.MATCH_UNINSTALLED_PACKAGES);
+
+        for (PackageInfo p : installedPackages) {
+            ApplicationInfo ai = p.applicationInfo;
+
+            //不显示系统应用
+            boolean b = (ai.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+            if (b) {
+                continue;
+            }
+
+            //不显示本应用
+            if (ai.packageName.equals(context.getPackageName())) {
+                continue;
+            }
+
+            if(DeviceMethod.getInstance(context).isHidden(ai.packageName)) {
+                appInfos.add(ai.packageName);
+            }
+        }
+        return appInfos;
+    }
 }

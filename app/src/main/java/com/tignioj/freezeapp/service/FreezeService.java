@@ -3,6 +3,7 @@ package com.tignioj.freezeapp.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
@@ -50,7 +51,6 @@ public class FreezeService extends Service {
     }
 
     List<FreezeTasker> freezeTaskers;
-    private boolean isLockScreen;
 
 
     HashMap<Long, Boolean> schedulingMap;
@@ -58,6 +58,7 @@ public class FreezeService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
         schedulingMap = new HashMap<>();
         //定时冻结
         final HomeViewModel homeViewModel = new HomeViewModel(getApplication());

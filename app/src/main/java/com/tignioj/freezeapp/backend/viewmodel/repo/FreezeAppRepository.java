@@ -66,6 +66,10 @@ public class FreezeAppRepository {
         return freezeAppDao.getMutableLiveDataFreezeAppListLiveInCategoryWithPattern(categoryId, "%" + pattern + "%");
     }
 
+    public FreezeApp getFreezeAppByPackageName(String packageName) {
+        return freezeAppDao.getFreezeAppByPackageName(packageName);
+    }
+
 
     public static class InsertAsyncTask extends AsyncTask<FreezeApp, Void, Void> {
         private FreezeAppDao freezeAppDao;
