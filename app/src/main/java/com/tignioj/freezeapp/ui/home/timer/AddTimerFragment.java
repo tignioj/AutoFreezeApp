@@ -47,20 +47,20 @@ public class AddTimerFragment extends Fragment {
     private EditText editTextStartTime;
     private RadioGroup radioGroupUnFreezeOrUnfreeze;
     private RadioButton radioButtonFreeze, radioButtonUnFreeze;
-    CheckBox checkBoxAddTimerIsLockScreen;
+    private CheckBox checkBoxAddTimerIsLockScreen;
 
 
-    HomeViewModel homeViewModel;
+    private HomeViewModel homeViewModel;
 
     public AddTimerFragment() {
     }
 
     private FreezeTasker freezeTasker;
 
-    Button buttonBack, buttonSave;
-    Spinner spinner;
+    private Button buttonBack, buttonSave;
+    private Spinner spinner;
 
-    boolean isFirstWarinng;
+    private boolean isFirstWarinng;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -123,7 +123,7 @@ public class AddTimerFragment extends Fragment {
         AppsCategory[] appsCategories = appsCategorys.toArray(new AppsCategory[0]);
 
         spinner = inflate.findViewById(R.id.addTimerTaskSpinner);
-        ArrayAdapter<AppsCategory> adapter = new ArrayAdapter<AppsCategory>(
+        ArrayAdapter<AppsCategory> adapter = new ArrayAdapter<>(
                 requireContext(),
                 R.layout.cell_spinner_on_tv,
                 appsCategories
@@ -192,6 +192,7 @@ public class AddTimerFragment extends Fragment {
             // Do something with the time chosen by the user
             c.set(Calendar.HOUR_OF_DAY, hourOfDay);
             c.set(Calendar.MINUTE, minute);
+            c.set(Calendar.SECOND, 0);
             switch (this.getTag()) {
                 case START_TIME_PICKER_TAG:
                     fragment.editTextStartTime.setText(sdf.format(c.getTime()));
