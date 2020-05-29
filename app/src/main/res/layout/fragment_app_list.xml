@@ -6,18 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.applist.AppListFragment">
 
-    <Button
-        android:id="@+id/button_freeze"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_applist_btn_freeze_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
-
-
+<!--    <Button-->
+<!--        android:id="@+id/button_freeze"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/fragment_applist_btn_freeze_text"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.5"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/guideline" />-->
 
 
     <EditText
@@ -28,6 +26,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/fragment_applist_et_input_package_name_hint_text"
+        android:inputType="text"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent" />
@@ -89,17 +88,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
 
-    <Button
-        android:id="@+id/buttonDebug"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButtonFreeze"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:onClick="debug"
-        android:text="DEBUG"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        app:srcCompat="@drawable/ic_ac_unit_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:focusable="true" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

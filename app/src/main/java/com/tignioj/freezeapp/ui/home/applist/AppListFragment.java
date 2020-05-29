@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tignioj.freezeapp.R;
 import com.tignioj.freezeapp.backend.entitys.FreezeApp;
 import com.tignioj.freezeapp.config.MyConfig;
@@ -44,7 +45,8 @@ public class AppListFragment extends Fragment {
     private AppListAdapter adapter;
     private HomeViewModel homeViewModel;
     private CheckBox checkBoxAppListSelectAll;
-    private Button buttonFreeze;
+//    private Button buttonFreeze;
+    private FloatingActionButton floatingActionButtonFreeze;
 
 
     @Override
@@ -85,9 +87,17 @@ public class AppListFragment extends Fragment {
         // Inflate the layout for this fragment
         final View inflate = inflater.inflate(R.layout.fragment_app_list, container, false);
 
-        buttonFreeze = inflate.findViewById(R.id.button_freeze);
+//        buttonFreeze = inflate.findViewById(R.id.button_freeze);
+        floatingActionButtonFreeze = inflate.findViewById(R.id.floatingActionButtonFreeze);
 
-        buttonFreeze.setOnClickListener(new View.OnClickListener() {
+//        buttonFreeze.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                freeze(v);
+//            }
+//        });
+
+        floatingActionButtonFreeze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 freeze(v);
@@ -127,9 +137,11 @@ public class AppListFragment extends Fragment {
             @Override
             public void onChanged(Integer integer) {
                 if (integer == 0) {
-                    buttonFreeze.setEnabled(false);
+//                    buttonFreeze.setEnabled(false);
+                    floatingActionButtonFreeze.setEnabled(false);
                 } else {
-                    buttonFreeze.setEnabled(true);
+//                    buttonFreeze.setEnabled(true);
+                    floatingActionButtonFreeze.setEnabled(true);
                 }
                 String s = selectedText.toString() + integer + "/" + adapter.getCount();
                 textViewAppListSelectCount.setText(s);
