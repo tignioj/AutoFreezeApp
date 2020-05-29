@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -29,6 +31,7 @@ import com.tignioj.freezeapp.R;
 import com.tignioj.freezeapp.backend.entitys.AppsCategory;
 import com.tignioj.freezeapp.backend.entitys.FreezeTasker;
 import com.tignioj.freezeapp.backend.viewmodel.HomeViewModel;
+import com.tignioj.freezeapp.config.MyConfig;
 import com.tignioj.freezeapp.utils.MyDateUtils;
 
 import java.text.SimpleDateFormat;
@@ -170,17 +173,11 @@ public class FreezeTimerEditFragment extends Fragment {
         editTextDescription.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().length() > 0
-                        && editTextStartTime.getText().toString().length() > 0
-                        && editTextEndTime.getText().toString().length() > 0
-                        && spinner.getSelectedItem() != null
-                ) {
-
+                if (checkForm()) {
                     buttonSave.setEnabled(true);
                 } else {
                     buttonSave.setEnabled(false);
@@ -189,11 +186,42 @@ public class FreezeTimerEditFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (checkForm()) {
+                    buttonSave.setEnabled(true);
+                } else {
+                    buttonSave.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                buttonSave.setEnabled(false);
             }
         });
 
         return inflate;
+    }
+
+    /**
+     * 表单验证
+     * @return 如果符合规则则返回true
+     */
+    public boolean checkForm() {
+        if (editTextDescription.getText().toString().length() > 0
+                && editTextStartTime.getText().toString().length() > 0
+                && editTextEndTime.getText().toString().length() > 0
+                && spinner.getSelectedItem() != null
+        ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private int getPosition(AppsCategory[] appsCategories) {
