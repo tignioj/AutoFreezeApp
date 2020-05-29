@@ -8,13 +8,14 @@
 
 
         <!-- Customize your theme here. -->
-<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
-<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-<!--        <item name="colorAccent">@color/colorAccent</item>-->
-
-        <item name="colorPrimary">#7986CB</item>
-        <item name="colorPrimaryDark">#7986CB</item>
-        <item name="colorAccent">#6A75AF</item>
+<!--        ActionBar颜色,和TextButton为enable的TextColor颜色-->
+<!--        <item name="colorPrimary">#000000</item>-->
+<!--        状态栏颜色-->
+<!--        <item name="colorPrimaryDark">#000000</item>-->
+<!--        floatingActionButton按钮和输入框-->
+        <item name="colorAccent">#7986CB</item>
+<!--        TextButton的enable=false时-->
+        <item name="colorOnSurface">#7986CB</item>
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
@@ -23,6 +24,7 @@
         <!--        在Spinner附近显示-->
         <item name="android:spinnerMode">dropdown</item>
         <item name="android:popupBackground">#EA9292</item>
+
     </style>
 
 
