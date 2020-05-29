@@ -27,21 +27,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewStartTimeCell"
         tools:text="9:30" />
 
-    <TextView
-        android:id="@+id/textViewCategoryNameCell"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:layout_marginLeft="6dp"
-        android:ellipsize="end"
-        android:maxEms="10"
-        android:maxLines="1"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewEndTimeCell"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Socal apps" />
-
     <ImageButton
         android:id="@+id/imageButtonDeleteTimer"
         android:layout_width="wrap_content"
@@ -69,9 +54,41 @@
         android:id="@+id/imageViewLockPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/lock_screeen_image_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageViewVisable"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_phonelink_lock_black_24dp" />
+
+    <TextView
+        android:id="@+id/textviewDescriptionCell"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:ellipsize="end"
+        android:maxEms="10"
+        android:maxLines="1"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/textViewCategoryNameCell"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewLockPhone"
+        app:layout_constraintStart_toEndOf="@+id/textViewStartTimeCell"
+            tools:text="@string/fragment_add_edit_timer_description"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewCategoryNameCell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:ellipsize="end"
+        android:maxEms="10"
+        android:maxLines="1"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textViewEndTimeCell"
+        app:layout_constraintTop_toBottomOf="@+id/textviewDescriptionCell"
+        tools:text="Socal apps" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

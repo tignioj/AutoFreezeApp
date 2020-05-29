@@ -17,10 +17,11 @@ import com.tignioj.freezeapp.backend.entitys.AppsCategory;
 import com.tignioj.freezeapp.backend.entitys.FreezeApp;
 import com.tignioj.freezeapp.backend.entitys.FreezeTasker;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-@Database(entities = {AppsCategory.class, FreezeApp.class, FreezeTasker.class}, version = 1, exportSchema = false)
+@Database(entities = {AppsCategory.class, FreezeApp.class, FreezeTasker.class}, version = 2, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppsDataBase extends RoomDatabase {
 
@@ -38,6 +39,7 @@ public abstract class AppsDataBase extends RoomDatabase {
                     /*清空当前数据式的迁移*/
 //                    .fallbackToDestructiveMigration()
                     /*自定义迁移策略*/
+                    .addMigrations(MIGRATION_1_2)
 //                    .addMigrations(MIGRATION_3_4)
                     /*级联删除tasks*/
 //                    .addMigrations(MIGRATION_4_5)
@@ -53,6 +55,20 @@ public abstract class AppsDataBase extends RoomDatabase {
     public abstract AppsCategoryDao getAppsCategoryDao();
     public abstract FreezeAppDao getFreezeAppDao();
     public abstract FreezeTaskerDao getFreezeTaskerDao();
+
+
+    /**
+     * freezeTimer添加字段description
+     */
+    private static final Migration MIGRATION_1_2 = new Migration(1,2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Date date = new Date();
+            String s =  "\'" + date.toString() + "\'";
+            database.execSQL("ALTER TABLE  freeze_tasker ADD COLUMN description VARCHAR DEFAULT "+ s);
+        }
+    };
+
 
     /**
      * 版本3->4 添加myTask的创建时间

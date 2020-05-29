@@ -56,4 +56,7 @@
     <string name="textview_option">OPTION</string>
     <string name="checkBoxAddTimerIsLockScreen">lock screen</string>
     <string name="lock_screen_check_warning_text">Check this option, you will not be able to use the phone during the specified time! The phone will remain locked</string>
+    <string name="fragment_add_edit_timer_description">Task description</string>
+    <string name="image_description_application_s_logo_text">Application\'s logo</string>
+    <string name="lock_screeen_image_description">lock_screeen_image_description</string>
 </resources>

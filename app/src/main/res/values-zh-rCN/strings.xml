@@ -52,4 +52,6 @@
     <string name="textview_option">选项</string>
     <string name="checkBoxAddTimerIsLockScreen">锁屏</string>
     <string name="lock_screen_check_warning_text">勾上此选项，在指定时间内将无法使用手机！手机将会一直处于锁屏状态</string>
+    <string name="fragment_add_edit_timer_description">任务描述</string>
+    <string name="image_description_application_s_logo_text">应用图标</string>
 </resources>

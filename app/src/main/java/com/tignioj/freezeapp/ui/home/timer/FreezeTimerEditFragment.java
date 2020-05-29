@@ -3,6 +3,8 @@ package com.tignioj.freezeapp.ui.home.timer;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,18 +44,19 @@ public class FreezeTimerEditFragment extends Fragment {
     private RadioGroup radioGroupUnFreezeOrUnfreeze;
     private RadioButton radioButtonFreeze, radioButtonUnFreeze;
     private CheckBox checkBoxEditTimerIsLockScreen;
+    private EditText editTextDescription;
 
 
-    HomeViewModel homeViewModel;
+    private HomeViewModel homeViewModel;
 
 
     public FreezeTimerEditFragment() {
     }
 
-    FreezeTasker freezeTaskerFromDb;
+    private FreezeTasker freezeTaskerFromDb;
 
-    Button buttonBack, buttonSave;
-    Spinner spinner;
+    private Button buttonBack, buttonSave;
+    private Spinner spinner;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,6 +75,8 @@ public class FreezeTimerEditFragment extends Fragment {
 
 
         View inflate = inflater.inflate(R.layout.fragment_edit_timer, container, false);
+
+
         buttonBack = inflate.findViewById(R.id.button_addTimer_Back);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +125,7 @@ public class FreezeTimerEditFragment extends Fragment {
         AppsCategory[] appsCategories = appsCategorys.toArray(new AppsCategory[0]);
 
         spinner = inflate.findViewById(R.id.addTimerTaskSpinner);
-        ArrayAdapter<AppsCategory> adapter = new ArrayAdapter<AppsCategory>(
+        ArrayAdapter<AppsCategory> adapter = new ArrayAdapter<>(
                 requireContext(),
                 R.layout.cell_spinner_on_tv,
                 appsCategories
@@ -134,13 +139,17 @@ public class FreezeTimerEditFragment extends Fragment {
         spinner.setSelection(itemPosition);
 
         buttonSave = inflate.findViewById(R.id.button_addTime_save);
+        buttonSave.setEnabled(false);
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AppsCategory selectedItem = (AppsCategory) spinner.getSelectedItem();
+
                 freezeTaskerFromDb.setCategoryId(selectedItem.getId());
                 freezeTaskerFromDb.setCategoryName(selectedItem.getCategoryName());
+                freezeTaskerFromDb.setDescription(editTextDescription.getText().toString());
+
                 if (radioGroupUnFreezeOrUnfreeze.getCheckedRadioButtonId() == R.id.radioButtonFreeze) {
                     freezeTaskerFromDb.setFrozen(true);
                 } else {
@@ -151,6 +160,36 @@ public class FreezeTimerEditFragment extends Fragment {
                 homeViewModel.updateFreezeTasks(freezeTaskerFromDb);
                 Toast.makeText(getContext(), R.string.save_success, Toast.LENGTH_SHORT).show();
                 Navigation.findNavController(v).navigateUp();
+            }
+        });
+
+        editTextDescription = inflate.findViewById(R.id.editTimerEditTextDescription);
+        editTextDescription.setText(freezeTaskerFromDb.getDescription());
+
+
+        editTextDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().length() > 0
+                        && editTextStartTime.getText().toString().length() > 0
+                        && editTextEndTime.getText().toString().length() > 0
+                        && spinner.getSelectedItem() != null
+                ) {
+
+                    buttonSave.setEnabled(true);
+                } else {
+                    buttonSave.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -212,5 +251,5 @@ public class FreezeTimerEditFragment extends Fragment {
                     break;
             }
         }
-    } 
+    }
 }

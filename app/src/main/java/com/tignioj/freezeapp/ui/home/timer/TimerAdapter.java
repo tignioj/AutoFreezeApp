@@ -23,10 +23,10 @@ import java.text.SimpleDateFormat;
 
 public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewHolder> {
 
-    TimerFragment timerFragment;
+    private TimerFragment timerFragment;
 
 
-    protected TimerAdapter(TimerFragment timerFragment) {
+    TimerAdapter(TimerFragment timerFragment) {
         super(new DiffUtil.ItemCallback<FreezeTasker>() {
             @Override
             public boolean areItemsTheSame(@NonNull FreezeTasker oldItem, @NonNull FreezeTasker newItem) {
@@ -40,11 +40,11 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
                         && oldItem.getEndTime().equals(newItem.getEndTime())
                         && oldItem.getCategoryName().equals(newItem.getCategoryName())
                         && oldItem.isLockScreen() == newItem.isLockScreen()
+                        && oldItem.getDescription().equals(newItem.getDescription())
                         ;
             }
         });
         this.timerFragment = timerFragment;
- ;
     }
 
     @NonNull
@@ -102,17 +102,21 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
             }
         });
         holder.imageViewLockPhone.setVisibility(item.isLockScreen()?View.VISIBLE:View.INVISIBLE);
+
+        holder.textViewDescription.setText(item.getDescription());
     }
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView textViewStartTime, textViewEndTime, textViewCategoryName;
         ImageButton imageButton;
         ImageView imageViewVisible, imageViewLockPhone;
+        TextView textViewDescription;
 
-        public MyViewHolder(@NonNull View itemView) {
+        MyViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewStartTime = itemView.findViewById(R.id.textViewStartTimeCell);
+            textViewDescription = itemView.findViewById(R.id.textviewDescriptionCell);
             textViewEndTime = itemView.findViewById(R.id.textViewEndTimeCell);
             textViewCategoryName = itemView.findViewById(R.id.textViewCategoryNameCell);
             imageButton = itemView.findViewById(R.id.imageButtonDeleteTimer);

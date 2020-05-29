@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
         app:layout_constraintTop_toTopOf="@+id/guideline10">
@@ -46,6 +47,7 @@
         android:id="@+id/editText_addTime_startTime"
         android:layout_width="80sp"
         android:layout_height="wrap_content"
+        android:autofillHints=""
         android:ems="10"
         android:focusableInTouchMode="false"
         android:hint="@string/start_time_edittext_hint"
@@ -55,14 +57,14 @@
         app:layout_constraintEnd_toStartOf="@+id/textView3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="@+id/textView2"
-        android:autofillHints="" />
+        app:layout_constraintTop_toTopOf="@+id/textView2" />
 
     <Spinner
         android:id="@+id/addTimerTaskSpinner"
         android:layout_width="0dp"
         android:layout_height="32sp"
         android:height="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
         app:layout_constraintTop_toTopOf="@+id/guideline7" />
@@ -71,6 +73,7 @@
         android:id="@+id/editText_addTime_endTime"
         android:layout_width="80sp"
         android:layout_height="wrap_content"
+        android:autofillHints=""
         android:ems="10"
         android:focusableInTouchMode="false"
         android:hint="@string/end_time_edit_text_hint"
@@ -80,8 +83,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toTopOf="@+id/textView3"
-        android:autofillHints="" />
+        app:layout_constraintTop_toTopOf="@+id/textView3" />
 
     <Button
         android:id="@+id/button_addTime_save"
@@ -104,7 +106,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button_addTime_save"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addTimerEditTextDescription" />
 
     <TextView
         android:id="@+id/textView"
@@ -121,6 +124,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_view_from"
+        app:layout_constraintBottom_toTopOf="@+id/guideline8"
         app:layout_constraintEnd_toStartOf="@+id/editText_addTime_startTime"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
@@ -157,7 +161,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintGuide_percent="0.8"
+        app:layout_constraintGuide_percent="0.6"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -172,16 +176,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/checkBoxAddTimerIsLockScreen"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline9" />
+        app:layout_constraintBottom_toBottomOf="@+id/addTimerEditTextDescription"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/addTimerEditTextDescription"
+        app:layout_constraintTop_toTopOf="@+id/addTimerEditTextDescription" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6" />
+        app:layout_constraintGuide_percent="0.75" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline10"
@@ -189,6 +195,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.4" />
+
+    <EditText
+        android:id="@+id/addTimerEditTextDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/fragment_add_edit_timer_description"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxAddTimerIsLockScreen"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline5"
+        app:layout_constraintTop_toTopOf="@+id/guideline9" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

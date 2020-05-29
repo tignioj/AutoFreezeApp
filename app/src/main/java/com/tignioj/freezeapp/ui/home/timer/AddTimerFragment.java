@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +50,7 @@ public class AddTimerFragment extends Fragment {
     private RadioGroup radioGroupUnFreezeOrUnfreeze;
     private RadioButton radioButtonFreeze, radioButtonUnFreeze;
     private CheckBox checkBoxAddTimerIsLockScreen;
+    private EditText editTextDescription;
 
 
     private HomeViewModel homeViewModel;
@@ -61,6 +64,7 @@ public class AddTimerFragment extends Fragment {
     private Spinner spinner;
 
     private boolean isFirstWarinng;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,6 +73,9 @@ public class AddTimerFragment extends Fragment {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         freezeTasker = new FreezeTasker();
         View inflate = inflater.inflate(R.layout.fragment_add_timer, container, false);
+
+
+
         buttonBack = inflate.findViewById(R.id.button_addTimer_Back);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +121,7 @@ public class AddTimerFragment extends Fragment {
                         }
                     }).setTitle(R.string.warning)
                             .setMessage(R.string.lock_screen_check_warning_text)
-                    .create().show();
+                            .create().show();
                 }
             }
         });
@@ -132,20 +139,28 @@ public class AddTimerFragment extends Fragment {
 //        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        if (spinner.getSelectedItem() == null) {
+            Toast.makeText(requireContext(), R.string.prompt_to_add_categories, Toast.LENGTH_SHORT).show();
+        }
+
+
         buttonSave = inflate.findViewById(R.id.button_addTime_save);
+        buttonSave.setEnabled(false);
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AppsCategory selectedItem = (AppsCategory) spinner.getSelectedItem();
-                if (selectedItem == null) {
-                    Toast.makeText(requireContext(), R.string.prompt_to_add_categories, Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                if (selectedItem == null) {
+//                    Toast.makeText(requireContext(), R.string.prompt_to_add_categories, Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
 
                 freezeTasker.setCategoryId(selectedItem.getId());
                 freezeTasker.setCategoryName(selectedItem.getCategoryName());
                 freezeTasker.setLockScreen(checkBoxAddTimerIsLockScreen.isChecked());
+
+                freezeTasker.setDescription(editTextDescription.getText().toString());
 
                 if (radioGroupUnFreezeOrUnfreeze.getCheckedRadioButtonId() == R.id.radioButtonFreeze) {
                     freezeTasker.setFrozen(true);
@@ -156,6 +171,34 @@ public class AddTimerFragment extends Fragment {
                 Navigation.findNavController(v).navigateUp();
             }
         });
+        editTextDescription = inflate.findViewById(R.id.addTimerEditTextDescription);
+
+        editTextDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().length() > 0
+                        && editTextStartTime.getText().toString().length() > 0
+                        && editTextEndTime.getText().toString().length() > 0
+                        && spinner.getSelectedItem() != null
+                ) {
+
+                    buttonSave.setEnabled(true);
+                } else {
+                    buttonSave.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
         return inflate;
     }
@@ -166,7 +209,7 @@ public class AddTimerFragment extends Fragment {
         Date time;
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
-        public TimePickerFragment(AddTimerFragment fragment) {
+        TimePickerFragment(AddTimerFragment fragment) {
             this.fragment = fragment;
         }
 
