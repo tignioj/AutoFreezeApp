@@ -3,6 +3,7 @@ package com.tignioj.freezeapp.backend.entitys;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -43,6 +44,17 @@ public class FreezeTasker {
     @ColumnInfo(name = "is_frozen")
     private boolean isFrozen;
 
+    @Ignore
+    private boolean isCurrent;
+
+    public boolean isCurrent() {
+        return isCurrent;
+    }
+
+    public void setCurrent(boolean current) {
+        isCurrent = current;
+    }
+
     @ColumnInfo(name = "is_lock_screen")
     private boolean isLockScreen;
 
@@ -54,6 +66,7 @@ public class FreezeTasker {
         isLockScreen = lockScreen;
     }
 
+
     @Override
     public String toString() {
         return "FreezeTasker{" +
@@ -64,6 +77,7 @@ public class FreezeTasker {
                 ", categoryName='" + categoryName + '\'' +
                 ", description='" + description + '\'' +
                 ", isFrozen=" + isFrozen +
+                ", isCurrent=" + isCurrent +
                 ", isLockScreen=" + isLockScreen +
                 '}';
     }

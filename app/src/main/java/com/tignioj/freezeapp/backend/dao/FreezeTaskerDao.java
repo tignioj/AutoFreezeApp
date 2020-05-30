@@ -26,7 +26,7 @@ public interface FreezeTaskerDao {
     @Query("DELETE FROM freeze_tasker")
     void deleteAllTasks();
 
-    @Query("SELECT * FROM freeze_tasker ORDER BY id")
+    @Query("SELECT * FROM freeze_tasker ORDER BY startTime")
     LiveData<List<FreezeTasker>> getAllTasksLive();
 
 

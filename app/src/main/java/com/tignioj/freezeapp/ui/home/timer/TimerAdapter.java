@@ -2,7 +2,14 @@ package com.tignioj.freezeapp.ui.home.timer;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tignioj.freezeapp.R;
 import com.tignioj.freezeapp.backend.entitys.FreezeTasker;
+import com.tignioj.freezeapp.config.MyConfig;
+import com.tignioj.freezeapp.utils.MyDateUtils;
 
 import java.text.SimpleDateFormat;
 
@@ -41,8 +50,10 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
                         && oldItem.getCategoryName().equals(newItem.getCategoryName())
                         && oldItem.isLockScreen() == newItem.isLockScreen()
                         && oldItem.getDescription().equals(newItem.getDescription())
+                        && oldItem.isCurrent() == newItem.isCurrent()
                         ;
             }
+
         });
         this.timerFragment = timerFragment;
     }
@@ -101,10 +112,19 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_freezeTimerEditFragment, bundle);
             }
         });
-        holder.imageViewLockPhone.setVisibility(item.isLockScreen()?View.VISIBLE:View.INVISIBLE);
+        holder.imageViewLockPhone.setVisibility(item.isLockScreen() ? View.VISIBLE : View.INVISIBLE);
 
         holder.textViewDescription.setText(item.getDescription());
+
+        //高亮当前
+        if (item.isCurrent()) {
+            holder.itemView.setBackgroundColor(Color.rgb(0x79, 0x86, 0xCB));
+        } else {
+            holder.itemView.setBackground(null);
+        }
     }
+
+
 
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
