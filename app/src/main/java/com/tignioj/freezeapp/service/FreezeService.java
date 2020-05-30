@@ -24,6 +24,7 @@ import com.tignioj.freezeapp.receiver.ScreenReceiver;
 import com.tignioj.freezeapp.utils.DeviceMethod;
 import com.tignioj.freezeapp.utils.MyDateUtils;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class FreezeService extends Service {
         return null;
     }
 
-    private  boolean isServiceEnd;
+    private boolean isServiceEnd;
 
 
     List<FreezeTasker> freezeTaskers;
@@ -46,6 +47,8 @@ public class FreezeService extends Service {
 
     public class ServiceThread extends Thread {
         HashMap<Long, Boolean> screenSchedulingMap;
+        private String string;
+
 
         ServiceThread() {
             //初始化数据
@@ -55,6 +58,7 @@ public class FreezeService extends Service {
         @Override
         public void run() {
             while (!isServiceEnd) {
+                Log.d(MyConfig.MY_TAG, new Date().toString() + ":循环查看任务, " + (freezeTaskers == null ? null : freezeTaskers.size()));
                 if (freezeTaskers != null) {
                     loopTasks();
                 }
@@ -125,7 +129,6 @@ public class FreezeService extends Service {
 
 
         private void unfreezeApps(List<FreezeApp> appsByCategory, HomeViewModel homeViewModel) {
-
             for (FreezeApp freezeApp : appsByCategory) {
                 if (freezeApp.isFrozen()) {
                     DeviceMethod.getInstance(getApplicationContext()).
@@ -154,8 +157,6 @@ public class FreezeService extends Service {
                 }
             }
         }
-
-
     }
 
 
@@ -176,7 +177,6 @@ public class FreezeService extends Service {
                     Log.d("myTag", "数据更新 从" + FreezeService.this.freezeTaskers.size() + "到 " + freezeTaskers.size());
                     //如果删掉了一个任务，必须先设置为false，否则当遍历不到被删掉的任务时，屏幕保持锁定状态
                     ScreenReceiver.isLockScreen = false;
-
                 }
                 FreezeService.this.freezeTaskers = freezeTaskers;
             }
@@ -211,6 +211,7 @@ public class FreezeService extends Service {
     public void onDestroy() {
         super.onDestroy();
         isServiceEnd = true;
+        Log.d(MyConfig.MY_TAG, "服务结束！");
         unregisterReceiver(screenReceiver);
         unregisterReceiver(packageReceiver);
     }

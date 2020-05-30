@@ -7,6 +7,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -45,8 +46,9 @@ public class MainActivity extends AppCompatActivity {
         return navController.navigateUp();
     }
 
-    public void debug(View view) {
-//        DeviceMethod.getInstance(getApplicationContext())
-    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

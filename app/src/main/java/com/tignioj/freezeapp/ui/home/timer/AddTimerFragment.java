@@ -216,9 +216,9 @@ public class AddTimerFragment extends Fragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             if (this.getTag().equals(START_TIME_PICKER_TAG)) {
-//                time = this.fragment.timeLine.getStartTime();
+                time = fragment.freezeTasker.getStartTime();
             } else {
-//                time = this.fragment.timeLine.getEndTime();
+                time = fragment.freezeTasker.getEndTime();
             }
 
             sdf.format(time == null ? new Date() : time);
