@@ -233,6 +233,9 @@ public class AddTimerFragment extends Fragment {
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // Do something with the time chosen by the user
+            c.set(Calendar.YEAR, 2020);
+            c.set(Calendar.MONTH, 1);
+            c.set(Calendar.DAY_OF_MONTH,1);
             c.set(Calendar.HOUR_OF_DAY, hourOfDay);
             c.set(Calendar.MINUTE, minute);
             c.set(Calendar.SECOND, 0);

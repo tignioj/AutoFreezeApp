@@ -56,9 +56,6 @@ public class FreezeTaskerRepository {
         new FreezeTaskerRepository.DeleteAllAsyncTask(freezeTaskerDao).execute();
     }
 
-    public LiveData<List<FreezeTasker>> getListLiveDataFreezeByCategoryId(long id) {
-        return freezeTaskerDao.getAllTasksLiveByCategoryId(id);
-    }
 
     public FreezeTasker getFrezeTaskerById(long id) {
         return freezeTaskerDao.getFrezeTaskerById(id);

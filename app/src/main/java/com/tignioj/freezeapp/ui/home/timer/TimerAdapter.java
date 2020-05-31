@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,6 +113,9 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
                 Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_freezeTimerEditFragment, bundle);
             }
         });
+
+
+
         holder.imageViewLockPhone.setVisibility(item.isLockScreen() ? View.VISIBLE : View.INVISIBLE);
 
         holder.textViewDescription.setText(item.getDescription());
@@ -123,8 +127,6 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
             holder.itemView.setBackground(null);
         }
     }
-
-
 
 
     static class MyViewHolder extends RecyclerView.ViewHolder {

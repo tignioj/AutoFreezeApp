@@ -30,9 +30,6 @@ public interface FreezeTaskerDao {
     LiveData<List<FreezeTasker>> getAllTasksLive();
 
 
-    @Query("SELECT * FROM freeze_tasker WHERE category_id=:categoryId ORDER BY id ")
-    LiveData<List<FreezeTasker>> getAllTasksLiveByCategoryId(long categoryId);
-
     @Query("SELECT * FROM freeze_tasker WHERE id=:id ORDER BY id ")
     FreezeTasker getFrezeTaskerById(long id);
 }
