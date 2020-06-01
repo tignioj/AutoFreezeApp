@@ -34,14 +34,13 @@
 
 因为它不需要Root权限，因此需要一些特殊的手段来激活这个应用
 
-## 步骤一：下载Apk,*不能*直接安装到手机，你需要使用adb工具
-
-这是因为清单中设置了testOnly="true"
+## 步骤一：下载Apk,*不能*直接安装到手机，你需要使用[adb工具](https://developer.android.com/studio/releases/platform-tools)
+这是因为清单中设置了`testOnly="true"`
 只有这样，才能更加方便卸载，否则如果app突然打不开，你将无法卸载
 
 
 ## 步骤二：退出所有手机账户
-在设置->账户 出退出你的所有账号，例如退出小米账号
+在设置->账户 出退出你的所有账号，例如退出小米账号, 注意，是所有
 
 ## 步骤三：打开开发者模式，打开USB调试模式
 
@@ -113,7 +112,9 @@ Caused by: android.os.RemoteException: Remote stack trace:
         at android.os.Binder.execTransact(Binder.java:726)
         
 ```
-表明步骤二和步骤六没做好，参考我下面给出的连接去寻找解决办法
+表明步骤二和步骤六没做好
+
+解决办法： 尝试卸载支付宝后，回到步骤六的2). 如果仍然没有出现Success, 请参考我下面给出的链接再去寻找解决办法, 或者贴出你的操作步骤到github的ISSUE
 
 
 # 如何卸载？

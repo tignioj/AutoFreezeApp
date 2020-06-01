@@ -1,4 +1,4 @@
-package com.tignioj.freezeapp.ui;
+package com.tignioj.freezeapp.ui.setting;
 
 import android.os.Bundle;
 

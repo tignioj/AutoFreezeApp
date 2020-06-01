@@ -2,17 +2,43 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        tignioj_keystore {
-            keyAlias store_key_alias
-            storeFile file(store_file)
-            keyPassword store_key_password
-            storePassword store_password
+        release {
+            //load resources from local.properties
+            Properties properties = new Properties()
+            InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream() ;
+            properties.load( inputStream )
+
+            //
+            def sdkDir = properties.getProperty('key.file')
+            storeFile file(sdkDir)
+
+            //read key
+            def key_keyAlias = properties.getProperty( 'keyAlias' )
+            def key_keyPassword = properties.getProperty( 'keyPassword' ) ;
+            def key_storePassword = properties.getProperty( 'storePassword' ) ;
+
+            storePassword key_storePassword
+            keyAlias key_keyAlias
+            keyPassword key_keyPassword
         }
         debug {
-            keyAlias store_key_alias
-            storeFile file(store_file)
-            keyPassword store_key_password
-            storePassword store_password
+            //load resources from local.properties
+            Properties properties = new Properties()
+            InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream() ;
+            properties.load( inputStream )
+
+            //
+            def sdkDir = properties.getProperty('key.file')
+            storeFile file( sdkDir )
+
+            //read key
+            def key_keyAlias = properties.getProperty( 'keyAlias' )
+            def key_keyPassword = properties.getProperty( 'keyPassword' ) ;
+            def key_storePassword = properties.getProperty( 'storePassword' ) ;
+
+            storePassword key_storePassword
+            keyAlias key_keyAlias
+            keyPassword key_keyPassword
         }
 
     }
@@ -34,7 +60,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.tignioj_keystore
+            signingConfig signingConfigs.release
         }
     }
 

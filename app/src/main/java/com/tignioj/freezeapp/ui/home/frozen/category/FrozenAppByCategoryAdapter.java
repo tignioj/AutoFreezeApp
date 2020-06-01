@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -20,6 +21,7 @@ import com.tignioj.freezeapp.backend.entitys.FreezeApp;
 import com.tignioj.freezeapp.backend.viewmodel.HomeViewModel;
 import com.tignioj.freezeapp.config.MyConfig;
 import com.tignioj.freezeapp.utils.DeviceMethod;
+import com.tignioj.freezeapp.utils.Inform;
 
 public class FrozenAppByCategoryAdapter extends ListAdapter<FreezeApp, FrozenAppByCategoryAdapter.MyViewHolder> {
     FrozenAppByCategoryFragment frozenAppByCategoryFragment;
@@ -65,17 +67,21 @@ public class FrozenAppByCategoryAdapter extends ListAdapter<FreezeApp, FrozenApp
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!DeviceMethod.getInstance(homeViewModel.getApplication()).isAdmin()) {
+                    Inform.showError("你还没有激活设备呢");
+                    return;
+                }
                 holder.progressBar.setVisibility(View.VISIBLE);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         final FreezeApp item = getItem(holder.getAdapterPosition());
+                        FragmentActivity activity = frozenAppByCategoryFragment.getActivity();
                         final boolean b = !item.isFrozen();
                         DeviceMethod.getInstance(homeViewModel.getApplication()).freeze(item.getPackageName(), b);
                         item.setFrozen(b);
                         homeViewModel.updateFreezeApp(item);
                         homeViewModel.updateAllMemoryData();
-                        FragmentActivity activity = frozenAppByCategoryFragment.getActivity();
                         if (activity != null) {
                             activity.runOnUiThread(new Runnable() {
                                 @Override

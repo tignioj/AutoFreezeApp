@@ -11,7 +11,9 @@
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.tignioj.freezeapp.MainActivity">
+        <activity
+            android:name="com.tignioj.freezeapp.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,21 +22,22 @@
         </activity>
         <receiver
             android:name="com.tignioj.freezeapp.MyDeviceAdminReceiver"
-            android:permission="android.permission.BIND_DEVICE_ADMIN"
-            >
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data
                 android:name="android.app.device_admin"
-                android:resource="@xml/device_admin"/>
+                android:resource="@xml/device_admin" />
             <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
-                <action android:name="android.app.action.DEVICE_ADMIN_DISABLE_REQUESTED"/>
-                <action android:name="android.app.action.DEVICE_ADMIN_DISABLED"/>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+                <action android:name="android.app.action.DEVICE_ADMIN_DISABLE_REQUESTED" />
+                <action android:name="android.app.action.DEVICE_ADMIN_DISABLED" />
             </intent-filter>
         </receiver>
 
 
-<!--        定时服务-->
-        <service android:name="com.tignioj.freezeapp.service.FreezeService" android:enabled="true"/>
+        <!--        定时服务-->
+        <service
+            android:name="com.tignioj.freezeapp.service.FreezeService"
+            android:enabled="true" />
 
     </application>
 

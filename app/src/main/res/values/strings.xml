@@ -59,4 +59,11 @@
     <string name="fragment_add_edit_timer_description">Task description</string>
     <string name="image_description_application_s_logo_text">Application\'s logo</string>
     <string name="lock_screeen_image_description">lock_screeen_image_description</string>
+    <string name="githubURL">https://github.com/tignioj/AutoFreezeApp</string>
+    <string name="menu_home">Home</string>
+    <string name="setting">setting</string>
+    <string name="nav_header_desc">Navgation header</string>
+    <string name="nav_header_title">AutoFreezeApp</string>
+    <string name="nav_header_subtitle">https://github.com/tignioj/AutoFreezeApp</string>
+    <string name="action_settings">Settings</string>
 </resources>

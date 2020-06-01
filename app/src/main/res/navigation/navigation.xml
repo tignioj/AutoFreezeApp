@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/nav_home">
 
     <fragment
         android:id="@+id/appListFragment"
@@ -16,18 +16,18 @@
         android:label="fragment_frozen"
         tools:layout="@layout/fragment_frozen" />
     <fragment
-        android:id="@+id/settingFragment"
-        android:name="com.tignioj.freezeapp.ui.SettingFragment"
+        android:id="@+id/nav_setting"
+        android:name="com.tignioj.freezeapp.ui.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/nav_home"
         android:name="com.tignioj.freezeapp.ui.home.HomeFragment"
         android:label="@string/fragment_home_label"
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_settingFragment"
-            app:destination="@id/settingFragment" />
+            app:destination="@id/nav_setting" />
         <action
             android:id="@+id/action_homeFragment_to_addTimerFragment"
             app:destination="@id/addTimerFragment" />

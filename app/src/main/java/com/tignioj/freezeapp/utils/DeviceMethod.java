@@ -5,6 +5,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -56,7 +58,7 @@ public class DeviceMethod {
             intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "提示文字");
             mContext.startActivity(intent);
         } else {
-            Toast.makeText(mContext, "设备已经激活,请勿重复激活", Toast.LENGTH_SHORT).show();
+            Inform.showError("请先激活设备");
         }
     }
 
@@ -65,7 +67,6 @@ public class DeviceMethod {
      */
     public void onRemoveActivate() {
         devicePolicyManager.removeActiveAdmin(componentName);
-
     }
 
     /**
@@ -96,7 +97,7 @@ public class DeviceMethod {
                     DevicePolicyManager.PASSWORD_QUALITY_NUMERIC);
             mContext.startActivity(intent);
         } else {
-            Toast.makeText(mContext, "请先激活设备", Toast.LENGTH_SHORT).show();
+            Inform.showError("请先激活设备");
         }
     }
 
@@ -107,7 +108,7 @@ public class DeviceMethod {
         if (devicePolicyManager.isAdminActive(componentName)) {
             devicePolicyManager.lockNow();
         } else {
-            Toast.makeText(mContext, "请先激活设备", Toast.LENGTH_SHORT).show();
+            Inform.showError("请先激活设备");
         }
     }
 
@@ -121,7 +122,7 @@ public class DeviceMethod {
         if (devicePolicyManager.isAdminActive(componentName)) {
             devicePolicyManager.setMaximumTimeToLock(componentName, time);
         } else {
-            Toast.makeText(mContext, "请先激活设备", Toast.LENGTH_SHORT).show();
+            Inform.showError("请先激活设备");
         }
     }
 
@@ -132,7 +133,7 @@ public class DeviceMethod {
         if (devicePolicyManager.isAdminActive(componentName)) {
             devicePolicyManager.wipeData(DevicePolicyManager.WIPE_EXTERNAL_STORAGE);
         } else {
-            Toast.makeText(mContext, "请先激活设备", Toast.LENGTH_SHORT).show();
+            Inform.showError("请先激活设备");
         }
     }
 
@@ -146,7 +147,7 @@ public class DeviceMethod {
             devicePolicyManager.resetPassword(password,
                     DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
         } else {
-            Toast.makeText(mContext, "请先激活设备", Toast.LENGTH_SHORT).show();
+            Inform.showError("请先激活设备");
         }
     }
 
@@ -163,9 +164,10 @@ public class DeviceMethod {
                 devicePolicyManager.setApplicationHidden(componentName, packageName, isFreeze);
             }
         } else {
-            Toast.makeText(mContext, "请先激活设备", Toast.LENGTH_SHORT).show();
+            Inform.showError("请先激活设备");
         }
     }
+
 
 
     /**
@@ -180,7 +182,7 @@ public class DeviceMethod {
                 b = devicePolicyManager.isApplicationHidden(componentName, packageName);
             }
         } else {
-            Toast.makeText(mContext, "请先激活设备", Toast.LENGTH_SHORT).show();
+            Inform.showError("请先激活设备");
         }
         return b;
     }

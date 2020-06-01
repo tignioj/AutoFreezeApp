@@ -116,6 +116,10 @@ Caused by: android.os.RemoteException: Remote stack trace:
 ```
 Indicate that steps 2 and 6 are not done, and refer to the links I give below to find a solution
 
+Indicating that steps two and six were not done well
+
+Solution: trying to uninstall `alipay`, go back to step 6 2). If `Success` still does not appear, please refer to the link below to find a solution, or post the steps to ISSUE
+
 # How to uninstall it?
 
 1. Do the same steps as above until step 5(include step5) to connect to
