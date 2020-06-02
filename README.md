@@ -10,7 +10,7 @@
 
 - 未激活
 
--[NO ACTIVATE](resources/imgs/device-2020-05-27-174714.png)
+![NO ACTIVATE](resources/imgs/device-2020-05-27-174714.png)
 
 - 第一次冻结，选中app后，需要添加分类
 
