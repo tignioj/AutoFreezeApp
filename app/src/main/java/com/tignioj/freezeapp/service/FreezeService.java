@@ -47,7 +47,6 @@ public class FreezeService extends Service {
 
     public class ServiceThread extends Thread {
         HashMap<Long, Boolean> screenSchedulingMap;
-        private String string;
 
 
         ServiceThread() {
@@ -60,7 +59,9 @@ public class FreezeService extends Service {
             while (!isServiceEnd) {
                 Log.d(MyConfig.MY_TAG, new Date().toString() + ":循环查看任务, " + (freezeTaskers == null ? null : freezeTaskers.size()));
                 if (freezeTaskers != null) {
-                    loopTasks();
+                    if (freezeTaskers.size() > 0) {
+                        loopTasks();
+                    }
                 }
                 //五秒刷新一次
                 try {
@@ -181,6 +182,7 @@ public class FreezeService extends Service {
                 FreezeService.this.freezeTaskers = freezeTaskers;
             }
         });
+
         serviceThread = new ServiceThread();
         serviceThread.start();
     }

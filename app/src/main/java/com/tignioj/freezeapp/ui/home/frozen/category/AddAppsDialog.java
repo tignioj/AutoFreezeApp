@@ -21,7 +21,7 @@ import com.tignioj.freezeapp.R;
 import com.tignioj.freezeapp.backend.entitys.FreezeApp;
 import com.tignioj.freezeapp.backend.viewmodel.HomeViewModel;
 import com.tignioj.freezeapp.config.MyConfig;
-import com.tignioj.freezeapp.entity.AppInfo;
+import com.tignioj.freezeapp.uientity.AppInfo;
 import com.tignioj.freezeapp.ui.home.applist.AppListAdapter;
 
 import java.util.List;

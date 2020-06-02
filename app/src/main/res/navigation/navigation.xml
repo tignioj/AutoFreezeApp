@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/nav_setting"
         android:name="com.tignioj.freezeapp.ui.setting.SettingFragment"
-        android:label="fragment_setting"
+        android:label="@string/fragment_setting_label"
         tools:layout="@layout/fragment_setting" />
     <fragment
         android:id="@+id/nav_home"

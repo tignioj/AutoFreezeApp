@@ -1,7 +1,9 @@
 package com.tignioj.freezeapp;
 
-import androidx.appcompat.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -9,15 +11,23 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.content.DialogInterface;
+import android.app.Application;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.tignioj.freezeapp.backend.viewmodel.HomeViewModel;
+import com.tignioj.freezeapp.config.MyConfig;
 import com.tignioj.freezeapp.service.FreezeService;
+import com.tignioj.freezeapp.ui.setting.SettingFragment;
 import com.tignioj.freezeapp.utils.DeviceMethod;
 import com.tignioj.freezeapp.utils.Inform;
 
@@ -25,17 +35,22 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (InitApplication.getInstance().isNightModeEnabled()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
         setContentView(R.layout.activity_main);
 
 //        DeviceMethod.getInstance(getApplicationContext()).onRemoveActivate();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         Inform.setMainActivity(MainActivity.this);
+
+        Log.d(MyConfig.MY_TAG, "reload");
 
 //        NavigationUI.setupActionBarWithNavController(this, navController);
 
@@ -45,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Inform.alert("请先激活", "请先激活, 先退出账号，再设置该应用为device owner, 激活方法请看https://github.com/tignioj/AutoFreezeApp",
-                            "查看链接", "退出",
+                    Inform.alert(R.string.please_activate_alert_title, R.string.activate_tips,
+                            R.string.check_link_buton_text, R.string.exit_text,
                             new Inform.Callback() {
                                 @Override
                                 public void ok() {
@@ -68,8 +83,9 @@ public class MainActivity extends AppCompatActivity {
                             });
                 }
             }, 0);
+        } else {
+            startService(new Intent(getApplicationContext(), FreezeService.class));
         }
-        startService(new Intent(getApplicationContext(), FreezeService.class));
 
 
         //侧边栏
@@ -82,21 +98,12 @@ public class MainActivity extends AppCompatActivity {
                 .setDrawerLayout(drawer)
                 .build();
 
-
         //添加返回按钮到导航栏
         NavController navController = Navigation.findNavController(this, R.id.fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
 
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
 
     @Override
     public boolean onSupportNavigateUp() {

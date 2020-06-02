@@ -1,4 +1,4 @@
-package com.tignioj.freezeapp.entity;
+package com.tignioj.freezeapp.uientity;
 
 import android.graphics.drawable.Drawable;
 

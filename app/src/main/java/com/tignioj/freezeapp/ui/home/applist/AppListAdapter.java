@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import com.tignioj.freezeapp.R;
-import com.tignioj.freezeapp.entity.AppInfo;
+import com.tignioj.freezeapp.uientity.AppInfo;
 import com.tignioj.freezeapp.backend.viewmodel.HomeViewModel;
 
 import java.util.List;

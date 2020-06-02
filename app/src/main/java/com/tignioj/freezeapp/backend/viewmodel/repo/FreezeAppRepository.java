@@ -38,15 +38,15 @@ public class FreezeAppRepository {
         return freezeAppDao.getAllAppsByCategoryId(id);
     }
 
-    public void insertFreezeApp(FreezeApp[] freezeApps) {
+    public void insertFreezeApp(FreezeApp ...freezeApps) {
         new FreezeAppRepository.InsertAsyncTask(freezeAppDao).execute(freezeApps);
     }
 
-    public void deleteFreezeApp(FreezeApp[] freezeApps) {
+    public void deleteFreezeApp(FreezeApp ...freezeApps) {
         new FreezeAppRepository.DeleteAsyncTask(freezeAppDao).execute(freezeApps);
     }
 
-    public void updateFreezeApp(FreezeApp[] freezeApps) {
+    public void updateFreezeApp(FreezeApp ...freezeApps) {
         new FreezeAppRepository.UpdateAsyncTask(freezeAppDao).execute(freezeApps);
     }
 
@@ -68,6 +68,17 @@ public class FreezeAppRepository {
 
     public FreezeApp getFreezeAppByPackageName(String packageName) {
         return freezeAppDao.getFreezeAppByPackageName(packageName);
+    }
+
+    /**
+     * 把数据库中所有冻结的改为未冻结
+     */
+    public void unFreezeAllApp() {
+        List<FreezeApp> allFrozenApps = getAllFrozenApps();
+        for (FreezeApp f : allFrozenApps) {
+            f.setFrozen(false);
+            updateFreezeApp(f);
+        }
     }
 
 

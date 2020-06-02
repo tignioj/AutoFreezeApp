@@ -2,7 +2,6 @@
     <string name="app_name">AutoFreezeApp</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tab_text_1">UnFreeze</string>
     <string name="tab_text_2">Category</string>
     <string name="tab_text_3">Timer</string>
@@ -59,11 +58,27 @@
     <string name="fragment_add_edit_timer_description">Task description</string>
     <string name="image_description_application_s_logo_text">Application\'s logo</string>
     <string name="lock_screeen_image_description">lock_screeen_image_description</string>
-    <string name="githubURL">https://github.com/tignioj/AutoFreezeApp</string>
+    <string name="githubURL" translatable="false">https://github.com/tignioj/AutoFreezeApp</string>
     <string name="menu_home">Home</string>
-    <string name="setting">setting</string>
-    <string name="nav_header_desc">Navgation header</string>
+    <string name="setting">Settings</string>
+    <string name="nav_header_image_desc">Navgation header</string>
     <string name="nav_header_title">AutoFreezeApp</string>
-    <string name="nav_header_subtitle">https://github.com/tignioj/AutoFreezeApp</string>
+    <string name="nav_header_subtitle" translatable="false">https://github.com/tignioj/AutoFreezeApp</string>
     <string name="action_settings">Settings</string>
+    <string name="cell_rcv_fragment_setting_imageview_content_description">Setting Fragment Cell ImageView</string>
+    <string name="setting_item_deactive_text">Deactivate</string>
+    <string name="setting_toggle_night_mode_text">Toggle night mode</string>
+    <string name="please_activate_alert_title">Please activate it</string>
+    <string name="check_link_buton_text">see the tutorial</string>
+    <string name="exit_text">exit</string>
+    <string name="activate_tips">Please activate it, detail: https://github.com/tignioj/AutoFreezeApp</string>
+    <string name="confirm_deactive_tips">CONFIRM DEACTIVATE? If you want to re-activate, you need to run command set device owner again, You can manually uninstall the software after deactivation.</string>
+    <string name="nav_header_desc">Sidebar header image</string>
+    <string name="develpoe_other_apps">Developer\'s other applications</string>
+    <string name="tips_text">TIPS</string>
+    <string name="open_ousite_url_text">Do you want to view the links \"https://github.com/tignioj/TimeLineApp\" ?</string>
+    <string name="fragment_setting_label">Settings</string>
+    <string name="githubOtherAppsURL" translatable="false">https://github.com/tignioj/TimeLineApp</string>
+    <string name="unfreeze_text">Unfreeze</string>
+    <string name="application_text">application</string>
 </resources>

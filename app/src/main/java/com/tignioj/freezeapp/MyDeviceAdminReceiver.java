@@ -22,12 +22,12 @@ public class MyDeviceAdminReceiver  extends DeviceAdminReceiver {
         // 设备管理：不可用
         Toast.makeText(context, "设备管理：不可用", Toast.LENGTH_SHORT).show();
         //如果取消了激活就再次提示激活
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                DeviceMethod.getInstance(context.getApplicationContext()).onActivate();
-            }
-        }, 3000);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                DeviceMethod.getInstance(context.getApplicationContext()).onActivate();
+//            }
+//        }, 3000);
     }
 
     @Override
@@ -37,25 +37,7 @@ public class MyDeviceAdminReceiver  extends DeviceAdminReceiver {
             intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent2);
             context.stopService(intent);// 是否可以停止*/
-
         return "这是一个可选的消息，警告有关禁止用户的请求";
     }
 
-    @Override
-    public void onPasswordChanged(Context context, Intent intent) {
-        // 设备管理：密码己经改变
-//        Toast.makeText(context, "设备管理：密码己经改变", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPasswordFailed(Context context, Intent intent) {
-        // 设备管理：改变密码失败
-//        Toast.makeText(context, "设备管理：改变密码失败", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPasswordSucceeded(Context context, Intent intent) {
-        // 设备管理：改变密码成功
-//        Toast.makeText(context, "设备管理：改变密码成功", Toast.LENGTH_SHORT).show();
-    }
 }

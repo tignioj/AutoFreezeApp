@@ -5,13 +5,19 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.FragmentActivity;
+
 import com.tignioj.freezeapp.MyDeviceAdminReceiver;
+import com.tignioj.freezeapp.R;
 import com.tignioj.freezeapp.config.MyConfig;
+import com.tignioj.freezeapp.ui.setting.SettingFragment;
+
+import java.util.List;
 
 /**
  * 来源：https://www.jianshu.com/p/8934d47aed3b
@@ -24,7 +30,6 @@ public class DeviceMethod {
     private DevicePolicyManager devicePolicyManager;
     private ComponentName componentName;
     private Context mContext;
-
 
 
     private DeviceMethod(Context context) {
@@ -168,10 +173,9 @@ public class DeviceMethod {
         }
     }
 
-
-
     /**
      * 检测App是否隐藏
+     *
      * @param packageName
      * @return
      */
@@ -179,7 +183,12 @@ public class DeviceMethod {
         boolean b = false;
         if (devicePolicyManager.isAdminActive(componentName)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                b = devicePolicyManager.isApplicationHidden(componentName, packageName);
+                try {
+                    b = devicePolicyManager.isApplicationHidden(componentName, packageName);
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                    Inform.showError("请先激活设备");
+                }
             }
         } else {
             Inform.showError("请先激活设备");
@@ -195,4 +204,88 @@ public class DeviceMethod {
     public DevicePolicyManager getDevicePolicyManager() {
         return devicePolicyManager;
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void clearDeviceOwnerApp(String packageName) {
+        if (isAdmin()) {
+            devicePolicyManager.clearDeviceOwnerApp(packageName);
+        }
+    }
+
+
+//    PackageInstaller mPackageInstaller;
+
+//    /**
+//     * @param packageName 应用包名
+//     */
+//    private void uninstallPackage(String packageName) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.REQUEST_DELETE_PACKAGES) != PackageManager.PERMISSION_GRANTED) {
+//                // 检查权限状态
+//                if (ActivityCompat.shouldShowRequestPermissionRationale(Inform.getMainActivity(), Manifest.permission.REQUEST_DELETE_PACKAGES)) {
+//                    //  用户彻底拒绝授予权限，一般会提示用户进入设置权限界面
+//                } else {
+//                    //  用户未彻底拒绝授予权限
+//                    ActivityCompat.requestPermissions(Inform.getMainActivity(), new String[]{Manifest.permission.REQUEST_DELETE_PACKAGES}, 1);
+//                }
+//            }
+//        }
+//
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//            //使用PackageInstaller卸载
+//            mPackageInstaller = mContext.getPackageManager().getPackageInstaller();
+//            Intent intent = new Intent(mContext, mContext.getClass());
+//            PendingIntent sender = PendingIntent.getActivity(mContext, 0, intent, 0);
+//            mPackageInstaller.uninstall(packageName, sender.getIntentSender());
+//        } else {
+//            //使用原始方式卸载
+//            Uri packageUri = Uri.parse("package:" + packageName);
+//            Intent uninstallIntent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri);
+//            Inform.getMainActivity().startActivityForResult(uninstallIntent, SettingFragment.DEACTIVATE);
+//        }
+//    }
+
+    public void deActivate(final SettingFragment settingFragment) {
+        Inform.alert(R.string.warning, R.string.confirm_deactive_tips, R.string.yes, R.string.no, new Inform.Callback() {
+            @Override
+            public void ok() {
+                final List<String> freezeApps = settingFragment.getHomeViewModel().getFonzenAppListPackageName();
+                settingFragment.getProgressBar().setVisibility(View.VISIBLE);
+                settingFragment.getProgressSettingText().setVisibility(View.VISIBLE);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final FragmentActivity activity = settingFragment.getActivity();
+                        final int i = settingFragment.getHomeViewModel().unFreezeAllApp();
+                        if (activity != null) {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    settingFragment.getProgressSettingText().setVisibility(View.INVISIBLE);
+                                    settingFragment.getProgressBar().setVisibility(View.INVISIBLE);
+                                    Toast.makeText(settingFragment.getContext(), activity.getString(R.string.unfreeze_text) + i + activity.getString(R.string.application_text), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            clearDeviceOwnerApp(componentName.getPackageName());
+                        } else {
+                            onRemoveActivate();
+                        }
+                    }
+                }).start();
+            }
+
+            @Override
+            public void cancel() {
+            }
+
+            @Override
+            public void dismiss() {
+            }
+        });
+
+
+    }
+
 }

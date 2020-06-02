@@ -15,13 +15,13 @@ import com.tignioj.freezeapp.backend.viewmodel.repo.AppsCategoryRepository;
 import com.tignioj.freezeapp.backend.viewmodel.repo.FreezeAppRepository;
 import com.tignioj.freezeapp.backend.viewmodel.repo.FreezeTaskerRepository;
 import com.tignioj.freezeapp.backend.viewmodel.repo.HomeRepository;
-import com.tignioj.freezeapp.entity.AppInfo;
+import com.tignioj.freezeapp.uientity.AppInfo;
+import com.tignioj.freezeapp.utils.DeviceMethod;
 
 import java.util.List;
 
 public class HomeViewModel extends AndroidViewModel {
     Context context;
-
     HomeRepository homeRepository;
     AppsCategoryRepository appsCategoryRepository;
     FreezeAppRepository freezeAppRepository;
@@ -31,6 +31,7 @@ public class HomeViewModel extends AndroidViewModel {
     public MutableLiveData<Integer> getSelectedReadyToFreezeCount() {
         return homeRepository.getSelectedReadyToFreezeCount();
     }
+
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
@@ -178,7 +179,6 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
 
-
     public void setSelectedReadyToFreezeCount(int i) {
         homeRepository.setSelectedReadyToFreezeCount(i);
     }
@@ -203,8 +203,22 @@ public class HomeViewModel extends AndroidViewModel {
         }
     }
 
-    public List<String > getFonzenAppListPackageName() {
-        return homeRepository.getFrozenAppListPackageName();
+    public List<String> getFonzenAppListPackageName() {
+        return homeRepository.getFrozenAppListPackageNameFromPM();
     }
 
+    /**
+     * 返回解冻数量
+     * @return
+     */
+    public int unFreezeAllApp() {
+        List<AppInfo> frozenAppList = homeRepository.getFrozenAppList();
+        int i = 0;
+        for (AppInfo a : frozenAppList) {
+            i++;
+            DeviceMethod.getInstance(context).freeze(a.getPackageName(), false);
+        }
+        freezeAppRepository.unFreezeAllApp();
+        return i;
+    }
 }

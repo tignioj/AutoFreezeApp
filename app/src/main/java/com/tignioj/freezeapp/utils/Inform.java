@@ -6,12 +6,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.tignioj.freezeapp.MainActivity;
+import com.tignioj.freezeapp.R;
 
 public class Inform {
     public static final int ERROR = -1;
 
     private static MainActivity mainActivity;
 
+    public static MainActivity getMainActivity() {
+        return mainActivity;
+    }
 
     public static void setMainActivity(MainActivity mainActivity) {
         Inform.mainActivity = mainActivity;
@@ -31,7 +35,7 @@ public class Inform {
         });
     }
 
-    public static void alert(final String title, final String msg, final String okText, final String cancelText, final Callback callback) {
+    public static void alert(final int title, final int msg, final int okText, final int cancelText, final Callback callback) {
         mainActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -58,7 +62,11 @@ public class Inform {
         });
     }
 
-    public static void alert(final String title, final String message, final Callback callback) {
+    public static void alert(int warning, String msg, final String title, final String message, final Callback callback) {
+    }
+
+    public static void alert(int title, int message, Callback callback) {
+        alert(title, message, R.string.yes, R.string.no, callback);
     }
 
     public interface Callback {

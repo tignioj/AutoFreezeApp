@@ -1,14 +1,17 @@
 package com.tignioj.freezeapp.backend.viewmodel.repo;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.tignioj.freezeapp.backend.entitys.FreezeApp;
-import com.tignioj.freezeapp.entity.AppInfo;
+import com.tignioj.freezeapp.config.MyConfig;
+import com.tignioj.freezeapp.uientity.AppInfo;
 import com.tignioj.freezeapp.utils.DeviceMethod;
 
 import java.util.ArrayList;
@@ -23,6 +26,8 @@ public class HomeRepository {
     private MutableLiveData<List<AppInfo>> mutableLiveDataAllAppList;
     private MutableLiveData<Integer> selectedReadyToFreezeCount;
 
+
+
     public synchronized static HomeRepository getInstance(Context context) {
         if (homeRepository == null) {
             homeRepository = new HomeRepository(context);
@@ -36,6 +41,7 @@ public class HomeRepository {
 
     private HomeRepository(Context context) {
         this.context = context;
+
 
         mutableLiveDataAllAppList = new MutableLiveData<>();
         this.allApps = getAllAppList();
@@ -65,13 +71,12 @@ public class HomeRepository {
      */
     public List<AppInfo> getFrozenAppList() {
         List<AppInfo> appInfos = new ArrayList<>();
-        for (AppInfo a : appInfos) {
+        for (AppInfo a : this.allApps) {
             if (a.isHidden()) {
                 appInfos.add(a);
             }
         }
         return appInfos;
-
     }
 
 
@@ -271,7 +276,7 @@ public class HomeRepository {
         return newAppInfosLive;
     }
 
-    public List<String> getFrozenAppListPackageName() {
+    public List<String> getFrozenAppListPackageNameFromPM() {
         List<String> appInfos = new ArrayList<>();
 
         PackageManager pm = context.getPackageManager();

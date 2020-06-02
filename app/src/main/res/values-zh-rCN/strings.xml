@@ -54,4 +54,23 @@
     <string name="lock_screen_check_warning_text">勾上此选项，在指定时间内将无法使用手机！手机将会一直处于锁屏状态</string>
     <string name="fragment_add_edit_timer_description">任务描述</string>
     <string name="image_description_application_s_logo_text">应用图标</string>
+    <string name="menu_home">主目录</string>
+    <string name="setting">设置</string>
+    <string name="nav_header_title">自动冻结</string>
+    <string name="action_settings">设置</string>
+    <string name="cell_rcv_fragment_setting_imageview_content_description">设置列表中的图像</string>
+    <string name="setting_item_deactive_text">取消激活</string>
+    <string name="setting_toggle_night_mode_text">切换夜间/日间模式</string>
+    <string name="please_activate_alert_title">请激活</string>
+    <string name="check_link_buton_text">看教程</string>
+    <string name="exit_text">退出</string>
+    <string name="activate_tips">请先激活，详情https://github.com/tignioj/AutoFreezeApp</string>
+    <string name="lock_screeen_image_description">锁定屏幕图像</string>
+    <string name="nav_header_desc">侧边栏头像</string>
+    <string name="nav_header_image_desc">侧边栏头像</string>
+    <string name="confirm_deactive_tips">确认取消激活吗？如需要再次激活，重新执行device-owner命令即可。取消激活后你可以手动卸载这个App。</string>
+    <string name="tips_text">提示</string>
+    <string name="develpoe_other_apps">开发者的其它应用</string>
+    <string name="open_ousite_url_text">是否访问链接\"https://github.com/tignioj/TimeLineApp\" ?</string>
+    <string name="fragment_setting_label">设置</string>
 </resources>
