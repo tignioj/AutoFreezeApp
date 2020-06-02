@@ -5,17 +5,17 @@ android {
         release {
             //load resources from local.properties
             Properties properties = new Properties()
-            InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream() ;
-            properties.load( inputStream )
+            InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream();
+            properties.load(inputStream)
 
             //
             def sdkDir = properties.getProperty('key.file')
             storeFile file(sdkDir)
 
             //read key
-            def key_keyAlias = properties.getProperty( 'keyAlias' )
-            def key_keyPassword = properties.getProperty( 'keyPassword' ) ;
-            def key_storePassword = properties.getProperty( 'storePassword' ) ;
+            def key_keyAlias = properties.getProperty('keyAlias')
+            def key_keyPassword = properties.getProperty('keyPassword');
+            def key_storePassword = properties.getProperty('storePassword');
 
             storePassword key_storePassword
             keyAlias key_keyAlias
@@ -24,17 +24,17 @@ android {
         debug {
             //load resources from local.properties
             Properties properties = new Properties()
-            InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream() ;
-            properties.load( inputStream )
+            InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream();
+            properties.load(inputStream)
 
             //
             def sdkDir = properties.getProperty('key.file')
-            storeFile file( sdkDir )
+            storeFile file(sdkDir)
 
             //read key
-            def key_keyAlias = properties.getProperty( 'keyAlias' )
-            def key_keyPassword = properties.getProperty( 'keyPassword' ) ;
-            def key_storePassword = properties.getProperty( 'storePassword' ) ;
+            def key_keyAlias = properties.getProperty('keyAlias')
+            def key_keyPassword = properties.getProperty('keyPassword');
+            def key_storePassword = properties.getProperty('storePassword');
 
             storePassword key_storePassword
             keyAlias key_keyAlias
@@ -42,15 +42,20 @@ android {
         }
 
     }
+
+
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
+
+    def vCode = getVersionCode()
+    def vName = getVersionName()
 
     defaultConfig {
         applicationId 'com.tignioj.freezeapp'
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode vCode
+        versionName vName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
@@ -63,6 +68,50 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+}
+
+/**
+ * 根据版本名称获取版本号
+ * @return
+ */
+//获取版本code,通过100 000 000 关联versionName
+def getVersionCode() {
+    def versionSplite = getVersionName().split("\\.")
+    println(versionSplite.toString())
+    StringBuffer sb = new StringBuffer();
+    for (item in versionSplite) {
+        switch (item.length()) {
+            case 1:
+                sb.append('00');
+                sb.append(item);
+                break
+            case 2:
+                sb.append('0');
+                sb.append(item);
+                break
+            case 3:
+                sb.append(item);
+                break
+            default:
+                throw new GradleException("version name is error !")
+                break
+        }
+    }
+    return sb.toInteger()
+}
+
+/**
+ * 获取名称
+ * @return
+ */
+def getVersionName() {
+
+    Properties properties = new Properties()
+    InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream();
+    properties.load(inputStream)
+    def versionCode = properties.getProperty('version.name')
+    return versionCode.toString()
 
 }
 
