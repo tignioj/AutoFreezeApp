@@ -2,6 +2,7 @@ package com.tignioj.freezeapp.ui.home.timer;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,6 +23,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -49,7 +51,6 @@ public class FreezeTimerEditFragment extends Fragment {
     private CheckBox checkBoxEditTimerIsLockScreen;
     private EditText editTextDescription;
 
-
     private HomeViewModel homeViewModel;
 
 
@@ -58,7 +59,7 @@ public class FreezeTimerEditFragment extends Fragment {
 
     private FreezeTasker freezeTaskerFromDb;
 
-    private Button buttonBack, buttonSave;
+    private Button buttonBack, buttonSave, buttonDelete;
     private Spinner spinner;
 
     @Override
@@ -78,7 +79,31 @@ public class FreezeTimerEditFragment extends Fragment {
 
 
         View inflate = inflater.inflate(R.layout.fragment_edit_timer, container, false);
+        buttonDelete = inflate.findViewById(R.id.buttonDelete);
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                final FreezeTasker currentDeleteItem = freezeTaskerFromDb;
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setTitle(R.string.warning)
+                        .setMessage(R.string.dialog_confirm_deletion_text)
+                        .setNegativeButton(R.string.no,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                }).setPositiveButton(R.string.yes,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                homeViewModel.deleteFreezeTasks(currentDeleteItem);
+                                Navigation.findNavController(v).navigateUp();
+//                                timerFragment.getAdapter().notifyItemRemoved(position);
+                            }
+                        }).create().show();
+            }
+        });
 
         buttonBack = inflate.findViewById(R.id.button_addTimer_Back);
         buttonBack.setOnClickListener(new View.OnClickListener() {

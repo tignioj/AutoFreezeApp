@@ -14,8 +14,11 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -52,6 +55,7 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
                         && oldItem.isLockScreen() == newItem.isLockScreen()
                         && oldItem.getDescription().equals(newItem.getDescription())
                         && oldItem.isCurrent() == newItem.isCurrent()
+                        && oldItem.isEnable() == newItem.isEnable()
                         ;
             }
 
@@ -77,29 +81,41 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
         holder.textViewStartTime.setText(formatStart);
         holder.textViewEndTime.setText(formatEnd);
         holder.textViewCategoryName.setText(item.getCategoryName());
-        holder.imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                final FreezeTasker currentDeleteItem = getItem(position);
+//        holder.imageButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(final View v) {
+//                final FreezeTasker currentDeleteItem = getItem(position);
+//
+//                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+//                builder.setTitle(R.string.warning)
+//                        .setMessage(R.string.dialog_confirm_deletion_text)
+//                        .setNegativeButton(R.string.no,
+//                                new DialogInterface.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                    }
+//                                }).setPositiveButton(R.string.yes,
+//                        new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                timerFragment.homeViewModel.deleteFreezeTasks(currentDeleteItem);
+//                                timerFragment.getAdapter().notifyItemRemoved(position);
+//                            }
+//                        }).create().show();
+//            }
+//        });
+        holder.aSwitchEnable.setChecked(item.isEnable());
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                builder.setTitle(R.string.warning)
-                        .setMessage(R.string.dialog_confirm_deletion_text)
-                        .setNegativeButton(R.string.no,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                    }
-                                }).setPositiveButton(R.string.yes,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                timerFragment.homeViewModel.deleteFreezeTasks(currentDeleteItem);
-                                timerFragment.getAdapter().notifyItemRemoved(position);
-                            }
-                        }).create().show();
+        holder.aSwitchEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                final FreezeTasker currentDeleteItem = getItem(position);
+                currentDeleteItem.setEnable(isChecked);
+                timerFragment.homeViewModel.updateFreezeTasks(currentDeleteItem);
             }
         });
+
+
         if (item.isFrozen()) {
             holder.imageViewVisible.setImageResource(R.drawable.ic_visibility_off_black_24dp);
         } else {
@@ -131,9 +147,10 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView textViewStartTime, textViewEndTime, textViewCategoryName;
-        ImageButton imageButton;
+//        ImageButton imageButton;
         ImageView imageViewVisible, imageViewLockPhone;
         TextView textViewDescription;
+        Switch aSwitchEnable;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -141,7 +158,10 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
             textViewDescription = itemView.findViewById(R.id.textviewDescriptionCell);
             textViewEndTime = itemView.findViewById(R.id.textViewEndTimeCell);
             textViewCategoryName = itemView.findViewById(R.id.textViewCategoryNameCell);
-            imageButton = itemView.findViewById(R.id.imageButtonDeleteTimer);
+//            imageButton = itemView.findViewById(R.id.imageButtonDeleteTimer);
+
+            aSwitchEnable = itemView.findViewById(R.id.switch_tasker_enable);
+
             imageViewVisible = itemView.findViewById(R.id.imageViewVisable);
             imageViewLockPhone = itemView.findViewById(R.id.imageViewLockPhone);
         }

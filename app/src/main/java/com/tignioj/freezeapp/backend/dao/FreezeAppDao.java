@@ -51,4 +51,7 @@ public interface FreezeAppDao {
 
     @Query("SELECT * FROM freeze_app WHERE package_name=:packageName")
     FreezeApp getFreezeAppByPackageName(String packageName);
+
+    @Query("UPDATE freeze_tasker SET enable=:isChecked")
+    void updateFreezeTasksAllEnable(boolean isChecked);
 }

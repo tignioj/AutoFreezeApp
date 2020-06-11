@@ -34,6 +34,9 @@ public class FreezeTasker {
     private Date startTime;
     private Date endTime;
 
+    private boolean enable;
+
+
 
     @ColumnInfo(name = "category_id")
     private long categoryId;
@@ -69,20 +72,12 @@ public class FreezeTasker {
         isLockScreen = lockScreen;
     }
 
+    public boolean isEnable() {
+        return enable;
+    }
 
-    @Override
-    public String toString() {
-        return "FreezeTasker{" +
-                "id=" + id +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", categoryId=" + categoryId +
-                ", categoryName='" + categoryName + '\'' +
-                ", description='" + description + '\'' +
-                ", isFrozen=" + isFrozen +
-                ", isCurrent=" + isCurrent +
-                ", isLockScreen=" + isLockScreen +
-                '}';
+    public void setEnable(boolean enable) {
+        this.enable = enable;
     }
 
     public String getDescription() {
@@ -139,5 +134,22 @@ public class FreezeTasker {
 
     public void setCategoryId(long categoryId) {
         this.categoryId = categoryId;
+    }
+
+
+    @Override
+    public String toString() {
+        return "FreezeTasker{" +
+                "id=" + id +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", enable=" + enable +
+                ", categoryId=" + categoryId +
+                ", categoryName='" + categoryName + '\'' +
+                ", description='" + description + '\'' +
+                ", isFrozen=" + isFrozen +
+                ", isCurrent=" + isCurrent +
+                ", isLockScreen=" + isLockScreen +
+                '}';
     }
 }

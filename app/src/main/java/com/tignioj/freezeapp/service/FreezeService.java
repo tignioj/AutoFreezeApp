@@ -49,6 +49,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 
@@ -86,14 +87,22 @@ public class FreezeService extends Service {
     //拼接标题
     String start = null, end = null;
 
-    MutableLiveData<HashMap<String, String>> notificationHashMapLive;
-    HashMap<String, String> notificationHashMap;
+    MutableLiveData<ConcurrentHashMap<String, String>> notificationHashMapLive;
+    ConcurrentHashMap<String, String> notificationHashMap;
 
     ReentrantLock reentrantLock;
 
 
     public class ServiceThread extends Thread {
-        HashMap<Long, Boolean> screenSchedulingMap;
+        ConcurrentHashMap<Long, Boolean> screenSchedulingMap;
+
+
+
+
+        public static final int OPERATION_GET_MAP_STRING = 0x100001;
+        public static final int OPERATION_CLEAN_MAP = 0x100000;
+
+
 
         /**
          * 通知，用于显示当前执行的任务描述
@@ -101,22 +110,22 @@ public class FreezeService extends Service {
 
         ServiceThread() {
             //初始化数据
-            screenSchedulingMap = new HashMap<>();
+            screenSchedulingMap = new ConcurrentHashMap<>();
             isActuallyEnable = DeviceMethod.getInstance(getApplicationContext()).isSelfEnable();
             notificationHashMapLive = new MutableLiveData<>();
 
-            notificationHashMapLive.observeForever(new Observer<HashMap<String, String>>() {
-                @Override
-                public synchronized void onChanged(HashMap<String, String> strings) {
 
+            notificationHashMapLive.observeForever(new Observer<ConcurrentHashMap<String, String>>() {
+                @Override
+                public synchronized void onChanged(ConcurrentHashMap<String, String> strings) {
                     //拼接内容
                     StringBuilder content = new StringBuilder();
                     if (notificationHashMap == null || notificationHashMap.size() == 0) {
                         content.append("暂时无任务");
-                    }
+                        start = null;
+                        end = null;
 
-
-                    else {
+                    } else {
                         content.append("[");
 //                    text = notificationHashMap.keySet() + "";
                         Set<Map.Entry<String, String>> entries = notificationHashMap.entrySet();
@@ -137,20 +146,17 @@ public class FreezeService extends Service {
                                 }
                             }
                         }
-                        content.replace(content.length()-1, content.length(), "]");
+                        content.replace(content.length() - 1, content.length(), "]");
                     }
-
-
-
-                    String s = content.toString();
-                    builder.setContentText(s);
+                    builder.setContentText(content.toString());
                     if (start != null) {
                         builder.setContentTitle(start + "-" + end);
                     }
                     startForeground(NOTIFICATION_ID, builder.build());
                 }
             });
-            notificationHashMap = new HashMap<>();
+
+            notificationHashMap = new ConcurrentHashMap<>();
             notificationHashMapLive.setValue(notificationHashMap);
         }
 
@@ -207,6 +213,13 @@ public class FreezeService extends Service {
         private void loopTasks() {
             Log.d(MyConfig.MY_TAG, new Date().toString() + ":循环查看任务, " + (freezeTaskers == null ? null : freezeTaskers.size()));
             for (FreezeTasker freezeTasker : freezeTaskers) {
+                Log.d(MyConfig.MY_TAG, freezeTasker.toString());
+
+                if (!freezeTasker.isEnable()) {
+                    continue;
+                }
+
+
                 //只处理这时间段的App
                 if (MyDateUtils.betweenStartTimeAndEndTime(freezeTasker.getStartTime(), freezeTasker.getEndTime())) {
                     if (!notificationHashMap.containsKey(freezeTasker.getDescription())) {
@@ -303,6 +316,8 @@ public class FreezeService extends Service {
                 }
             }
         }
+
+
     }
 
     private void createNotificationChannel() {
@@ -329,7 +344,9 @@ public class FreezeService extends Service {
 
     @Override
     public void onCreate() {
+
         super.onCreate();
+        reentrantLock = new ReentrantLock();
         homeViewModel = new HomeViewModel(getApplication());
         MutableLiveData<ProgramLocker> programLockerMutableLiveData = homeViewModel.getProgramLockerMutableLiveData();
         programLockerMutableLiveData.observeForever(new Observer<ProgramLocker>() {
@@ -342,7 +359,7 @@ public class FreezeService extends Service {
                 .setSmallIcon(R.drawable.ic_lock_black_24dp)
                 .setContentTitle(getString(R.string.notifaction_keep_running_title))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        startForeground(NOTIFICATION_ID, builder.build());
+//        startForeground(NOTIFICATION_ID, builder.build());
 
 
         //注册广播
@@ -386,6 +403,7 @@ public class FreezeService extends Service {
                     case UPDATE_NOTIFICATION:
                         notificationHashMapLive.setValue(notificationHashMap);
                         break;
+
                 }
             }
         };
@@ -402,7 +420,13 @@ public class FreezeService extends Service {
                 }
 //                Log.d(MyConfig.LOG_TAG_FREEZE_SERVICE, "clear notification map");
 //                notificationHashMap.clear();
+                hideMySelfHandler.sendEmptyMessage(UPDATE_NOTIFICATION);
                 FreezeService.this.freezeTaskers = freezeTaskers;
+                if (serviceThread != null) {
+                    notificationHashMap.clear();
+                    notificationHashMapLive.setValue(notificationHashMap);
+                }
+
             }
         });
 

@@ -11,6 +11,7 @@ public class MyConfig {
     public static final String PERSONAL_SHP_CONFIG_KEY_EDITABLE_END_TIME = "editable_end_time";
     public static final String PERSONAL_SHP_CONFIG_KEY_EDITABLE_ENABLE = "editable_enable";
     public static final String PERSONAL_SHP_CONFIG_KEY_HIDE_ICON = "hide_icon";
+    public static final String PERSONAL_SHP_CONFIG_KEY_ENABLE_ALL_TASKS = "enable_all_tasks";
 
     //Shp文件End=============================================================
 

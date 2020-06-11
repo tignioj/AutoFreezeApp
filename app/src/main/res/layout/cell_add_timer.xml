@@ -27,18 +27,20 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewStartTimeCell"
         tools:text="9:30" />
 
-    <ImageButton
-        android:id="@+id/imageButtonDeleteTimer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@null"
-        android:contentDescription="@string/image_button_content_description_delete"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_delete_forever_black_24dp" />
+
+    <!--    <ImageButton-->
+    <!--        android:id="@+id/switch_tasker_enable"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginEnd="8dp"-->
+    <!--        android:layout_marginRight="8dp"-->
+    <!--        android:background="@null"-->
+    <!--        android:contentDescription="@string/image_button_content_description_delete"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:srcCompat="@drawable/ic_delete_forever_black_24dp" />-->
+
 
     <ImageView
         android:id="@+id/imageViewVisable"
@@ -46,7 +48,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/imageview_content_description_visibility"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageButtonDeleteTimer"
+        app:layout_constraintEnd_toStartOf="@+id/switch_tasker_enable"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_visibility_black_24dp" />
 
@@ -73,8 +75,8 @@
         app:layout_constraintBottom_toTopOf="@+id/textViewCategoryNameCell"
         app:layout_constraintEnd_toStartOf="@+id/imageViewLockPhone"
         app:layout_constraintStart_toEndOf="@+id/textViewStartTimeCell"
-            tools:text="@string/fragment_add_edit_timer_description"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/fragment_add_edit_timer_description" />
 
     <TextView
         android:id="@+id/textViewCategoryNameCell"
@@ -90,5 +92,13 @@
         app:layout_constraintStart_toEndOf="@+id/textViewEndTimeCell"
         app:layout_constraintTop_toBottomOf="@+id/textviewDescriptionCell"
         tools:text="Socal apps" />
+
+    <Switch
+        android:id="@+id/switch_tasker_enable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

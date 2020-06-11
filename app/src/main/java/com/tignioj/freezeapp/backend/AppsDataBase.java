@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-@Database(entities = {AppsCategory.class, FreezeApp.class, FreezeTasker.class}, version = 2, exportSchema = false)
+@Database(entities = {AppsCategory.class, FreezeApp.class, FreezeTasker.class}, version = 3, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppsDataBase extends RoomDatabase {
 
@@ -39,7 +39,7 @@ public abstract class AppsDataBase extends RoomDatabase {
                     /*清空当前数据式的迁移*/
 //                    .fallbackToDestructiveMigration()
                     /*自定义迁移策略*/
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_2_3)
 //                    .addMigrations(MIGRATION_3_4)
                     /*级联删除tasks*/
 //                    .addMigrations(MIGRATION_4_5)
@@ -68,6 +68,20 @@ public abstract class AppsDataBase extends RoomDatabase {
             database.execSQL("ALTER TABLE  freeze_tasker ADD COLUMN description VARCHAR DEFAULT "+ s);
         }
     };
+
+
+    /**
+     * freezeTimer添加字段description
+     */
+    private static final Migration MIGRATION_2_3 = new Migration(2,3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE  freeze_tasker ADD COLUMN enable INTEGER  NOT NULL DEFAULT 0");
+        }
+    };
+
+
+    //============================参考=========================
 
 
     /**

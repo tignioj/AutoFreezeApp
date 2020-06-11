@@ -81,6 +81,10 @@ public class FreezeAppRepository {
         }
     }
 
+    public void updateFreezeTasksAllEnable(boolean isChecked) {
+        freezeAppDao.updateFreezeTasksAllEnable(isChecked);
+    }
+
 
     public static class InsertAsyncTask extends AsyncTask<FreezeApp, Void, Void> {
         private FreezeAppDao freezeAppDao;

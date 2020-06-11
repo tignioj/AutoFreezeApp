@@ -89,22 +89,22 @@
 
         android:layout_height="wrap_content"
         android:text="@string/update_button_text"
-        app:layout_constraintBottom_toBottomOf="@+id/button_addTimer_Back"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonDelete"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/button_addTimer_Back"
-        app:layout_constraintTop_toTopOf="@+id/button_addTimer_Back" />
+        app:layout_constraintStart_toEndOf="@+id/buttonDelete"
+        app:layout_constraintTop_toTopOf="@+id/buttonDelete"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/button_addTimer_Back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:text="@string/back_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button_addTime_save"
+        app:layout_constraintEnd_toStartOf="@+id/buttonDelete"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline5"
         app:layout_constraintTop_toBottomOf="@+id/editTimerEditTextDescription" />
 
     <TextView
@@ -206,6 +206,17 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
         app:layout_constraintTop_toTopOf="@+id/guideline12" />
+
+    <Button
+        android:id="@+id/buttonDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_button_text"
+        app:layout_constraintBottom_toBottomOf="@+id/button_addTimer_Back"
+        app:layout_constraintEnd_toStartOf="@+id/button_addTime_save"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button_addTimer_Back"
+        app:layout_constraintTop_toTopOf="@+id/button_addTimer_Back" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

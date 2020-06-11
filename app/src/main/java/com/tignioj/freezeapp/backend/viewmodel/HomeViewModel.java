@@ -232,4 +232,8 @@ public class HomeViewModel extends AndroidViewModel {
         freezeAppRepository.unFreezeAllApp();
         return i;
     }
+
+    public void updateFreezeTasksAllEnable(boolean isChecked) {
+        freezeAppRepository.updateFreezeTasksAllEnable(isChecked);
+    }
 }

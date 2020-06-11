@@ -1,5 +1,6 @@
 package com.tignioj.freezeapp.ui.home.timer;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,10 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import com.tignioj.freezeapp.R;
 import com.tignioj.freezeapp.backend.entitys.FreezeTasker;
@@ -43,6 +48,7 @@ public class TimerFragment extends Fragment {
     HomeViewModel homeViewModel;
     Handler handler;
     List<FreezeTasker> freezeTaskers;
+    Switch aSwitchEnableAll;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +64,22 @@ public class TimerFragment extends Fragment {
         });
 
 
+
+        final SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        boolean enableAll = mPrefs.getBoolean(MyConfig.PERSONAL_SHP_CONFIG_KEY_ENABLE_ALL_TASKS, true);
+        aSwitchEnableAll = inflate.findViewById(R.id.switch_eanble_all_task);
+        aSwitchEnableAll.setChecked(enableAll);
+        aSwitchEnableAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                homeViewModel.updateFreezeTasksAllEnable(isChecked);
+                SharedPreferences.Editor edit = mPrefs.edit();
+                edit.putBoolean(MyConfig.PERSONAL_SHP_CONFIG_KEY_ENABLE_ALL_TASKS, isChecked);
+                edit.apply();
+            }
+        });
+
+
         recyclerView = inflate.findViewById(R.id.rcv_timer);
         timerAdapter = new TimerAdapter(this);
         recyclerView.setAdapter(timerAdapter);
@@ -68,7 +90,7 @@ public class TimerFragment extends Fragment {
             public void onChanged(List<FreezeTasker> freezeTaskers) {
                 TimerFragment.this.freezeTaskers = freezeTaskers;
                 timerAdapter.submitList(freezeTaskers);
-                timerAdapter.notifyDataSetChanged();
+//                timerAdapter.notifyDataSetChanged();
             }
         });
 
@@ -102,6 +124,7 @@ public class TimerFragment extends Fragment {
         };
 
         handler.sendEmptyMessage(0x100 );
+
 
         return inflate;
     }
