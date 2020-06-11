@@ -47,4 +47,14 @@ public class MyDateUtils {
         }
         return null;
     }
+
+    /**
+     * 判断a是否比b早
+     * @param a
+     * @param b
+     * @return
+     */
+    public static boolean aAfterThanb(String a, String b) {
+        return parse(a).after(parse(b));
+    }
 }

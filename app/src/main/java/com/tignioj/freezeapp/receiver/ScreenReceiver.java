@@ -13,7 +13,7 @@ public class ScreenReceiver extends BroadcastReceiver {
 
     public static void lockNow(Context context) {
         Log.d(MyConfig.LOG_TAG_FREEZE_SERVICE, "lock_now");
-//        DeviceMethod.getInstance(context).lockNow();
+        DeviceMethod.getInstance(context).lockNow();
     }
 
     @Override

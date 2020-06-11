@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.Entity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -43,11 +44,18 @@ import com.tignioj.freezeapp.utils.MyDateUtils;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class FreezeService extends Service {
     private static final String CHANNEL_ID = "channel_id1";
+    private static final int NOTIFICATION_ID = 0x1001;
+
 
     @Nullable
     @Override
@@ -65,6 +73,7 @@ public class FreezeService extends Service {
     public static final int ENABLE_SELF = 0x100;
     public static final int HIDE_SELF = 0x101;
 
+    private static final int UPDATE_NOTIFICATION = 0x1002;
 
     List<FreezeTasker> freezeTaskers;
     private HomeViewModel homeViewModel;
@@ -74,13 +83,75 @@ public class FreezeService extends Service {
     boolean isActuallyEnable;
     NotificationCompat.Builder builder;
 
+    //拼接标题
+    String start = null, end = null;
+
+    MutableLiveData<HashMap<String, String>> notificationHashMapLive;
+    HashMap<String, String> notificationHashMap;
+
+    ReentrantLock reentrantLock;
+
+
     public class ServiceThread extends Thread {
         HashMap<Long, Boolean> screenSchedulingMap;
+
+        /**
+         * 通知，用于显示当前执行的任务描述
+         */
 
         ServiceThread() {
             //初始化数据
             screenSchedulingMap = new HashMap<>();
             isActuallyEnable = DeviceMethod.getInstance(getApplicationContext()).isSelfEnable();
+            notificationHashMapLive = new MutableLiveData<>();
+
+            notificationHashMapLive.observeForever(new Observer<HashMap<String, String>>() {
+                @Override
+                public synchronized void onChanged(HashMap<String, String> strings) {
+
+                    //拼接内容
+                    StringBuilder content = new StringBuilder();
+                    if (notificationHashMap == null || notificationHashMap.size() == 0) {
+                        content.append("暂时无任务");
+                    }
+
+
+                    else {
+                        content.append("[");
+//                    text = notificationHashMap.keySet() + "";
+                        Set<Map.Entry<String, String>> entries = notificationHashMap.entrySet();
+                        for (Map.Entry<String, String> entry : entries) {
+                            content.append(entry.getKey().trim()).append(",");
+
+                            String[] split = entry.getValue().split("-");
+                            if (split.length == 2) {
+                                if (start == null) {
+                                    start = split[0];
+                                    end = split[1];
+                                }
+                                if (!MyDateUtils.aAfterThanb(split[0], start)) {
+                                    start = split[0];
+                                }
+                                if (MyDateUtils.aAfterThanb(split[1], end)) {
+                                    end = split[1];
+                                }
+                            }
+                        }
+                        content.replace(content.length()-1, content.length(), "]");
+                    }
+
+
+
+                    String s = content.toString();
+                    builder.setContentText(s);
+                    if (start != null) {
+                        builder.setContentTitle(start + "-" + end);
+                    }
+                    startForeground(NOTIFICATION_ID, builder.build());
+                }
+            });
+            notificationHashMap = new HashMap<>();
+            notificationHashMapLive.setValue(notificationHashMap);
         }
 
         @Override
@@ -102,7 +173,6 @@ public class FreezeService extends Service {
             }
 
         }
-
 
         private void loopHideIcon() {
             if (programLocker != null) {
@@ -139,10 +209,23 @@ public class FreezeService extends Service {
             for (FreezeTasker freezeTasker : freezeTaskers) {
                 //只处理这时间段的App
                 if (MyDateUtils.betweenStartTimeAndEndTime(freezeTasker.getStartTime(), freezeTasker.getEndTime())) {
+                    if (!notificationHashMap.containsKey(freezeTasker.getDescription())) {
+                        notificationHashMap.put(freezeTasker.getDescription(), MyDateUtils.format(freezeTasker.getStartTime())
+                                + "-" + MyDateUtils.format(freezeTasker.getEndTime()));
+                        Message message = new Message();
+                        message.what = UPDATE_NOTIFICATION;
+                        hideMySelfHandler.sendMessage(message);
+                    }
+
                     processLockScreen(freezeTasker);
 
                     processFreezeApp(freezeTasker);
                 } else {
+                    if (notificationHashMap.containsKey(freezeTasker.getDescription())) {
+                        notificationHashMap.remove(freezeTasker.getDescription());
+                        hideMySelfHandler.sendEmptyMessage(UPDATE_NOTIFICATION);
+
+                    }
                     processUnLockScreen(freezeTasker);
                 }
             }
@@ -253,21 +336,17 @@ public class FreezeService extends Service {
             @Override
             public void onChanged(ProgramLocker programLocker) {
                 FreezeService.this.programLocker = programLocker;
-                builder = new NotificationCompat.Builder(FreezeService.this.getApplicationContext(), CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_lock_black_24dp)
-                        .setContentTitle(getString(R.string.notifaction_keep_running_title))
-                        .setContentText(getString(R.string.notification_access_time) + programLocker.getStartTime() + "-" + programLocker.getEndTime())
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-                startForeground(0x1001, builder.build());
             }
         });
+        builder = new NotificationCompat.Builder(FreezeService.this.getApplicationContext(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_lock_black_24dp)
+                .setContentTitle(getString(R.string.notifaction_keep_running_title))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        startForeground(NOTIFICATION_ID, builder.build());
 
 
         //注册广播
         registBroadCast();
-
-
-
 
 
         hideMySelfHandler = new Handler(
@@ -293,6 +372,7 @@ public class FreezeService extends Service {
                 p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
                 isActuallyEnable = false;
             }
+
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
@@ -302,6 +382,10 @@ public class FreezeService extends Service {
                         break;
                     case HIDE_SELF:
                         hideMe();
+                        break;
+                    case UPDATE_NOTIFICATION:
+                        notificationHashMapLive.setValue(notificationHashMap);
+                        break;
                 }
             }
         };
@@ -316,6 +400,8 @@ public class FreezeService extends Service {
                     //如果删掉了一个任务，必须先设置为false，否则当遍历不到被删掉的任务时，屏幕保持锁定状态
                     ScreenReceiver.isLockScreen = false;
                 }
+//                Log.d(MyConfig.LOG_TAG_FREEZE_SERVICE, "clear notification map");
+//                notificationHashMap.clear();
                 FreezeService.this.freezeTaskers = freezeTaskers;
             }
         });
@@ -323,7 +409,6 @@ public class FreezeService extends Service {
         serviceThread = new ServiceThread();
         serviceThread.start();
     }
-
 
 
     ServiceThread serviceThread;
