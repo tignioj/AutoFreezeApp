@@ -92,4 +92,7 @@
     <string name="channel_description_keep_running">保持运行</string>
     <string name="checkbox_hide_icon_text">隐藏图标</string>
     <string name="warning_hide_icon_tips">非指定时间内你将无法从桌面看到这个图标!</string>
+    <string name="calmdown_end_text">冷静结束</string>
+    <string name="notifaction_keep_running_title">自动冻结后台运行中</string>
+    <string name="notification_access_time">访问时间:</string>
 </resources>

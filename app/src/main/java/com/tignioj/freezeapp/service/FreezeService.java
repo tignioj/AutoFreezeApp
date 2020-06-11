@@ -72,6 +72,7 @@ public class FreezeService extends Service {
     ScreenReceiver screenReceiver;
     ProgramLocker programLocker;
     boolean isActuallyEnable;
+    NotificationCompat.Builder builder;
 
     public class ServiceThread extends Thread {
         HashMap<Long, Boolean> screenSchedulingMap;
@@ -238,31 +239,35 @@ public class FreezeService extends Service {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(MyConfig.LOG_TAG_FREEZE_SERVICE, "start_sticky");
+        return START_STICKY;
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
-
-        //安卓O以上需要创建Channel用来发送通知
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_lock_black_24dp)
-                .setContentTitle("AutoFreezeApp Keep Running")
-//                .setContentText("Much longer text that cannot fit one line...")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        createNotificationChannel();
-
-
-        startForeground(0x1001, builder.build());
-
-        //注册广播
-        registBroadCast();
         homeViewModel = new HomeViewModel(getApplication());
-
         MutableLiveData<ProgramLocker> programLockerMutableLiveData = homeViewModel.getProgramLockerMutableLiveData();
         programLockerMutableLiveData.observeForever(new Observer<ProgramLocker>() {
             @Override
             public void onChanged(ProgramLocker programLocker) {
                 FreezeService.this.programLocker = programLocker;
+                builder = new NotificationCompat.Builder(FreezeService.this.getApplicationContext(), CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_lock_black_24dp)
+                        .setContentTitle(getString(R.string.notifaction_keep_running_title))
+                        .setContentText(getString(R.string.notification_access_time) + programLocker.getStartTime() + "-" + programLocker.getEndTime())
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                startForeground(0x1001, builder.build());
             }
         });
+
+
+        //注册广播
+        registBroadCast();
+
+
+
 
 
         hideMySelfHandler = new Handler(
@@ -271,7 +276,7 @@ public class FreezeService extends Service {
                 if (isActuallyEnable) {
                     return;
                 }
-                Toast.makeText(getApplicationContext(), "Service:冷静结束", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.calmdown_end_text, Toast.LENGTH_SHORT).show();
                 PackageManager p = getPackageManager();
                 ComponentName componentName = new ComponentName(getApplication(), MainActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
                 p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);

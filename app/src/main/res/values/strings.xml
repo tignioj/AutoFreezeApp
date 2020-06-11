@@ -100,4 +100,7 @@
     <string name="channel_description_keep_running">keep running</string>
     <string name="checkbox_hide_icon_text">Hide icon</string>
     <string name="warning_hide_icon_tips">You won\'t be able to see the icon from desktop when not in specifid time!</string>
+    <string name="calmdown_end_text">Calm down end</string>
+    <string name="notifaction_keep_running_title">AutoFreezeApp Keep Running</string>
+    <string name="notification_access_time">Access time:</string>
 </resources>
