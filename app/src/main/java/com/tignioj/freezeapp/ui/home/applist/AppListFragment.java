@@ -3,10 +3,12 @@ package com.tignioj.freezeapp.ui.home.applist;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,6 +41,12 @@ public class AppListFragment extends Fragment {
         // Required empty public constructor
     }
 
+//    @Override
+//    public void onResume() {
+//        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+//        super.onResume();
+//    }
+
     private TextView textViewSearch, textViewAppListSelectCount;
     private ListView listViewAppList;
     private AppListAdapter adapter;
@@ -64,7 +72,6 @@ public class AppListFragment extends Fragment {
         unfreezeApps = homeViewModel.getMutableLiveDataUnFreezeAppListLive();
 
         adapter = new AppListAdapter(requireContext(), R.layout.cell_listview, unfreezeApps.getValue(), homeViewModel, getActivity());
-
 
         listViewAppList.setAdapter(adapter);
         unfreezeApps.observe(getViewLifecycleOwner(), new Observer<List<AppInfo>>() {
@@ -178,6 +185,7 @@ public class AppListFragment extends Fragment {
         //执行的命令
         return inflate;
     }
+
 
     /**
      * 冻结App

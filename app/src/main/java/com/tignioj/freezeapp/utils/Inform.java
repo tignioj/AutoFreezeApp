@@ -1,6 +1,7 @@
 package com.tignioj.freezeapp.utils;
 
 import android.content.DialogInterface;
+import android.telecom.Call;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -35,11 +36,11 @@ public class Inform {
         });
     }
 
-    public static void alert(final int title, final int msg, final int okText, final int cancelText, final Callback callback) {
+    public static void confirm(final int title, final int msg, final int okText, final int cancelText, final Callback callback) {
         mainActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                AlertDialog.Builder builder= new AlertDialog.Builder(mainActivity);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
                 builder.setTitle(title).setMessage(msg);
                 builder.setNegativeButton(okText, new DialogInterface.OnClickListener() {
                     @Override
@@ -62,16 +63,68 @@ public class Inform {
         });
     }
 
-    public static void alert(int warning, String msg, final String title, final String message, final Callback callback) {
+    public static void confirm(final int title, final int msg, final Callback callback) {
+        confirm(title, msg, R.string.yes, R.string.no, callback);
     }
 
-    public static void alert(int title, int message, Callback callback) {
-        alert(title, message, R.string.yes, R.string.no, callback);
+    public static void alert(final int title, final int msg) {
+        mainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+                builder.setTitle(title).setMessage(msg);
+                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).create().show();
+            }
+        });
+    }
+
+    public static void alert(final int title, final int msg, final Callback callback) {
+        mainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+                builder.setTitle(title).setMessage(msg);
+                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        callback.ok();
+                    }
+                }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        callback.dismiss();
+                    }
+                })
+                        .create().show();
+            }
+        });
+    }
+
+    public abstract static class MySimpleCallback implements Callback {
+        @Override
+        public void cancel() {
+
+        }
+
+        @Override
+        public void ok() {
+
+        }
+
+        @Override
+        public void dismiss() {
+        }
     }
 
     public interface Callback {
         void ok();
+
         void cancel();
+
         void dismiss();
     }
 }

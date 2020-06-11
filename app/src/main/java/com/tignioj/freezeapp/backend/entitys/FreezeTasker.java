@@ -1,5 +1,7 @@
 package com.tignioj.freezeapp.backend.entitys;
 
+import android.util.Log;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -31,6 +33,7 @@ public class FreezeTasker {
 
     private Date startTime;
     private Date endTime;
+
 
     @ColumnInfo(name = "category_id")
     private long categoryId;

@@ -1,20 +1,37 @@
 package com.tignioj.freezeapp;
 
 import android.app.admin.DeviceAdminReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.tignioj.freezeapp.config.MyConfig;
 import com.tignioj.freezeapp.utils.DeviceMethod;
 
-public class MyDeviceAdminReceiver  extends DeviceAdminReceiver {
+public class MyDeviceAdminReceiver extends DeviceAdminReceiver {
 
 
     @Override
     public void onEnabled(Context context, Intent intent) {
         // 设备管理：可用
         Toast.makeText(context, "设备管理：可用", Toast.LENGTH_SHORT).show();
+        ComponentName componentName = new ComponentName(context, MainActivity.class);
+
+        Log.d(MyConfig.LOG_TAG_MyDeviceAdminReceiver, componentName.getPackageName() + ":" + componentName.getClassName() + " enable:" + DeviceMethod.isComponentEnabled(context.getPackageManager(), componentName.getPackageName()
+                , componentName.getClassName()));
+        //如果App不小心隐藏了，就将他激活
+        showApp(context);
+    }
+
+    private void showApp(Context context) {
+        PackageManager p = context.getPackageManager();
+        ComponentName componentName = new ComponentName("com.tignioj.freezeapp", "com.tignioj.freezeapp.MainActivity");
+        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        Log.d(MyConfig.LOG_TAG_MyDeviceAdminReceiver, "receive enable!");
     }
 
     @Override

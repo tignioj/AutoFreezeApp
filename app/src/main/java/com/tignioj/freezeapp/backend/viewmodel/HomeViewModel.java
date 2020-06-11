@@ -16,6 +16,7 @@ import com.tignioj.freezeapp.backend.viewmodel.repo.FreezeAppRepository;
 import com.tignioj.freezeapp.backend.viewmodel.repo.FreezeTaskerRepository;
 import com.tignioj.freezeapp.backend.viewmodel.repo.HomeRepository;
 import com.tignioj.freezeapp.uientity.AppInfo;
+import com.tignioj.freezeapp.uientity.ProgramLocker;
 import com.tignioj.freezeapp.utils.DeviceMethod;
 
 import java.util.List;
@@ -32,6 +33,15 @@ public class HomeViewModel extends AndroidViewModel {
         return homeRepository.getSelectedReadyToFreezeCount();
     }
 
+    public MutableLiveData<ProgramLocker> getProgramLockerMutableLiveData() {
+        return homeRepository.getProgramLockerMutableLiveData();
+    }
+
+    public void setProgramLocker(ProgramLocker programLocker) {
+        homeRepository.setProgramLocker(programLocker);
+    }
+
+
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
@@ -40,8 +50,9 @@ public class HomeViewModel extends AndroidViewModel {
         this.appsCategoryRepository = AppsCategoryRepository.getInstance(context);
         this.freezeAppRepository = FreezeAppRepository.getInstance(context);
         this.freezeTaskerRepository = FreezeTaskerRepository.getInstance(context);
-
     }
+
+
 
 
     public LiveData<List<AppsCategory>> getAppsCategoryLive() {

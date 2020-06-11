@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +30,8 @@ import com.tignioj.freezeapp.config.MyConfig;
 import com.tignioj.freezeapp.uientity.SettingEntity;
 import com.tignioj.freezeapp.utils.DeviceMethod;
 import com.tignioj.freezeapp.utils.Inform;
+
+import org.w3c.dom.Text;
 
 class SettingAdapter extends ListAdapter<SettingEntity, SettingAdapter.SettingViewHolder> {
     private Context context;
@@ -51,7 +54,6 @@ class SettingAdapter extends ListAdapter<SettingEntity, SettingAdapter.SettingVi
         this.settingFragment = settingFragment;
         this.homeViewModel = homeViewModel;
 
-
     }
 
     @NonNull
@@ -66,7 +68,8 @@ class SettingAdapter extends ListAdapter<SettingEntity, SettingAdapter.SettingVi
     @Override
     public void onBindViewHolder(@NonNull SettingViewHolder holder, int position) {
         final SettingEntity item = getItem(position);
-        holder.textView.setText(item.getText());
+        holder.textViewName.setText(item.getText());
+        holder.textViewDescription.setText(item.getDescription());
         holder.imageView.setImageDrawable(item.getDrawable());
         holder.itemView.setOnClickListener(new MyClickListener(holder, item));
 
@@ -105,10 +108,10 @@ class SettingAdapter extends ListAdapter<SettingEntity, SettingAdapter.SettingVi
                     settingFragment.getActivity().startActivity(intent);
                     break;
                 case SettingFragment.OTHER_APPS:
-                    Inform.alert(R.string.tips_text, R.string.open_ousite_url_text, new Inform.Callback() {
+                    Inform.confirm(R.string.tips_text, R.string.open_ousite_url_text, new Inform.Callback() {
                         @Override
                         public void ok() {
-                            Uri parse = Uri.parse(context.getString(R.string.githubURL));
+                            Uri parse = Uri.parse(context.getString(R.string.githubOtherAppsURL));
                             Intent intent = new Intent(Intent.ACTION_VIEW, parse);
                             context.startActivity(intent);
                         }
@@ -123,18 +126,24 @@ class SettingAdapter extends ListAdapter<SettingEntity, SettingAdapter.SettingVi
 
                         }
                     });
+                    break;
+                case SettingFragment.TASKS_EDITABLE_TIME:
+                    Navigation.findNavController(v).navigate(R.id.action_nav_setting_to_taskerEditableFragment);
+                    break;
             }
         }
     }
 
     public static class SettingViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView textView;
+        TextView textViewName;
+        TextView textViewDescription;
 
         public SettingViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.cell_rcv_fragment_setting_imgview);
-            textView = itemView.findViewById(R.id.cell_rcv_fragment_setting_textview);
+            textViewName = itemView.findViewById(R.id.cell_rcv_fragment_setting_tv_name);
+            textViewDescription = itemView.findViewById(R.id.cell_rcv_fragment_setting_tv_description);
         }
     }
 

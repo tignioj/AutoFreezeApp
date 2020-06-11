@@ -7,15 +7,13 @@
     android:background="@android:drawable/list_selector_background">
 
     <TextView
-        android:id="@+id/cell_rcv_fragment_setting_textview"
+        android:id="@+id/cell_rcv_fragment_setting_tv_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:textSize="@dimen/normal_button_text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cell_rcv_fragment_setting_imgview"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="@dimen/tv_small_size"
+        app:layout_constraintBottom_toBottomOf="@+id/cell_rcv_fragment_setting_imgview"
+        app:layout_constraintStart_toStartOf="@+id/cell_rcv_fragment_setting_tv_name"
+        app:layout_constraintTop_toBottomOf="@+id/cell_rcv_fragment_setting_tv_name"
         tools:text="text" />
 
     <ImageView
@@ -31,4 +29,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/cell_rcv_fragment_setting_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="TextView"
+        android:textSize="@dimen/tv_normal_size"
+        app:layout_constraintStart_toEndOf="@+id/cell_rcv_fragment_setting_imgview"
+        app:layout_constraintTop_toTopOf="@+id/cell_rcv_fragment_setting_imgview" />
 </androidx.constraintlayout.widget.ConstraintLayout>

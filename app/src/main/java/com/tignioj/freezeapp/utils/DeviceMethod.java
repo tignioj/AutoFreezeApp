@@ -4,6 +4,9 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ComponentInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
@@ -12,11 +15,14 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 
+import com.tignioj.freezeapp.MainActivity;
 import com.tignioj.freezeapp.MyDeviceAdminReceiver;
 import com.tignioj.freezeapp.R;
 import com.tignioj.freezeapp.config.MyConfig;
 import com.tignioj.freezeapp.ui.setting.SettingFragment;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,6 +37,9 @@ public class DeviceMethod {
     private ComponentName componentName;
     private Context mContext;
 
+    public ComponentName getComponentName() {
+        return componentName;
+    }
 
     private DeviceMethod(Context context) {
         mContext = context;
@@ -245,8 +254,64 @@ public class DeviceMethod {
 //        }
 //    }
 
+
+    public boolean isSelfEnable() {
+        return isComponentEnabled(mContext.getPackageManager(), componentName.getPackageName(), MainActivity.class.getName());
+    }
+
+    /**
+     * 组件是否可用
+     * 来源
+     * https://stackoverflow.com/questions/26956375/how-to-check-if-an-activity-is-enabled
+     *
+     * @param pm
+     * @param pkgName
+     * @param clsName
+     * @return
+     */
+    public static boolean isComponentEnabled(PackageManager pm, String pkgName, String clsName) {
+        ComponentName componentName = new ComponentName(pkgName, clsName);
+        int componentEnabledSetting = pm.getComponentEnabledSetting(componentName);
+        switch (componentEnabledSetting) {
+            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED:
+                return false;
+            case PackageManager.COMPONENT_ENABLED_STATE_ENABLED:
+                return true;
+            case PackageManager.COMPONENT_ENABLED_STATE_DEFAULT:
+            default:
+                // We need to get the application info to get the component's default state
+                try {
+                    PackageInfo packageInfo = pm.getPackageInfo(pkgName, PackageManager.GET_ACTIVITIES
+                            | PackageManager.GET_RECEIVERS
+                            | PackageManager.GET_SERVICES
+                            | PackageManager.GET_PROVIDERS
+                            | PackageManager.GET_DISABLED_COMPONENTS);
+
+                    List<ComponentInfo> components = new ArrayList<>();
+                    if (packageInfo.activities != null)
+                        Collections.addAll(components, packageInfo.activities);
+                    if (packageInfo.services != null)
+                        Collections.addAll(components, packageInfo.services);
+                    if (packageInfo.providers != null)
+                        Collections.addAll(components, packageInfo.providers);
+
+                    for (ComponentInfo componentInfo : components) {
+                        if (componentInfo.name.equals(clsName)) {
+                            return componentInfo.isEnabled();
+                        }
+                    }
+
+                    // the component is not declared in the AndroidManifest
+                    return false;
+                } catch (PackageManager.NameNotFoundException e) {
+                    // the package isn't installed on the device
+                    return false;
+                }
+        }
+    }
+
     public void deActivate(final SettingFragment settingFragment) {
-        Inform.alert(R.string.warning, R.string.confirm_deactive_tips, R.string.yes, R.string.no, new Inform.Callback() {
+        Inform.confirm(R.string.warning, R.string.confirm_deactive_tips, R.string.yes, R.string.no, new Inform.Callback() {
             @Override
             public void ok() {
                 final List<String> freezeApps = settingFragment.getHomeViewModel().getFonzenAppListPackageName();

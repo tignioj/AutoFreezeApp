@@ -6,12 +6,14 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.preference.PreferenceManager;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.tignioj.freezeapp.backend.entitys.FreezeApp;
 import com.tignioj.freezeapp.config.MyConfig;
 import com.tignioj.freezeapp.uientity.AppInfo;
+import com.tignioj.freezeapp.uientity.ProgramLocker;
 import com.tignioj.freezeapp.utils.DeviceMethod;
 
 import java.util.ArrayList;
@@ -25,8 +27,22 @@ public class HomeRepository {
     private MutableLiveData<List<AppInfo>> mutableLiveDataFrozenAppList;
     private MutableLiveData<List<AppInfo>> mutableLiveDataAllAppList;
     private MutableLiveData<Integer> selectedReadyToFreezeCount;
+    private MutableLiveData<ProgramLocker> programLockerMutableLiveData;
 
+    public MutableLiveData<ProgramLocker> getProgramLockerMutableLiveData() {
+        return programLockerMutableLiveData;
+    }
 
+    public void setProgramLocker(ProgramLocker programLocker) {
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor edit = mPrefs.edit();
+        edit.putString(MyConfig.PERSONAL_SHP_CONFIG_KEY_EDITABLE_START_TIME, programLocker.getStartTime());
+        edit.putString(MyConfig.PERSONAL_SHP_CONFIG_KEY_EDITABLE_END_TIME, programLocker.getEndTime());
+        edit.putBoolean(MyConfig.PERSONAL_SHP_CONFIG_KEY_EDITABLE_ENABLE, programLocker.isEnable());
+        edit.putBoolean(MyConfig.PERSONAL_SHP_CONFIG_KEY_HIDE_ICON, programLocker.isHideIcon());
+        edit.apply();
+        this.programLockerMutableLiveData.setValue(programLocker);
+    }
 
     public synchronized static HomeRepository getInstance(Context context) {
         if (homeRepository == null) {
@@ -42,6 +58,14 @@ public class HomeRepository {
     private HomeRepository(Context context) {
         this.context = context;
 
+        programLockerMutableLiveData = new MutableLiveData<>();
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        String startTimeText = mPrefs.getString(MyConfig.PERSONAL_SHP_CONFIG_KEY_EDITABLE_START_TIME, "00:00");
+        String endTimeText = mPrefs.getString(MyConfig.PERSONAL_SHP_CONFIG_KEY_EDITABLE_END_TIME, "23:59");
+        boolean isEnable = mPrefs.getBoolean(MyConfig.PERSONAL_SHP_CONFIG_KEY_EDITABLE_ENABLE, false);
+        boolean isHideIcon = mPrefs.getBoolean(MyConfig.PERSONAL_SHP_CONFIG_KEY_HIDE_ICON, false);
+
+        programLockerMutableLiveData.setValue(new ProgramLocker(startTimeText, endTimeText, isEnable, isHideIcon));
 
         mutableLiveDataAllAppList = new MutableLiveData<>();
         this.allApps = getAllAppList();
@@ -58,6 +82,10 @@ public class HomeRepository {
 
         this.selectedReadyToFreezeCount = new MutableLiveData<>();
         this.selectedReadyToFreezeCount.setValue(0);
+
+
+
+
     }
 
     public MutableLiveData<List<AppInfo>> getMutableLiveDataAllAppList() {

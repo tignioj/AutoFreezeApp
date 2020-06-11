@@ -79,6 +79,25 @@
     <string name="open_ousite_url_text">Do you want to view the links \"https://github.com/tignioj/TimeLineApp\" ?</string>
     <string name="fragment_setting_label">Settings</string>
     <string name="githubOtherAppsURL" translatable="false">https://github.com/tignioj/TimeLineApp</string>
-    <string name="unfreeze_text">Unfreeze</string>
-    <string name="application_text">application</string>
+    <string name="unfreeze_text" translatable="false">Unfreeze</string>
+    <string name="application_text" translatable="false">application</string>
+    <string name="fragment_setting_editable_tasker_label">Program Lock</string>
+    <string name="enable">Enable</string>
+    <string name="tasker_modifiable_time">Application available  time.</string>
+    <string name="locked_text">locked</string>
+    <string name="edit_limit_tips">The program has been locked and can only be opened within the specified time</string>
+    <string name="program_lock">Program Lock</string>
+    <string name="enable_state_text_enabled">enabled</string>
+    <string name="enable_state_text_off">off</string>
+    <string name="program_lock_warning_text">When enabled, the application will only can be opened for a specified time! Please think twice</string>
+    <string name="giveup_message_alert_title">Believe that setbacks will pass</string>
+    <string name="giveup_message_alert_message">I hope you will get better soon.</string>
+    <string name="forbid_giveup_message_alert_title">You can\'t give up!</string>
+    <string name="forbid_giveup_message_alert_message">Be patient</string>
+    <string name="button_i_give_up_text">I give up</string>
+    <string name="button_calm_text">I need calm down 5 minutes</string>
+    <string name="channel_name_keep_running">Service Keep Running</string>
+    <string name="channel_description_keep_running">keep running</string>
+    <string name="checkbox_hide_icon_text">Hide icon</string>
+    <string name="warning_hide_icon_tips">You won\'t be able to see the icon from desktop when not in specifid time!</string>
 </resources>

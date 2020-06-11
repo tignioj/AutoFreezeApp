@@ -1,8 +1,10 @@
 package com.tignioj.freezeapp.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class MyDateUtils {
     /**
@@ -32,7 +34,17 @@ public class MyDateUtils {
     }
 
     public static String format(Date startTime) {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.CHINA);
         return sdf.format(startTime);
+    }
+
+    public static Date parse(String pattern) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.CHINA);
+        try {
+            return  sdf.parse(pattern);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

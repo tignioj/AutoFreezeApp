@@ -8,7 +8,23 @@ public class SettingEntity {
 
     private Drawable drawable;
     private String text;
+    private String description;
     private int action;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public SettingEntity(Drawable drawable, String text, int action, String description) {
+        this.drawable = drawable;
+        this.text = text;
+        this.action = action;
+        this.description = description;
+    }
 
     public SettingEntity(Drawable drawable, String text, int action) {
         this.text = text;

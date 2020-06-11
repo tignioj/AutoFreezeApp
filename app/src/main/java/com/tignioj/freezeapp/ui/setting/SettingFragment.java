@@ -1,5 +1,6 @@
 package com.tignioj.freezeapp.ui.setting;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -7,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -17,14 +19,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.tignioj.freezeapp.InitApplication;
 import com.tignioj.freezeapp.R;
 import com.tignioj.freezeapp.backend.viewmodel.HomeViewModel;
+import com.tignioj.freezeapp.config.MyConfig;
 import com.tignioj.freezeapp.uientity.SettingEntity;
 
 import java.util.ArrayList;
@@ -34,7 +39,6 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class SettingFragment extends Fragment {
-    public static final int OTHER_APPS = 0x3;
     public int currentNightMode;
     RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -47,6 +51,8 @@ public class SettingFragment extends Fragment {
 
     public static final int DEACTIVATE = 0x1;
     public static final int CHANGE_DAY_NIGHT_MODE = 0x2;
+    public static final int OTHER_APPS = 0x3;
+    public static final int TASKS_EDITABLE_TIME = 0x04;
 
 
     private Drawable getDrawable(int id) {
@@ -79,6 +85,8 @@ public class SettingFragment extends Fragment {
         return progressBar;
     }
 
+    private SettingAdapter settingAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,22 +104,36 @@ public class SettingFragment extends Fragment {
 
         recyclerView = inflate.findViewById(R.id.rcv_fragment_setting);
 
-        SettingAdapter settingAdapter = new SettingAdapter(requireContext(), this, homeViewModel);
+        settingAdapter = new SettingAdapter(requireContext(), this, homeViewModel);
 
         SettingEntity deActivate = new SettingEntity(getDrawable(R.drawable.ic_baseline_mobile_off_24),
-                getString(R.string.setting_item_deactive_text), DEACTIVATE);
+                getString(R.string.setting_item_deactive_text), DEACTIVATE, "Current:activated");
+
         SettingEntity nightMode = new SettingEntity(getDrawable(R.drawable.ic_baseline_brightness_medium_24),
-                getString(R.string.setting_toggle_night_mode_text), CHANGE_DAY_NIGHT_MODE);
+                getString(R.string.setting_toggle_night_mode_text), CHANGE_DAY_NIGHT_MODE, InitApplication.getInstance().isNightModeEnabled()? "Current:night": "Current:day");
 
         SettingEntity otherApps = new SettingEntity(getDrawable(R.drawable.ic_baseline_apps_24),
-                getString(R.string.develpoe_other_apps), OTHER_APPS
+                getString(R.string.develpoe_other_apps), OTHER_APPS,
+                "Go to the website"
         );
+
+        SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String startTimeText = mPrefs.getString(MyConfig.PERSONAL_SHP_CONFIG_KEY_EDITABLE_START_TIME, "00:00");
+        String endTimeText = mPrefs.getString(MyConfig.PERSONAL_SHP_CONFIG_KEY_EDITABLE_END_TIME, "23:59");
+        boolean aBoolean = mPrefs.getBoolean(MyConfig.PERSONAL_SHP_CONFIG_KEY_EDITABLE_ENABLE, false);
+
+
+        SettingEntity taskerEdiableTime = new SettingEntity(getDrawable(R.drawable.ic_baseline_access_time_24),
+                getString(R.string.program_lock), TASKS_EDITABLE_TIME, aBoolean ?getString(R.string.enable_state_text_enabled) + ": " + startTimeText + "-" + endTimeText
+                :getString(R.string.enable_state_text_off));
+
 
 
         ArrayList<SettingEntity> settingEntities = new ArrayList<>();
         settingEntities.add(deActivate);
         settingEntities.add(nightMode);
         settingEntities.add(otherApps);
+        settingEntities.add(taskerEdiableTime);
 
         settingAdapter.submitList(settingEntities);
 
@@ -121,5 +143,9 @@ public class SettingFragment extends Fragment {
 
 
         return inflate;
+    }
+
+    public RecyclerView.Adapter getAdapter() {
+        return settingAdapter;
     }
 }

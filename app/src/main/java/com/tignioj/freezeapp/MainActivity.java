@@ -1,7 +1,5 @@
 package com.tignioj.freezeapp;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
@@ -11,23 +9,18 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.app.Application;
+import android.content.ComponentName;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
-import com.tignioj.freezeapp.backend.viewmodel.HomeViewModel;
 import com.tignioj.freezeapp.config.MyConfig;
 import com.tignioj.freezeapp.service.FreezeService;
-import com.tignioj.freezeapp.ui.setting.SettingFragment;
 import com.tignioj.freezeapp.utils.DeviceMethod;
 import com.tignioj.freezeapp.utils.Inform;
 
@@ -54,13 +47,14 @@ public class MainActivity extends AppCompatActivity {
 
 //        NavigationUI.setupActionBarWithNavController(this, navController);
 
+
         //判断是否可使用
         boolean admin = DeviceMethod.getInstance(getApplicationContext()).isAdmin();
         if (!admin) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Inform.alert(R.string.please_activate_alert_title, R.string.activate_tips,
+                    Inform.confirm(R.string.please_activate_alert_title, R.string.activate_tips,
                             R.string.check_link_buton_text, R.string.exit_text,
                             new Inform.Callback() {
                                 @Override
@@ -84,9 +78,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }, 0);
         } else {
-            startService(new Intent(getApplicationContext(), FreezeService.class));
+//            startService(new Intent(getApplicationContext(), FreezeService.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(new Intent(this, FreezeService.class));
+            } else {
+                startService(new Intent(this, FreezeService.class));
+            }
         }
-
 
         //侧边栏
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

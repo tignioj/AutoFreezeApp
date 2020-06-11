@@ -77,12 +77,14 @@ public class TimerFragment extends Fragment {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
+
+
                 List<FreezeTasker> freezeTaskers = TimerFragment.this.freezeTaskers;
                 if (freezeTaskers != null) {
                     for (int i = 0; i < freezeTaskers.size(); i++) {
                         FreezeTasker f = freezeTaskers.get(i);
                         if (MyDateUtils.betweenStartTimeAndEndTime(f.getStartTime(), f.getEndTime())) {
-                            Log.d(MyConfig.MY_TAG, "current:" + f);
+                            Log.d(MyConfig.LOG_TAG_TIMER_FRAGMENT, "currentTask:" + f.getDescription());
                             if (!f.isCurrent()) {
                                 f.setCurrent(true);
                                 timerAdapter.notifyItemChanged(i);

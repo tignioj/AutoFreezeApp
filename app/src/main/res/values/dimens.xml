@@ -7,4 +7,9 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="normal_button_text_size">15sp</dimen>
     <dimen name="dialog_spinner_height">25dp</dimen>
+    <dimen name="tv_small_size">10sp</dimen>
+    <dimen name="tv_normal_size">15sp</dimen>
+    <dimen name="tv_large_size">20sp</dimen>
+    <dimen name="tv_very_large_size">35sp</dimen>
+
 </resources>

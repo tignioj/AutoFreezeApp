@@ -73,4 +73,23 @@
     <string name="develpoe_other_apps">开发者的其它应用</string>
     <string name="open_ousite_url_text">是否访问链接\"https://github.com/tignioj/TimeLineApp\" ?</string>
     <string name="fragment_setting_label">设置</string>
+    <string name="locked_text">已锁定</string>
+    <string name="edit_limit_tips">程序已经锁定，指定的时间内才能打开</string>
+    <string name="tasker_modifiable_time">程序可用时间</string>
+    <string name="fragment_setting_editable_tasker_label">程序锁定</string>
+    <string name="enable">启用</string>
+    <string name="enable_state_text_enabled">已启用</string>
+    <string name="enable_state_text_off">已关闭</string>
+    <string name="program_lock_warning_text">当启用时，应用将只能在指定的时间内打开! 请三思而后行</string>
+    <string name="program_lock">程序锁定</string>
+    <string name="giveup_message_alert_title">相信挫折会过去的</string>
+    <string name="giveup_message_alert_message">我希望你快点好起来</string>
+    <string name="forbid_giveup_message_alert_title">你不能放弃！</string>
+    <string name="forbid_giveup_message_alert_message">请给自己多点耐心</string>
+    <string name="button_i_give_up_text">我放弃</string>
+    <string name="button_calm_text">我需要冷静5分钟</string>
+    <string name="channel_name_keep_running">服务保持运行中</string>
+    <string name="channel_description_keep_running">保持运行</string>
+    <string name="checkbox_hide_icon_text">隐藏图标</string>
+    <string name="warning_hide_icon_tips">非指定时间内你将无法从桌面看到这个图标!</string>
 </resources>
