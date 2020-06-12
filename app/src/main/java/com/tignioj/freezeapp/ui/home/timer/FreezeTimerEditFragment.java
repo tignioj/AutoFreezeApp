@@ -183,9 +183,12 @@ public class FreezeTimerEditFragment extends Fragment {
                 } else {
                     freezeTaskerFromDb.setFrozen(false);
                 }
+
                 freezeTaskerFromDb.setLockScreen(checkBoxEditTimerIsLockScreen.isChecked());
 //                homeViewModel.insertFreezeTasks(freezeTaskerFromDb);
                 homeViewModel.updateFreezeTasks(freezeTaskerFromDb);
+
+
                 Toast.makeText(getContext(), R.string.save_success, Toast.LENGTH_SHORT).show();
                 Navigation.findNavController(v).navigateUp();
             }

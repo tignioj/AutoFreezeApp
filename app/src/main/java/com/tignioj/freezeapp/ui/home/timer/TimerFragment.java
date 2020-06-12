@@ -90,7 +90,6 @@ public class TimerFragment extends Fragment {
             public void onChanged(List<FreezeTasker> freezeTaskers) {
                 TimerFragment.this.freezeTaskers = freezeTaskers;
                 timerAdapter.submitList(freezeTaskers);
-//                timerAdapter.notifyDataSetChanged();
             }
         });
 

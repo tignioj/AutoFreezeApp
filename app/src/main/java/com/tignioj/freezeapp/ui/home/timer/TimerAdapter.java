@@ -48,8 +48,12 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
 
             @Override
             public boolean areContentsTheSame(@NonNull FreezeTasker oldItem, @NonNull FreezeTasker newItem) {
+                if (oldItem.isFrozen() != newItem.isFrozen()) {
+                    Log.d(MyConfig.LOG_TAG_TIMER_FRAGMENT, newItem.toString());
+                }
                 return oldItem.getCategoryId() == newItem.getCategoryId()
                         && oldItem.getStartTime().equals(newItem.getStartTime())
+                        && oldItem.isFrozen() == newItem.isFrozen()
                         && oldItem.getEndTime().equals(newItem.getEndTime())
                         && oldItem.getCategoryName().equals(newItem.getCategoryName())
                         && oldItem.isLockScreen() == newItem.isLockScreen()
