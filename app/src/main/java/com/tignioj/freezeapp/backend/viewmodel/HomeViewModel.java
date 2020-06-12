@@ -177,8 +177,8 @@ public class HomeViewModel extends AndroidViewModel {
 
     public void updateFreezeTasks(FreezeTasker... freezeTaskerFromDb) {
         freezeTaskerRepository.insertFreezeTasker(freezeTaskerFromDb);
-
     }
+
 
     public LiveData<List<AppsCategory>> findAppCategorysLiveWithPattern(String pattern) {
         return appsCategoryRepository.findAppCategorysLiveWithPattern(pattern);

@@ -15,10 +15,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -50,6 +52,7 @@ public class FreezeTimerEditFragment extends Fragment {
     private RadioButton radioButtonFreeze, radioButtonUnFreeze;
     private CheckBox checkBoxEditTimerIsLockScreen;
     private EditText editTextDescription;
+    private Switch switchEnableSIngleTask;
 
     private HomeViewModel homeViewModel;
 
@@ -135,6 +138,11 @@ public class FreezeTimerEditFragment extends Fragment {
             }
         });
 
+        switchEnableSIngleTask = inflate.findViewById(R.id.switchEnableSIngleTask);
+        switchEnableSIngleTask.setChecked(freezeTaskerFromDb.isEnable());
+
+
+
         radioGroupUnFreezeOrUnfreeze = inflate.findViewById(R.id.radioButtonUnFreezeOrUnfreeze);
         radioButtonFreeze = inflate.findViewById(R.id.radioButtonFreeze);
         radioButtonUnFreeze = inflate.findViewById(R.id.radioButtonUnfreeze);
@@ -185,6 +193,9 @@ public class FreezeTimerEditFragment extends Fragment {
                 }
 
                 freezeTaskerFromDb.setLockScreen(checkBoxEditTimerIsLockScreen.isChecked());
+
+                freezeTaskerFromDb.setEnable(switchEnableSIngleTask.isChecked());
+
 //                homeViewModel.insertFreezeTasks(freezeTaskerFromDb);
                 homeViewModel.updateFreezeTasks(freezeTaskerFromDb);
 

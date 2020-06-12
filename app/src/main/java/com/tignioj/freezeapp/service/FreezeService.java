@@ -151,6 +151,8 @@ public class FreezeService extends Service {
                     builder.setContentText(content.toString());
                     if (start != null) {
                         builder.setContentTitle(start + "-" + end);
+                    } else {
+                        builder.setContentTitle(null);
                     }
                     startForeground(NOTIFICATION_ID, builder.build());
                 }

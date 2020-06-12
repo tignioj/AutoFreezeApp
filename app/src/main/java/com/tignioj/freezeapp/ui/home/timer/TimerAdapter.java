@@ -33,6 +33,7 @@ import com.tignioj.freezeapp.config.MyConfig;
 import com.tignioj.freezeapp.utils.MyDateUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewHolder> {
 
@@ -77,7 +78,7 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-        FreezeTasker item = getItem(position);
+        final FreezeTasker item = getItem(position);
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         String formatStart = sdf.format(item.getStartTime());
 
@@ -110,12 +111,18 @@ public class TimerAdapter extends ListAdapter<FreezeTasker, TimerAdapter.MyViewH
 //        });
         holder.aSwitchEnable.setChecked(item.isEnable());
 
+
+
         holder.aSwitchEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                final FreezeTasker currentDeleteItem = getItem(position);
-                currentDeleteItem.setEnable(isChecked);
-                timerFragment.homeViewModel.updateFreezeTasks(currentDeleteItem);
+                FreezeTasker item1 = getItem(holder.getAdapterPosition());
+                Log.d("switchChange1", item1.getDescription());
+                if (item1.isEnable() != isChecked) {
+                    item1.setEnable(isChecked);
+                    timerFragment.homeViewModel.updateFreezeTasks(item1);
+                }
+
             }
         });
 

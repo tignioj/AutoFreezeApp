@@ -218,5 +218,15 @@
         app:layout_constraintStart_toEndOf="@+id/button_addTimer_Back"
         app:layout_constraintTop_toTopOf="@+id/button_addTimer_Back" />
 
+    <Switch
+        android:id="@+id/switchEnableSIngleTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/enable"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintStart_toStartOf="@+id/guideline5"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -65,13 +65,16 @@ public class TimerFragment extends Fragment {
 
 
 
-        final SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+         SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
         boolean enableAll = mPrefs.getBoolean(MyConfig.PERSONAL_SHP_CONFIG_KEY_ENABLE_ALL_TASKS, true);
         aSwitchEnableAll = inflate.findViewById(R.id.switch_eanble_all_task);
         aSwitchEnableAll.setChecked(enableAll);
+
+
         aSwitchEnableAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
                 homeViewModel.updateFreezeTasksAllEnable(isChecked);
                 SharedPreferences.Editor edit = mPrefs.edit();
                 edit.putBoolean(MyConfig.PERSONAL_SHP_CONFIG_KEY_ENABLE_ALL_TASKS, isChecked);
