@@ -16,9 +16,13 @@ public class FreezeAppRepository {
     private Context mContext;
     private static FreezeAppRepository INSTANCE;
 
-    public synchronized static FreezeAppRepository getInstance(Context context) {
+    public  static FreezeAppRepository getInstance(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = new FreezeAppRepository(context);
+            synchronized (FreezeAppRepository.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new FreezeAppRepository(context);
+                }
+            }
         }
         return INSTANCE;
     }

@@ -44,9 +44,13 @@ public class HomeRepository {
         this.programLockerMutableLiveData.setValue(programLocker);
     }
 
-    public synchronized static HomeRepository getInstance(Context context) {
+    public  static HomeRepository getInstance(Context context) {
         if (homeRepository == null) {
-            homeRepository = new HomeRepository(context);
+            synchronized (HomeRepository.class) {
+                if (homeRepository == null) {
+                    homeRepository = new HomeRepository(context);
+                }
+            }
         }
         return homeRepository;
     }

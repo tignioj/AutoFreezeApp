@@ -17,9 +17,13 @@ public class AppsCategoryRepository {
     LiveData<List<AppsCategory>> listLiveDataAppsCategory;
 
 
-    public synchronized static AppsCategoryRepository getInstance(Context context) {
+    public  static AppsCategoryRepository getInstance(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = new AppsCategoryRepository(context);
+            synchronized (AppsCategoryRepository.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new AppsCategoryRepository(context);
+                }
+            }
         }
         return INSTANCE;
     }

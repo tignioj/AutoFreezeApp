@@ -4,8 +4,10 @@ import android.app.admin.DeviceAdminReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ public class MyDeviceAdminReceiver extends DeviceAdminReceiver {
         Toast.makeText(context, "设备管理：可用", Toast.LENGTH_SHORT).show();
         ComponentName componentName = new ComponentName(context, MainActivity.class);
 
+        //如果隐藏了App，将它复原
         Log.d(MyConfig.LOG_TAG_MyDeviceAdminReceiver, componentName.getPackageName() + ":" + componentName.getClassName() + " enable:" + DeviceMethod.isComponentEnabled(context.getPackageManager(), componentName.getPackageName()
                 , componentName.getClassName()));
         //如果App不小心隐藏了，就将他激活
@@ -29,9 +32,19 @@ public class MyDeviceAdminReceiver extends DeviceAdminReceiver {
 
     private void showApp(Context context) {
         PackageManager p = context.getPackageManager();
-        ComponentName componentName = new ComponentName("com.tignioj.freezeapp", "com.tignioj.freezeapp.MainActivity");
-        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-        Log.d(MyConfig.LOG_TAG_MyDeviceAdminReceiver, "receive enable!");
+//        ComponentName componentName = new ComponentName("com.tignioj.freezeapp", "com.tignioj.freezeapp.MainActivity");
+//        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+//        Log.d(MyConfig.LOG_TAG_MyDeviceAdminReceiver, "receive enable!");
+
+        ComponentName componentName = new ComponentName(context, MainActivity.class);
+        if (!DeviceMethod.isComponentEnabled(p, componentName.getPackageName(), componentName.getClassName())) {
+            Log.d(MyConfig.LOG_TAG_MyBootReceiver, componentName.getPackageName() + ":" + componentName.getClassName() + "冻结了，正在解冻中");
+            SharedPreferences mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor edit = mPrefs.edit();
+            edit.putBoolean(MyConfig.PERSONAL_SHP_CONFIG_KEY_EDITABLE_ENABLE, false);
+            edit.apply();
+            p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        }
     }
 
     @Override

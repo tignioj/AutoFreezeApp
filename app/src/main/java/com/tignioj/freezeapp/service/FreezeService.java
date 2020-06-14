@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Entity;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -16,6 +17,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -90,20 +93,9 @@ public class FreezeService extends Service {
     MutableLiveData<ConcurrentHashMap<String, String>> notificationHashMapLive;
     ConcurrentHashMap<String, String> notificationHashMap;
 
-    ReentrantLock reentrantLock;
-
 
     public class ServiceThread extends Thread {
         ConcurrentHashMap<Long, Boolean> screenSchedulingMap;
-
-
-
-
-        public static final int OPERATION_GET_MAP_STRING = 0x100001;
-        public static final int OPERATION_CLEAN_MAP = 0x100000;
-
-
-
         /**
          * 通知，用于显示当前执行的任务描述
          */
@@ -114,17 +106,15 @@ public class FreezeService extends Service {
             isActuallyEnable = DeviceMethod.getInstance(getApplicationContext()).isSelfEnable();
             notificationHashMapLive = new MutableLiveData<>();
 
-
             notificationHashMapLive.observeForever(new Observer<ConcurrentHashMap<String, String>>() {
                 @Override
                 public synchronized void onChanged(ConcurrentHashMap<String, String> strings) {
                     //拼接内容
+                    start = null;
+                    end = null;
                     StringBuilder content = new StringBuilder();
                     if (notificationHashMap == null || notificationHashMap.size() == 0) {
                         content.append("暂时无任务");
-                        start = null;
-                        end = null;
-
                     } else {
                         content.append("[");
 //                    text = notificationHashMap.keySet() + "";
@@ -154,12 +144,34 @@ public class FreezeService extends Service {
                     } else {
                         builder.setContentTitle(null);
                     }
+                    builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
                     startForeground(NOTIFICATION_ID, builder.build());
+
+//                    long[] pattern = new long[]{1000, 1000, 1000, 1000};
+//                    myVibrate(getApplicationContext() ,pattern);
                 }
             });
-
             notificationHashMap = new ConcurrentHashMap<>();
-            notificationHashMapLive.setValue(notificationHashMap);
+
+        }
+        /**
+         * 震动
+         * @param context
+         * @param pattern
+         */
+        public  void myVibrate(Context context, long[] pattern) {
+            Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            if (vibrator == null) {
+                return;
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // -1 : Play exactly once
+                VibrationEffect effect = VibrationEffect.createWaveform(pattern, -1);
+//                vibrator.vibrate(VibrationEffect.createOneShot(pattern[0], VibrationEffect.DEFAULT_AMPLITUDE));
+                vibrator.vibrate(effect);
+            } else {
+                vibrator.vibrate(pattern, -1);
+            }
         }
 
         @Override
@@ -199,7 +211,6 @@ public class FreezeService extends Service {
                         if (hideMySelfHandler != null) {
                             hideMySelfHandler.sendEmptyMessage(HIDE_SELF);
                         }
-
                     }
                 } else {
                     Log.d(MyConfig.LOG_TAG_FREEZE_SERVICE, "liberate:" + "actually Enable:" + isActuallyEnable);
@@ -216,20 +227,20 @@ public class FreezeService extends Service {
             Log.d(MyConfig.MY_TAG, new Date().toString() + ":循环查看任务, " + (freezeTaskers == null ? null : freezeTaskers.size()));
             for (FreezeTasker freezeTasker : freezeTaskers) {
                 Log.d(MyConfig.MY_TAG, freezeTasker.toString());
-
                 if (!freezeTasker.isEnable()) {
                     continue;
                 }
 
-
                 //只处理这时间段的App
                 if (MyDateUtils.betweenStartTimeAndEndTime(freezeTasker.getStartTime(), freezeTasker.getEndTime())) {
                     if (!notificationHashMap.containsKey(freezeTasker.getDescription())) {
+
                         notificationHashMap.put(freezeTasker.getDescription(), MyDateUtils.format(freezeTasker.getStartTime())
                                 + "-" + MyDateUtils.format(freezeTasker.getEndTime()));
-                        Message message = new Message();
-                        message.what = UPDATE_NOTIFICATION;
-                        hideMySelfHandler.sendMessage(message);
+                        hideMySelfHandler.sendEmptyMessage(UPDATE_NOTIFICATION);
+
+
+
                     }
 
                     processLockScreen(freezeTasker);
@@ -239,7 +250,6 @@ public class FreezeService extends Service {
                     if (notificationHashMap.containsKey(freezeTasker.getDescription())) {
                         notificationHashMap.remove(freezeTasker.getDescription());
                         hideMySelfHandler.sendEmptyMessage(UPDATE_NOTIFICATION);
-
                     }
                     processUnLockScreen(freezeTasker);
                 }
@@ -331,6 +341,7 @@ public class FreezeService extends Service {
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
+            channel.enableVibration(false);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
@@ -348,7 +359,6 @@ public class FreezeService extends Service {
     public void onCreate() {
 
         super.onCreate();
-        reentrantLock = new ReentrantLock();
         homeViewModel = new HomeViewModel(getApplication());
         MutableLiveData<ProgramLocker> programLockerMutableLiveData = homeViewModel.getProgramLockerMutableLiveData();
         programLockerMutableLiveData.observeForever(new Observer<ProgramLocker>() {
@@ -360,7 +370,10 @@ public class FreezeService extends Service {
         builder = new NotificationCompat.Builder(FreezeService.this.getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_lock_black_24dp)
                 .setContentTitle(getString(R.string.notifaction_keep_running_title))
+
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        createNotificationChannel();
+
 //        startForeground(NOTIFICATION_ID, builder.build());
 
 
@@ -422,11 +435,12 @@ public class FreezeService extends Service {
                 }
 //                Log.d(MyConfig.LOG_TAG_FREEZE_SERVICE, "clear notification map");
 //                notificationHashMap.clear();
-                hideMySelfHandler.sendEmptyMessage(UPDATE_NOTIFICATION);
                 FreezeService.this.freezeTaskers = freezeTaskers;
+
+
                 if (serviceThread != null) {
                     notificationHashMap.clear();
-                    notificationHashMapLive.setValue(notificationHashMap);
+                    hideMySelfHandler.sendEmptyMessage(UPDATE_NOTIFICATION);
                 }
 
             }

@@ -17,9 +17,13 @@ public class FreezeTaskerRepository {
     private static FreezeTaskerRepository INSTANCE;
     LiveData<List<FreezeTasker>> listLiveDataFreezeTasker;
 
-    public synchronized static FreezeTaskerRepository getInstance(Context context) {
+    public  static FreezeTaskerRepository getInstance(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = new FreezeTaskerRepository(context);
+            synchronized (FreezeTaskerRepository.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new FreezeTaskerRepository(context);
+                }
+            }
         }
         return INSTANCE;
     }
